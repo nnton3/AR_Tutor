@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using UniRx;
+using System;
 
 public class MainMenuUIControl : MonoBehaviour
 {
@@ -13,14 +16,19 @@ public class MainMenuUIControl : MonoBehaviour
     [SerializeField] private GameObject[] gamePanels = new GameObject[] { };
     [SerializeField] private List<EditableElement> editableElements = new List<EditableElement>();
 
-    private MenuTransitionController menuTransition;
+    private MenuTransitionController transitionController;
     private VariantGameMenu variantGameUI;
-    private MenuMode mode = MenuMode.GameSelection;
+    public MenuMode mode { get; private set; } = MenuMode.GameSelection;
+    public bool SettingsBtnActiveSelf
+    {
+        get { return settingsBtn.gameObject.activeSelf; }
+        set { settingsBtn.gameObject.SetActive(value); }
+    }
     #endregion
 
     public void Initialize()
     {
-        menuTransition = FindObjectOfType<MenuTransitionController>();
+        transitionController = FindObjectOfType<MenuTransitionController>();
         variantGameUI = GetComponent<VariantGameMenu>();
 
         editableElements = FindObjectsOfType<EditableElement>().ToList();
@@ -28,14 +36,15 @@ public class MainMenuUIControl : MonoBehaviour
         variantGameUI.HidePanels();
         SwitchEditableElemets();
 
-        menuTransition.ActivatePanel(new GameObject[] { gameSelector });
+        transitionController.ActivatePanel(new GameObject[] { gameSelector });
+        transitionController.ReturnToMainMenuEvent.AddListener(() => SettingsBtnActiveSelf = true);
     }
 
     private void BindBtns()
     {
-        BindPanelBtns(gamesBtns, gamePanels);
+        BindPanelBtns(gamesBtns, gamePanels, () => SettingsBtnActiveSelf = false);
 
-        returnBtn.onClick.AddListener(() => menuTransition.ReturnToBack());
+        returnBtn.onClick.AddListener(() => transitionController.ReturnToBack());
         settingsBtn.onClick.AddListener(() => SwitchMode());
     }
 
@@ -60,7 +69,7 @@ public class MainMenuUIControl : MonoBehaviour
         }
     }
 
-    public void BindPanelBtns(Button[] btns, GameObject[] panels)
+    public void BindPanelBtns(Button[] btns, GameObject[] panels, UnityAction action = null)
     {
         for (int i = 0; i < btns.Length; i++)
         {
@@ -69,7 +78,8 @@ public class MainMenuUIControl : MonoBehaviour
 
             btn.onClick.AddListener(() =>
             {
-                menuTransition.ActivatePanel(new GameObject[] { panel });
+                transitionController.ActivatePanel(new GameObject[] { panel });
+                action?.Invoke();
             });
         }
     }

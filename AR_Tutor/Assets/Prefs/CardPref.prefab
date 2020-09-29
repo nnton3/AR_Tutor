@@ -185,7 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3904c8db41792f4aa459690d66ec80d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  img: {fileID: 3978958015556193744}
   title: {fileID: 8088061607841270218}
   selectBtn: {fileID: 2528843152660994391}
   selectImageBtn: {fileID: 6061211043866847896}
@@ -249,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.9339623, g: 0.2511125, b: 0.2511125, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:

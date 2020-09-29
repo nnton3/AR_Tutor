@@ -7,14 +7,16 @@ using UnityEngine.UI;
 public class CardInitializer : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private Text title;
-    [SerializeField] private Button selectBtn, selectImageBtn, deleteBtn;
-    [SerializeField] private Image image;
+    [SerializeField] protected Text title;
+    [SerializeField] protected Button selectBtn, selectImageBtn, deleteBtn;
+    [SerializeField] protected Image image;
     private CategoryManager categoryManager;
     private CardCreator cardCreator;
     private SaveSystem saveSystem;
     protected PatientDataManager patientManager;
     private Texture2D texture;
+    private AudioClip audioClip;
+    private AudioSource source;
     public int categoryIndex { get; private set; }
     public string key { get; private set; }
     public GameName game { get; private set; }
@@ -26,6 +28,7 @@ public class CardInitializer : MonoBehaviour
         patientManager = FindObjectOfType<PatientDataManager>();
         saveSystem = FindObjectOfType<SaveSystem>();
         cardCreator = FindObjectOfType<CardCreator>();
+        source = FindObjectOfType<AudioSource>();
 
         ConfigurateUI(data);
         categoryIndex = _categoryIndex;
@@ -40,6 +43,9 @@ public class CardInitializer : MonoBehaviour
         {
             categoryManager.SetUpNewImage(game, categoryIndex, key);
         });
+
+        if (source != null)
+            selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
 
         deleteBtn.onClick.AddListener(HideCard);
     }
@@ -57,6 +63,9 @@ public class CardInitializer : MonoBehaviour
         if (image != null)
             if (data.img != null)
                 image.sprite = data.img;
+
+        if (data.audioClip != null)
+            audioClip = data.audioClip;
     }
 
     protected virtual void HideCard()

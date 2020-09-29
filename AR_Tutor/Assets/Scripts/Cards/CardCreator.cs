@@ -48,8 +48,8 @@ public class CardCreator : MonoBehaviour
 
         playBtn.onClick.AddListener(() => PlayAudio(audioClip));
         play2Btn.onClick.AddListener(() => PlayAudio(audioClipForm));
-        recBtn.onClick.AddListener(() => RecordAudio());
-        rec2Btn.onClick.AddListener(() => RecordAudioForm());
+        recBtn.onClick.AddListener(() => StartCoroutine(RecordClipRoutine()));
+        rec2Btn.onClick.AddListener(() => StartCoroutine(RecordClipFormRoutine()));
 
         toRight.onClick.AddListener(() => SwitchImage(1));
         toLeft.onClick.AddListener(() => SwitchImage(-1));
@@ -58,7 +58,7 @@ public class CardCreator : MonoBehaviour
         {
             if (CardDataIsValid())
             {
-                CreateCard(cardName, cardNameForm, image1.sprite);
+                CreateCard(cardName, cardNameForm, image1.sprite, audioClip);
                 transitionController.ReturnToBack(2);
             }
         });
@@ -67,46 +67,54 @@ public class CardCreator : MonoBehaviour
     public void CreateCard(string baseCardKey, Sprite newImg)
     {
         var oldData = storage.cards[baseCardKey];
-        CreateCard(oldData.Title, oldData.TitleForm, newImg);
+        CreateCard(oldData.Title, oldData.TitleForm, newImg, oldData.audioClip);
     }
 
-    private void CreateCard(string _title, string _titleForm, Sprite _image1data)
+    private void CreateCard(string _title, string _titleForm, Sprite _image1data, AudioClip _audioClip)
     {
-        var image1Key = $"{patientDataManager.GetPatientLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image1";
         var cardKey = $"{patientDataManager.GetPatientLogin()}_{_title}_{saveSystem.GetCustomCardsData().keys.Count}";
+        var image1Key = $"{patientDataManager.GetPatientLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image1";
+        var audio1Key = $"{patientDataManager.GetPatientLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
 
         data = new CardData(
             _title,
             _titleForm,
             _image1data,
+            _audioClip,
             true);
 
         saveSystem.SaveImage(_image1data.texture, image1Key);
+        saveSystem.SaveAudio(_audioClip, audio1Key);
 
-        storage.AddNewCardToBase(data, cardKey, image1Key);
+        storage.AddNewCardToBase(data, cardKey, image1Key, audio1Key);
         categoryManager.AddCard(cardKey);
     }
 
     #region Audio
-    private void RecordAudio()
+    private IEnumerator RecordClipRoutine()
     {
-        StartCoroutine(RecordRoutine(audioClip));
+        Debug.Log("Start record");
+        var clip = Microphone.Start(null, true, 100, 44100);
+        yield return new WaitForSeconds(3f);
+        Microphone.End(null);
+        Debug.Log("End record");
+        audioClip = clip;
     }
 
-    private void RecordAudioForm()
+    private IEnumerator RecordClipFormRoutine()
     {
-        StartCoroutine(RecordRoutine(audioClipForm));
-    }
-
-    private IEnumerator RecordRoutine(AudioClip clip)
-    {
-        clip = Microphone.Start(Microphone.devices[0], true, 5, 44100);
-        yield return new WaitForSeconds(5f);
-        Microphone.End(Microphone.devices[0]);
+        Debug.Log("Start record");
+        var clip = Microphone.Start(null, true, 100, 44100);
+        yield return new WaitForSeconds(3f);
+        Microphone.End(null);
+        Debug.Log("End record");
+        audioClipForm = clip;
     }
 
     private void PlayAudio(AudioClip clip)
     {
+        Debug.Log($"Clip is null? {clip == null}");
+        Debug.Log("Play audio");
         source.clip = clip;
         source.Play();
     }
@@ -151,10 +159,10 @@ public class CardCreator : MonoBehaviour
     {
         if (cardName == "") return false;
         if (cardNameForm == null) return false;
-        //if (image1data == null) return false;
+        if (image1data == null) return false;
         //if (image2data == null) return false;
         //if (image3data == null) return false;
-        //if (audioClip == null) return false;
+        if (audioClip == null) return false;
         //if (audioClipForm == null) return false;
 
         return true;

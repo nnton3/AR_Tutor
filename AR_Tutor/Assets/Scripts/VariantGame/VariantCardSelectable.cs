@@ -7,6 +7,7 @@ public class VariantCardSelectable : MonoBehaviour
 {
     #region Variables
     private VariantCardSelector selector;
+    private MainMenuUIControl mainUIControl;
 
     [SerializeField] private Image img;
     [SerializeField] private Button btn;
@@ -18,12 +19,15 @@ public class VariantCardSelectable : MonoBehaviour
     private void Awake()
     {
         selector = FindObjectOfType<VariantCardSelector>();
+        mainUIControl = FindObjectOfType<MainMenuUIControl>();
 
-        btn.onClick.AddListener(OnClickEvent);
+        btn.onClick.AddListener(OnClickEventHandler);
     }
 
-    private void OnClickEvent()
+    private void OnClickEventHandler()
     {
+        if (mainUIControl.mode == MenuMode.CustomizeMenu) return;
+
         if (Selected) Unselect();
         else Select();
     }
@@ -36,7 +40,7 @@ public class VariantCardSelectable : MonoBehaviour
         selector.SelectEvent.Invoke(GetComponent<CardInitializer>().key);
     }
 
-    private void Unselect()
+    public void Unselect()
     {
         Selected = false;
         img.color = defaultClr;
