@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "462828029971",
+    "firebase_url": "https://ar-tutor.firebaseio.com",
+    "project_id": "ar-tutor",
+    "storage_bucket": "ar-tutor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462828029971:android:420084df7807be29e457e6",
+        "android_client_info": {
+          "package_name": "com.arlab.artutor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462828029971-ks4u7l689q88qvkfpkm23c2867bfbjcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyvgz_1jzO2aXfBrsNr1Klzt2PqsQmbJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462828029971-ks4u7l689q88qvkfpkm23c2867bfbjcs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "462828029971-fajqdb67jjd9rvnmcirf71fugcl022fp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.arlab.artutor"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
