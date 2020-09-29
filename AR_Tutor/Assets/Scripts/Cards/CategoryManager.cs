@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UniRx;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -67,6 +64,7 @@ public class CategoryManager : MonoBehaviour
     private IEnumerator AddCardToCategoryRoutine()
     {
         transitionController.ActivatePanel(new GameObject[] { addMethodSeletor });
+        transitionController.AddEventToReturnBtn(() => StopCoroutine(AddCardToCategoryRoutine()));
 
         while (!methodSelected)
             yield return null;
@@ -93,6 +91,7 @@ public class CategoryManager : MonoBehaviour
     {
         libraryControl.BindCardsForSelect();
         transitionController.ActivatePanel(new GameObject[] { libraryPanel });
+        transitionController.AddEventToReturnBtn(() => libraryControl.ClearBtnsEvents());
     }
 
     public void AddCard(string _cardKey)
@@ -110,7 +109,6 @@ public class CategoryManager : MonoBehaviour
     private void UpdateCardImgInMenu(string _cardKey, Sprite _cardImg)
     {
         variantMenu.UpdateCardImg(_cardKey, _cardImg);
-
         libraryControl.UpdateCardImg(_cardKey, _cardImg);
     }
 

@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveSystem : MonoBehaviour
 {
     [SerializeField] private Button testDelete;
-    private CardSaveData cardSaveData = new CardSaveData(null, null, null, null);
+    private CardSaveData cardSaveData = new CardSaveData(null, null, null, null, null);
 
     public void Initialize()
     {
@@ -34,19 +35,20 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Cards
-    public void SaveCustomCardFromLocal(CardData cardData, string key, string imageKey)
+    public void SaveCustomCardFromLocal(CardData cardData, string key, string imageKey, string audioKey)
     {
         cardSaveData.cardTitles.Add(cardData.Title);
         cardSaveData.cardTitleForms.Add(cardData.TitleForm);
         cardSaveData.keys.Add(key);
         cardSaveData.imageAddres.Add(imageKey);
+        cardSaveData.audioAddres.Add(audioKey);
 
         UpdateCustomCardLocal();
     }
 
     private CardSaveData LoadCustomCardsFromLocal()
     {
-        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData(null, null, null, null);
+        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData(null, null, null, null, null);
         else return JsonUtility.FromJson<CardSaveData>(PlayerPrefs.GetString("Custom_cards"));
     }
 
@@ -82,16 +84,32 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Audio
-    private void SaveAudio(AudioClip clip)
+    public void SaveAudio(AudioClip clip, string _key)
     {
         ES3.Save<AudioClip>("TestAudio", clip);
+
+        // StartCoroutine(SaveAudioRoutine(clip));
     }
 
-    private AudioClip LoadAudio(string key)
+    private IEnumerator SaveAudioRoutine(AudioClip clip)
     {
-        if (ES3.FileExists(key))
-            return ES3.Load<AudioClip>(key);
-        else return null;
+        Debug.Log("StartSave");
+        yield return new Task(() =>
+        {
+            ES3.Save<AudioClip>("TestAudio", clip);
+        });
+        Debug.Log("Saved");
+    }
+
+    public AudioClip LoadAudio(string _key)
+    {
+        foreach (var item in ES3.GetKeys())
+        {
+            Debug.Log(item);
+        }
+
+        var clip = ES3.Load<AudioClip>("TestAudio");
+        return clip;
     }
     #endregion
 

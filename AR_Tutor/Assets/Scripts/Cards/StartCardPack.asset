@@ -17,23 +17,29 @@ MonoBehaviour:
     TitleForm: "\u041F\u0430\u043F\u0443"
     IsCustom: 0
     img: {fileID: 21300000, guid: 809a55ce17d9b474aa2b422694b1051a, type: 3}
+    audioClip: {fileID: 8300000, guid: 49aa9292e9774ac4f9a92282ab1e58a3, type: 3}
   - Title: "\u041C\u0430\u043C\u0430"
     TitleForm: "\u041C\u0430\u043C\u0443"
     IsCustom: 0
     img: {fileID: 21300000, guid: e48a7e376e017c64dad1f53007aa43c9, type: 3}
+    audioClip: {fileID: 0}
   - Title: "\u0414\u0435\u0442\u0438"
     TitleForm: "\u0414\u0435\u0442\u0435\u0439"
     IsCustom: 0
     img: {fileID: 21300000, guid: 984f009629c2229479ff9e97e8a2fc95, type: 3}
+    audioClip: {fileID: 0}
   - Title: "\u0421\u0443\u043F"
     TitleForm: "\u0421\u0443\u043F"
     IsCustom: 0
     img: {fileID: 21300000, guid: ecac1b88b4dead045a74b5b0cbdeb29b, type: 3}
+    audioClip: {fileID: 0}
   - Title: "\u0421\u0430\u043B\u0430\u0442"
     TitleForm: "\u0421\u0430\u043B\u0430\u0442"
     IsCustom: 0
     img: {fileID: 21300000, guid: 44b479c75119dd645af6b029b3e50971, type: 3}
+    audioClip: {fileID: 0}
   - Title: "\u0422\u043E\u0440\u0442"
     TitleForm: "\u0422\u043E\u0440\u0442"
     IsCustom: 0
     img: {fileID: 21300000, guid: c29167e2c0a20c8409ee2fc00210a74f, type: 3}
+    audioClip: {fileID: 0}

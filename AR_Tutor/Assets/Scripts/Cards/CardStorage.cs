@@ -54,6 +54,7 @@ public class CardStorage : MonoBehaviour
                     saveSystem.LoadImage(customCardsData.imageAddres[i]),
                     new Rect(0, 0, img.width, img.height),
                     Vector2.zero),
+                saveSystem.LoadAudio(customCardsData.audioAddres[i]),
                 true);
             AddCustomCard(customCardsData.keys[i], card);
         }
@@ -65,12 +66,12 @@ public class CardStorage : MonoBehaviour
             cards.Add(key, card);
     }
 
-    public void AddNewCardToBase(CardData card, string key, string imageKey)
+    public void AddNewCardToBase(CardData card, string key, string imageKey, string audioKey)
     {
         if (cards.ContainsKey(key)) return;
 
         AddCustomCard(key, card);
-        saveSystem.SaveCustomCardFromLocal(card, key, imageKey);
+        saveSystem.SaveCustomCardFromLocal(card, key, imageKey, audioKey);
     }
 
     public void UpdateCustomCardImage(string _cardKey, Sprite _cardImg)

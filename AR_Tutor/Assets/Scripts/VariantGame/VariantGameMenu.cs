@@ -13,6 +13,7 @@ public class VariantGameMenu : MonoBehaviour
     private CategoryManager categoryManager;
     private MainMenuUIControl mainMenu;
     private VariantCardSelector cardSelector;
+    private MenuTransitionController transitionController;
 
     private VariantCategoryData[] config;
     [SerializeField] private GameObject categoryCardPref, categoryPanelPref, cardPref, customCardPref, addCardBtnPref, categoriesSelector, VariantGameParent;
@@ -28,6 +29,7 @@ public class VariantGameMenu : MonoBehaviour
         categoryManager = FindObjectOfType<CategoryManager>();
         mainMenu = FindObjectOfType<MainMenuUIControl>();
         cardSelector = FindObjectOfType<VariantCardSelector>();
+        transitionController = FindObjectOfType<MenuTransitionController>();
 
         categoryManager.AddCardEvent.AddListener(AddNewCard);
 
@@ -146,7 +148,10 @@ public class VariantGameMenu : MonoBehaviour
     private void BindBtns()
     {
         uiControl.BindPanelBtns(gameModes, new GameObject[] { categoriesSelector, categoriesSelector, categoriesSelector });
-        uiControl.BindPanelBtns(CategoriesBtns.ToArray(), CategoriesPanels.ToArray());
+        uiControl.BindPanelBtns(
+            CategoriesBtns.ToArray(),
+            CategoriesPanels.ToArray(),
+            () => transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll()));
 
         gameModes[0].onClick.AddListener(() => cardSelector.SetMaxCard(2));
         gameModes[1].onClick.AddListener(() => cardSelector.SetMaxCard(4));
