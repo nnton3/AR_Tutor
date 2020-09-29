@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 992ef14f0bb83de459e262acfd045aec, type: 3}
+  m_Name: StartCardPack
+  m_EditorClassIdentifier: 
+  cards:
+  - Title: "\u041F\u0430\u043F\u0430"
+    TitleForm: "\u041F\u0430\u043F\u0443"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: 809a55ce17d9b474aa2b422694b1051a, type: 3}
+  - Title: "\u041C\u0430\u043C\u0430"
+    TitleForm: "\u041C\u0430\u043C\u0443"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: e48a7e376e017c64dad1f53007aa43c9, type: 3}
+  - Title: "\u0414\u0435\u0442\u0438"
+    TitleForm: "\u0414\u0435\u0442\u0435\u0439"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: 984f009629c2229479ff9e97e8a2fc95, type: 3}
+  - Title: "\u0421\u0443\u043F"
+    TitleForm: "\u0421\u0443\u043F"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: ecac1b88b4dead045a74b5b0cbdeb29b, type: 3}
+  - Title: "\u0421\u0430\u043B\u0430\u0442"
+    TitleForm: "\u0421\u0430\u043B\u0430\u0442"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: 44b479c75119dd645af6b029b3e50971, type: 3}
+  - Title: "\u0422\u043E\u0440\u0442"
+    TitleForm: "\u0422\u043E\u0440\u0442"
+    IsCustom: 0
+    img: {fileID: 21300000, guid: c29167e2c0a20c8409ee2fc00210a74f, type: 3}
