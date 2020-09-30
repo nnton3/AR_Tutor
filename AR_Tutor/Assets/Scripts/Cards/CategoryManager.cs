@@ -100,24 +100,31 @@ public class CategoryManager : MonoBehaviour
         methodSelected = false;
     }
 
-    private void UpdateCardImage(string _cardKey, Sprite _cardImg)
+    public void AddCardFromLibrary(string _cardKey)
     {
-        storage.UpdateCustomCardImage(_cardKey, _cardImg);
-        UpdateCardImgInMenu(_cardKey, _cardImg);
+        if (CardIsValid(_cardKey))
+        {
+            AddCard(_cardKey);
+            transitionController.ReturnToBack(2);
+        }
+        else
+        {
+            libraryControl.BindCardsForSelect();
+        }
     }
 
-    private void UpdateCardImgInMenu(string _cardKey, Sprite _cardImg)
-    {
-        variantMenu.UpdateCardImg(_cardKey, _cardImg);
-        libraryControl.UpdateCardImg(_cardKey, _cardImg);
-    }
-
-    public bool CardIsValid(string _key)
+    private bool CardIsValid(string _key)
     {
         return patientDataManager.CardExists(gameName, categoryIndex, _key);
     }
     #endregion
 
+    /// <summary>
+    /// Установить для карточки новую картинку
+    /// </summary>
+    /// <param name="_game"></param>
+    /// <param name="_categoryIndex"></param>
+    /// <param name="_cardKey"></param>
     public void SetUpNewImage(GameName _game,int _categoryIndex , string _cardKey)
     {
         gameName = _game;
@@ -133,10 +140,8 @@ public class CategoryManager : MonoBehaviour
             {
                 Texture2D texture = NativeGallery.LoadImageAtPath(path, -1, false);
 
-                if (texture.width < texture.height)
-                    sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.width), Vector2.zero);
-                else
-                    sprite = Sprite.Create(texture, new Rect(0, 0, texture.height, texture.height), Vector2.zero);
+                var size = (texture.width < texture.height) ? texture.width : texture.height;
+                sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
 
                 if (cardData.IsCustom)
                     UpdateCardImage(_cardKey, sprite);
@@ -159,6 +164,20 @@ public class CategoryManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    private void UpdateCardImage(string _cardKey, Sprite _cardImg)
+    {
+        /// Обновить картинку для карточки в библиотеке и сохранить изменения локально
+        storage.UpdateCustomCardImage(_cardKey, _cardImg);
+        libraryControl.UpdateCardImg(_cardKey, _cardImg);
+
+        UpdateCardImgInMenu(_cardKey, _cardImg);
+    }
+
+    private void UpdateCardImgInMenu(string _cardKey, Sprite _cardImg)
+    {
+        variantMenu.UpdateCardImg(_cardKey, _cardImg);
     }
 
     private void OnDestroy() { AddCardEvent.RemoveAllListeners(); }

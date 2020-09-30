@@ -17,7 +17,6 @@ public class MainMenuUIControl : MonoBehaviour
     [SerializeField] private List<EditableElement> editableElements = new List<EditableElement>();
 
     private MenuTransitionController transitionController;
-    private VariantGameMenu variantGameUI;
     public MenuMode mode { get; private set; } = MenuMode.GameSelection;
     public bool SettingsBtnActiveSelf
     {
@@ -29,11 +28,8 @@ public class MainMenuUIControl : MonoBehaviour
     public void Initialize()
     {
         transitionController = FindObjectOfType<MenuTransitionController>();
-        variantGameUI = GetComponent<VariantGameMenu>();
 
-        editableElements = FindObjectsOfType<EditableElement>().ToList();
         BindBtns();
-        variantGameUI.HidePanels();
         SwitchEditableElemets();
 
         transitionController.ActivatePanel(new GameObject[] { gameSelector });
