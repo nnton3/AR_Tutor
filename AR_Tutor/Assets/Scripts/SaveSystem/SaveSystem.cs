@@ -86,30 +86,12 @@ public class SaveSystem : MonoBehaviour
     #region Audio
     public void SaveAudio(AudioClip clip, string _key)
     {
-        ES3.Save<AudioClip>("TestAudio", clip);
-
-        // StartCoroutine(SaveAudioRoutine(clip));
-    }
-
-    private IEnumerator SaveAudioRoutine(AudioClip clip)
-    {
-        Debug.Log("StartSave");
-        yield return new Task(() =>
-        {
-            ES3.Save<AudioClip>("TestAudio", clip);
-        });
-        Debug.Log("Saved");
+        SaveWav.Save(_key, clip);
     }
 
     public AudioClip LoadAudio(string _key)
     {
-        foreach (var item in ES3.GetKeys())
-        {
-            Debug.Log(item);
-        }
-
-        var clip = ES3.Load<AudioClip>("TestAudio");
-        return clip;
+        return ES3.LoadAudio($"{Application.persistentDataPath}/{_key}.wav", AudioType.WAV);
     }
     #endregion
 

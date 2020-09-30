@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameName { Variant}
+public enum GameName { Variant, Buttons, WordBook, WordComposing}
 
 public class PatientDataManager : MonoBehaviour
 {
