@@ -81,7 +81,7 @@ public class VariantGameMenu : MonoBehaviour
         var btn = init.GetSelectBtn();
         btn.onClick.AddListener(() =>
         {
-            categoryManager.AddCardToCategory(GameName.Variant, categoryIndex);
+            categoryManager.SelectAddMethod(GameName.Variant, categoryIndex);
         });
         Destroy(addCardBtnInstance.GetComponent<EditableElement>());
     }

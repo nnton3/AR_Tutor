@@ -54,7 +54,7 @@ public class CategoryManager : MonoBehaviour
     }
 
     #region Add card in category
-    public void AddCardToCategory(GameName game, int _categoryIndex)
+    public void SelectAddMethod(GameName game, int _categoryIndex)
     {
         gameName = game;
         categoryIndex = _categoryIndex;
