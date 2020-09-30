@@ -130,9 +130,8 @@ public class CardCreator : MonoBehaviour
                 if (texture == null)
                     return;
 
-                if (texture.width < texture.height)
-                    _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.width), Vector2.zero);
-                else _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, texture.height, texture.height), Vector2.zero);
+                var size = (texture.width < texture.height) ? texture.width : texture.height;
+                _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
 
                 _texture = texture;
             }

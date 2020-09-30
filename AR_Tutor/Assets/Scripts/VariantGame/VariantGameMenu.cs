@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
-public class VariantGameMenu : MonoBehaviour
+public class VariantGameMenu : MonoBehaviour, IGameMenu
 {
     #region Variables
     private MainMenuUIControl uiControl;
@@ -42,6 +41,7 @@ public class VariantGameMenu : MonoBehaviour
         }
 
         BindBtns();
+        HidePanels();
 
         cardSelector.Initialize(Cards);
     }
@@ -67,14 +67,21 @@ public class VariantGameMenu : MonoBehaviour
     private void ConfigurateCards(VariantCategoryData categoryData, GameObject categoryPanel, int categoryIndex)
     {
         if (cardStorage == null) return;
-         
+
         if (categoryData.cardKeys.Count > 0)
             foreach (var key in categoryData.cardKeys)
             {
                 GameObject cardObj = AddCardInMenu(categoryPanel, categoryIndex, key);
-                cardObj.GetComponent<EditableElement>().visible = categoryData.cardVisibleValue[categoryData.cardKeys.IndexOf(key)];
+                var editableElem = cardObj.GetComponent<EditableElement>();
+                editableElem.visible = categoryData.cardVisibleValue[categoryData.cardKeys.IndexOf(key)];
+                mainMenu.AddEditableElement(editableElem);
             }
 
+        CreateAddCardBtn(categoryPanel, categoryIndex);
+    }
+
+    private void CreateAddCardBtn(GameObject categoryPanel, int categoryIndex)
+    {
         var addCardBtnInstance = Instantiate(addCardBtnPref, categoryPanel.transform);
         var init = addCardBtnInstance.GetComponent<CardInitializer>();
         init.Initialize(GameName.Variant, categoryIndex, null, new CardData());
@@ -83,7 +90,6 @@ public class VariantGameMenu : MonoBehaviour
         {
             categoryManager.SelectAddMethod(GameName.Variant, categoryIndex);
         });
-        Destroy(addCardBtnInstance.GetComponent<EditableElement>());
     }
 
     private GameObject AddCardInMenu(GameObject categoryPanel, int categoryIndex, string key)
@@ -91,10 +97,8 @@ public class VariantGameMenu : MonoBehaviour
         var cardData = cardStorage.cards[key];
         GameObject cardObj;
 
-        if (!cardData.IsCustom)
-            cardObj = Instantiate(cardPref, categoryPanel.transform);
-        else
-            cardObj = Instantiate(customCardPref, categoryPanel.transform);
+        cardObj = (!cardData.IsCustom) ? 
+            Instantiate(cardPref, categoryPanel.transform) : Instantiate(customCardPref, categoryPanel.transform);
 
         Cards.Add(cardObj);
         var initializer = cardObj.GetComponent<CardInitializer>();
@@ -117,10 +121,12 @@ public class VariantGameMenu : MonoBehaviour
         cardSelector.AddCard(cardObj);
     }
 
-    public void UpdateCardImg(string cardKey, Sprite cardImg)
+    public void UpdateCardImg(string _cardKey, Sprite _cardImg)
     {
-        var target = Cards.Find((card) => card.GetComponent<CardInitializer>().key == cardKey);
-        target.GetComponent<CardInitializer>().UpdateImg(cardImg);
+        var validCards = Cards.FindAll((card) => card.GetComponent<CardInitializer>().key == _cardKey);
+        foreach (var item in validCards)
+            item.GetComponent<CardInitializer>().UpdateImg(_cardImg);
+
         Debug.Log("Variant game updated");
     }
 
@@ -137,7 +143,7 @@ public class VariantGameMenu : MonoBehaviour
             }
     }
 
-    public void HidePanels()
+    private void HidePanels()
     {
         foreach (var panel in CategoriesPanels)
             panel.SetActive(false);
