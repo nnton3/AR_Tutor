@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class VariantGameMenu : MonoBehaviour, IGameMenu
 {
     #region Variables
-    private MainMenuUIControl uiControl;
     private CardStorage cardStorage;
     private CategoryManager categoryManager;
     private MainMenuUIControl mainMenu;
@@ -23,18 +22,16 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
 
     public void Initialize()
     {
-        uiControl = GetComponent<MainMenuUIControl>();
         cardStorage = FindObjectOfType<CardStorage>();
         categoryManager = FindObjectOfType<CategoryManager>();
         mainMenu = FindObjectOfType<MainMenuUIControl>();
         cardSelector = FindObjectOfType<VariantCardSelector>();
         transitionController = FindObjectOfType<MenuTransitionController>();
 
-        categoryManager.AddCardEvent.AddListener(AddNewCard);
-
-        if (FindObjectOfType<PatientDataManager>().GetPatientData() != null)
+        var patientManager = FindObjectOfType<PatientDataManager>();
+        if (patientManager.GetPatientData() != null)
         {
-            config = FindObjectOfType<PatientDataManager>().GetPatientData().Value.VariantGameConfig;
+            config = patientManager.GetPatientData().Value.VariantGameConfig;
 
             if (config != null)
                 ConfigurateCategories();
@@ -42,7 +39,9 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
 
         BindBtns();
         HidePanels();
-
+        
+        Signals.AddCardEvent.AddListener(AddNewCard);
+        Signals.DeleteCardFromCategory.AddListener(DeleteCard);
         cardSelector.Initialize(Cards);
     }
 
@@ -60,7 +59,7 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
 
             ConfigurateCards(config[i], categoryPanel, i);
 
-            category.GetComponent<EditableElement>().visible = (config[i].visible);
+            category.GetComponent<EditableElement>().Visible = (config[i].visible);
         }
     }
 
@@ -73,23 +72,24 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
             {
                 GameObject cardObj = AddCardInMenu(categoryPanel, categoryIndex, key);
                 var editableElem = cardObj.GetComponent<EditableElement>();
-                editableElem.visible = categoryData.cardVisibleValue[categoryData.cardKeys.IndexOf(key)];
+                editableElem.Visible = categoryData.cardVisibleValue[categoryData.cardKeys.IndexOf(key)];
+                editableElem.ConfigurateElement(mainMenu.Mode);
                 mainMenu.AddEditableElement(editableElem);
             }
 
         CreateAddCardBtn(categoryPanel, categoryIndex);
     }
 
-    private void CreateAddCardBtn(GameObject categoryPanel, int categoryIndex)
+    public void AddNewCard(GameName _game, int _categoryIndex, string _key)
     {
-        var addCardBtnInstance = Instantiate(addCardBtnPref, categoryPanel.transform);
-        var init = addCardBtnInstance.GetComponent<CardInitializer>();
-        init.Initialize(GameName.Variant, categoryIndex, null, new CardData());
-        var btn = init.GetSelectBtn();
-        btn.onClick.AddListener(() =>
-        {
-            categoryManager.SelectAddMethod(GameName.Variant, categoryIndex);
-        });
+        if (_game != GameName.Variant) return;
+
+        GameObject cardObj = AddCardInMenu(CategoriesPanels[_categoryIndex], _categoryIndex, _key);
+        
+        var editableElem = cardObj.GetComponent<EditableElement>();
+        editableElem.ConfigurateElement(MenuMode.GameSelection);
+        mainMenu.AddEditableElement(editableElem);
+        cardSelector.AddCard(cardObj);
     }
 
     private GameObject AddCardInMenu(GameObject categoryPanel, int categoryIndex, string key)
@@ -101,39 +101,40 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
             Instantiate(cardPref, categoryPanel.transform) : Instantiate(customCardPref, categoryPanel.transform);
 
         Cards.Add(cardObj);
-        var initializer = cardObj.GetComponent<CardInitializer>();
+        var initializer = cardObj.GetComponent<CardBase>();
         initializer.Initialize(GameName.Variant, categoryIndex, key, cardData);
-        var cardBtn = initializer.GetSelectBtn();
-        cardBtn.onClick.AddListener(() => Debug.Log(cardData.Title));
         return cardObj;
     }
 
-    public void AddNewCard(GameName _game, int _categoryIndex, string _key)
+    private void CreateAddCardBtn(GameObject categoryPanel, int categoryIndex)
     {
-        if (_game != GameName.Variant) return;
-
-        GameObject cardObj = AddCardInMenu(CategoriesPanels[_categoryIndex], _categoryIndex, _key);
-        
-        var editableElem = cardObj.GetComponent<EditableElement>();
-        editableElem.visible = true;
-        editableElem.ConfigurateElement(MenuMode.GameSelection);
+        var instance = Instantiate(addCardBtnPref, categoryPanel.transform);
+        var editableElem = instance.GetComponent<EditableElement>();
         mainMenu.AddEditableElement(editableElem);
-        cardSelector.AddCard(cardObj);
+        var init = instance.GetComponent<CardBase>();
+        init.Initialize(GameName.Variant, categoryIndex, null, new CardData());
+        var btn = init.GetSelectBtn();
+        btn.onClick.AddListener(() =>
+        {
+            categoryManager.SelectAddMethod(GameName.Variant, categoryIndex);
+        });
     }
 
     public void UpdateCardImg(string _cardKey, Sprite _cardImg)
     {
-        var validCards = Cards.FindAll((card) => card.GetComponent<CardInitializer>().key == _cardKey);
+        var validCards = Cards.FindAll((card) => card.GetComponent<CardBase>().Key == _cardKey);
         foreach (var item in validCards)
-            item.GetComponent<CardInitializer>().UpdateImg(_cardImg);
+            item.GetComponent<CardBase>().UpdateImg(_cardImg);
 
         Debug.Log("Variant game updated");
     }
 
-    public void DeleteCard(int _categoryIndex, string _key)
+    public void DeleteCard(GameName _game, int _categoryIndex, string _key)
     {
+        if (_game != GameName.Variant) return;
+
          foreach (var card in Cards)
-            if (card.GetComponent<CardInitializer>().key == _key)
+            if (card.GetComponent<CardBase>().Key == _key)
             {
                 mainMenu.DeleteEditableElement(card.GetComponent<EditableElement>());
                 Cards.Remove(card);
@@ -153,14 +154,30 @@ public class VariantGameMenu : MonoBehaviour, IGameMenu
 
     private void BindBtns()
     {
-        uiControl.BindPanelBtns(gameModes, new GameObject[] { categoriesSelector, categoriesSelector, categoriesSelector });
-        uiControl.BindPanelBtns(
-            CategoriesBtns.ToArray(),
-            CategoriesPanels.ToArray(),
-            () => transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll()));
+        /// Bind mode btns
+        for (int i = 0; i < gameModes.Length; i++)
+        {
+            var btn = gameModes[i];
+            var maxCardCount = 2 + 2 * i;
 
-        gameModes[0].onClick.AddListener(() => cardSelector.SetMaxCard(2));
-        gameModes[1].onClick.AddListener(() => cardSelector.SetMaxCard(4));
-        gameModes[2].onClick.AddListener(() => cardSelector.SetMaxCard(6));
+            btn.onClick.AddListener(() =>
+            {
+                transitionController.ActivatePanel(new GameObject[] { categoriesSelector });
+                cardSelector.SetMaxCard(maxCardCount);
+            });
+        }
+
+        /// Bind categories btns
+        for (int i = 0; i < CategoriesBtns.Count; i++)
+        {
+            var btn = CategoriesBtns[i];
+            var panel = CategoriesPanels[i];
+
+            btn.onClick.AddListener(() =>
+            {
+                transitionController.ActivatePanel(new GameObject[] { panel });
+                transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll());
+            });
+        }
     }
 }

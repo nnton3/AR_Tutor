@@ -13,16 +13,12 @@ public class MainMenuUIControl : MonoBehaviour
     [SerializeField] private GameObject gameSelector;
     [SerializeField] private Button returnBtn, settingsBtn;
     [SerializeField] private Button[] gamesBtns = new Button[] { };
-    [SerializeField] private GameObject[] gamePanels = new GameObject[] { };
+    [SerializeField] private GameObject[] defaultGamePanels = new GameObject[] { };
+    [SerializeField] private GameObject[] settingsGamePanels = new GameObject[] { };
     [SerializeField] private List<EditableElement> editableElements = new List<EditableElement>();
 
     private MenuTransitionController transitionController;
-    public MenuMode mode { get; private set; } = MenuMode.GameSelection;
-    public bool SettingsBtnActiveSelf
-    {
-        get { return settingsBtn.gameObject.activeSelf; }
-        set { settingsBtn.gameObject.SetActive(value); }
-    }
+    public MenuMode Mode { get; private set; } = MenuMode.GameSelection;    
     #endregion
 
     public void Initialize()
@@ -33,12 +29,27 @@ public class MainMenuUIControl : MonoBehaviour
         SwitchEditableElemets();
 
         transitionController.ActivatePanel(new GameObject[] { gameSelector });
-        transitionController.ReturnToMainMenuEvent.AddListener(() => SettingsBtnActiveSelf = true);
+        transitionController.ReturnToMainMenuEvent.AddListener(() => settingsBtn.gameObject.SetActive(true));
     }
 
     private void BindBtns()
     {
-        BindPanelBtns(gamesBtns, gamePanels, () => SettingsBtnActiveSelf = false);
+        for (int i = 0; i < gamesBtns.Length; i++)
+        {
+            var btn = gamesBtns[i];
+            var panel = defaultGamePanels[i];
+            var panel_settings = settingsGamePanels[i];
+
+            btn.onClick.AddListener(() =>
+            {
+                settingsBtn.gameObject.SetActive(false);
+
+                if (Mode == MenuMode.GameSelection)
+                    transitionController.ActivatePanel(new GameObject[] { panel });
+                else
+                    transitionController.ActivatePanel(new GameObject[] { panel_settings });
+            });
+        }
 
         returnBtn.onClick.AddListener(() => transitionController.ReturnToBack());
         settingsBtn.onClick.AddListener(() => SwitchMode());
@@ -46,8 +57,8 @@ public class MainMenuUIControl : MonoBehaviour
 
     private void SwitchMode()
     {
-        if (mode == MenuMode.CustomizeMenu) mode = MenuMode.GameSelection;
-        else mode = MenuMode.CustomizeMenu;
+        if (Mode == MenuMode.CustomizeMenu) Mode = MenuMode.GameSelection;
+        else Mode = MenuMode.CustomizeMenu;
 
         SwitchEditableElemets();
     }
@@ -61,22 +72,7 @@ public class MainMenuUIControl : MonoBehaviour
                 editableElements.Remove(element);
                 continue;
             }
-            element.ConfigurateElement(mode);
-        }
-    }
-
-    public void BindPanelBtns(Button[] btns, GameObject[] panels, UnityAction action = null)
-    {
-        for (int i = 0; i < btns.Length; i++)
-        {
-            var btn = btns[i];
-            var panel = panels[i];
-
-            btn.onClick.AddListener(() =>
-            {
-                transitionController.ActivatePanel(new GameObject[] { panel });
-                action?.Invoke();
-            });
+            element.ConfigurateElement(Mode);
         }
     }
 

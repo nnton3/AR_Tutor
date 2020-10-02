@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VariantCardInitializer : CardInitializer
+public class VariantCardInitializer : CardBase
 {
     private RectTransform rect;
     private bool isActive;

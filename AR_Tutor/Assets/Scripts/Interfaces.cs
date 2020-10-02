@@ -18,7 +18,7 @@ public interface IGameMenu
     /// </summary>
     /// <param name="_categoryIndex">Индекс категории в списке</param>
     /// <param name="_key">Ключ карточки, по которому происходит поиск и идентификация карточки</param>
-    void DeleteCard(int _categoryIndex, string _key);
+    void DeleteCard(GameName _game, int _categoryIndex, string _key);
     /// <summary>
     /// Обновление картинки карточки
     /// </summary>

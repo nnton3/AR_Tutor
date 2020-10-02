@@ -15,7 +15,7 @@ public class LibraryUIControl : MonoBehaviour
         storage = FindObjectOfType<CardStorage>();
         FindObjectOfType<LibraryCardSelector>().Initialize();
 
-        FindObjectOfType<CategoryManager>().AddCardEvent.AddListener(AddCard);
+        Signals.AddCardEvent.AddListener(AddCard);
 
         FillLibrary();
     }
@@ -26,14 +26,14 @@ public class LibraryUIControl : MonoBehaviour
             CreateCardInstance(card.Key, card.Value);
     }
 
-    public void AddCard(GameName _game, int _category, string key)
+    public void AddCard(GameName _game, int _category, string _cardKey)
     {
-        if (libraryCards.Find((card) => card.cardKey == key))
+        if (libraryCards.Find((card) => card.cardKey == _cardKey))
         {
             Debug.Log("Library contain this card");
             return;
         }
-        else CreateCardInstance(key, storage.cards[key]);
+        else CreateCardInstance(_cardKey, storage.cards[_cardKey]);
     }
 
     private void CreateCardInstance(string key, CardData data)

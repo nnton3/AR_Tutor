@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum GameName { Variant, Buttons, WordBook, WordComposing}
 
 public class PatientDataManager : MonoBehaviour
 {
+    #region Variables
     private SaveSystem saveSystem;
     private PatientGameData? patientData;
     [SerializeField] private PatientGameData testData;
-
     [SerializeField] private string login;
+    #endregion
 
     public PatientGameData? GetPatientData()
     {
@@ -26,12 +24,14 @@ public class PatientDataManager : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        FindObjectOfType<CategoryManager>().AddCardEvent.AddListener(AddCardToCategory);
+        Signals.AddCardEvent.AddListener(AddCardToCategory);
         patientData = new PatientGameData(null);
         var loadData = saveSystem.LoadPatientDataFromLocal(login);
 
         if (loadData != null) patientData = loadData;
 
+        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
+        Signals.DeleteCardFromCategory.AddListener(DeleteCardFromCategory);
         testData = patientData.Value;
     }
 
@@ -71,35 +71,18 @@ public class PatientDataManager : MonoBehaviour
     #endregion
 
     #region Card management
-    public void HideCard(GameName game, int categoryIndex, string cardIndex)
+    public void SwitchCardVisible(GameName _game, int _categoryIndex, string _cardKey)
     {
-        switch (game)
+        switch (_game)
         {
             case GameName.Variant:
                 if (patientData.HasValue)
                 {
-                    int index = patientData.Value.VariantGameConfig[categoryIndex].cardKeys.IndexOf(cardIndex);
-                    patientData.Value.VariantGameConfig[categoryIndex].cardVisibleValue[index] = false;
+                    int index = patientData.Value.VariantGameConfig[_categoryIndex].cardKeys.IndexOf(_cardKey);
+                    patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue[index] = 
+                        !patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue[index];
                 }
                     
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void ShowCard(GameName game, int categoryIndex, string cardIndex)
-    {
-        switch (game)
-        {
-            case GameName.Variant:
-                if (patientData.HasValue)
-                {
-                    int index = patientData.Value.VariantGameConfig[categoryIndex].cardKeys.IndexOf(cardIndex);
-                    patientData.Value.VariantGameConfig[categoryIndex].cardVisibleValue[index] = true;
-                }
-
                 UpdatePatientData();
                 break;
             default:
@@ -143,11 +126,6 @@ public class PatientDataManager : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    public void SetImageToCard()
-    {
-
     }
     #endregion
 }

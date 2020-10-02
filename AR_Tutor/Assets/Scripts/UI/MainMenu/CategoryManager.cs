@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class CategoryManager : MonoBehaviour
@@ -19,11 +18,10 @@ public class CategoryManager : MonoBehaviour
     private int categoryIndex;
     private bool methodSelected;
     private SelectionMethod method;
+    private Coroutine routine;
 
     [SerializeField] private GameObject addMethodSeletor, createCardPanel, libraryPanel;
     [SerializeField] private Button selectCardFromLibraryBtn, createNewCardBtn;
-
-    [HideInInspector] public AddCardEventUnityEvent AddCardEvent = new AddCardEventUnityEvent();
     #endregion
 
     private void Awake()
@@ -35,6 +33,7 @@ public class CategoryManager : MonoBehaviour
         libraryControl = FindObjectOfType<LibraryUIControl>();
         cardCreator = FindObjectOfType<CardCreator>();
 
+        Signals.SetImageEvent.AddListener(SetUpNewImage);
         BindBtn();
     }
 
@@ -58,14 +57,22 @@ public class CategoryManager : MonoBehaviour
     {
         gameName = game;
         categoryIndex = _categoryIndex;
-        StartCoroutine(AddCardToCategoryRoutine());
+        transitionController.ActivatePanel(new GameObject[] { addMethodSeletor });
+        StartSelectMethodRoutine();
+    }
+
+    private void StartSelectMethodRoutine()
+    {
+        routine = StartCoroutine(AddCardToCategoryRoutine());
+        transitionController.AddEventToReturnBtn(() =>
+        {
+            StopCoroutine(routine);
+            methodSelected = false;
+        });
     }
 
     private IEnumerator AddCardToCategoryRoutine()
     {
-        transitionController.ActivatePanel(new GameObject[] { addMethodSeletor });
-        transitionController.AddEventToReturnBtn(() => StopCoroutine(AddCardToCategoryRoutine()));
-
         while (!methodSelected)
             yield return null;
 
@@ -84,38 +91,50 @@ public class CategoryManager : MonoBehaviour
 
     private void OpenCreateCardPanel()
     {
+        methodSelected = false;
         transitionController.ActivatePanel(new GameObject[] { createCardPanel });
+        transitionController.AddEventToReturnBtn(() =>
+        {
+            cardCreator.ResetFields();
+            StartSelectMethodRoutine();
+        });
     }
 
     private void OpenLibrary()
     {
         libraryControl.BindCardsForSelect();
+        methodSelected = false;
         transitionController.ActivatePanel(new GameObject[] { libraryPanel });
-        transitionController.AddEventToReturnBtn(() => libraryControl.ClearBtnsEvents());
+        transitionController.AddEventToReturnBtn(() =>
+        {
+            libraryControl.ClearBtnsEvents();
+            StartSelectMethodRoutine();
+        });
     }
 
     public void AddCard(string _cardKey)
     {
-        AddCardEvent.Invoke(gameName, categoryIndex, _cardKey);
-        methodSelected = false;
+        Signals.AddCardEvent.Invoke(gameName, categoryIndex, _cardKey);
     }
 
     public void AddCardFromLibrary(string _cardKey)
     {
         if (CardIsValid(_cardKey))
         {
+            Debug.Log("add card");
             AddCard(_cardKey);
             transitionController.ReturnToBack(2);
         }
         else
         {
+            Debug.Log("card exist, select new");
             libraryControl.BindCardsForSelect();
         }
     }
 
     private bool CardIsValid(string _key)
     {
-        return patientDataManager.CardExists(gameName, categoryIndex, _key);
+        return !patientDataManager.CardExists(gameName, categoryIndex, _key);
     }
     #endregion
 
@@ -155,32 +174,16 @@ public class CategoryManager : MonoBehaviour
     {
         cardCreator.CreateCard(_cardKey, sprite);
         patientDataManager.DeleteCardFromCategory(gameName, categoryIndex, _cardKey);
-        /// Delete old card from menu
-        switch (_game)
-        {
-            case GameName.Variant:
-                variantMenu.DeleteCard(_categoryIndex, _cardKey);
-                break;
-            default:
-                break;
-        }
+        Signals.DeleteCardFromCategory.Invoke(gameName, categoryIndex, _cardKey);
     }
 
     private void UpdateCardImage(string _cardKey, Sprite _cardImg)
     {
         /// Обновить картинку для карточки в библиотеке и сохранить изменения локально
         storage.UpdateCustomCardImage(_cardKey, _cardImg);
+
+        /// Обновить картинку для карточки во всех меню
         libraryControl.UpdateCardImg(_cardKey, _cardImg);
-
-        UpdateCardImgInMenu(_cardKey, _cardImg);
-    }
-
-    private void UpdateCardImgInMenu(string _cardKey, Sprite _cardImg)
-    {
         variantMenu.UpdateCardImg(_cardKey, _cardImg);
     }
-
-    private void OnDestroy() { AddCardEvent.RemoveAllListeners(); }
 }
-
-public class AddCardEventUnityEvent: UnityEvent<GameName, int, string> { }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -12,18 +13,21 @@ public class CardCreator : MonoBehaviour
     private PatientDataManager patientDataManager;
     private CategoryManager categoryManager;
     private MenuTransitionController transitionController;
+    [SerializeField] private bool recording;
 
     [SerializeField] private AudioSource source;
 
     [SerializeField] private InputField cardNameField, cardNameFormField;
     [SerializeField] private Button addImage1Btn, addImage2Btn, addImage3Btn, toRight, toLeft, recBtn, rec2Btn, playBtn, play2Btn, applyBtn;
+    [SerializeField] private Image recClipIcon, recClipFormIcon;
+    [SerializeField] Sprite recImg, stopRecImg;
     [SerializeField] private Image image1, image2, image3;
     [SerializeField] private Transform imageContent;
     [SerializeField] private CardData data;
 
     [SerializeField] private string cardName, cardNameForm;
     [SerializeField] private Texture2D image1data, image2data, image3data;
-    [SerializeField] private AudioClip audioClip, audioClipForm;
+    [SerializeField] private AudioClip audioClip, audioClipForm, clipTmp;
     #endregion
 
     private void Awake()
@@ -48,8 +52,8 @@ public class CardCreator : MonoBehaviour
 
         playBtn.onClick.AddListener(() => PlayAudio(audioClip));
         play2Btn.onClick.AddListener(() => PlayAudio(audioClipForm));
-        recBtn.onClick.AddListener(() => StartCoroutine(RecordClipRoutine()));
-        rec2Btn.onClick.AddListener(() => StartCoroutine(RecordClipFormRoutine()));
+        recBtn.onClick.AddListener(() => RecordBtnOnClick(true));
+        rec2Btn.onClick.AddListener(() => RecordBtnOnClick(false));
 
         toRight.onClick.AddListener(() => SwitchImage(1));
         toLeft.onClick.AddListener(() => SwitchImage(-1));
@@ -88,27 +92,65 @@ public class CardCreator : MonoBehaviour
 
         storage.AddNewCardToBase(data, cardKey, image1Key, audio1Key);
         categoryManager.AddCard(cardKey);
+        ResetFields();
+    }
+
+    public void ResetFields()
+    {
+        cardNameField.text = null;
+        cardNameFormField.text = null;
+        cardName = "";
+        cardNameForm = "";
+
+        image1data = null;
+        image2data = null;
+        image3data = null;
+        image1.sprite = null;
+        image2.sprite = null;
+        image3.sprite = null;
+
+        audioClip = null;
+        audioClipForm = null;
+        clipTmp = null;
     }
 
     #region Audio
-    private IEnumerator RecordClipRoutine()
+    private void RecordBtnOnClick(bool _mainClip)
     {
-        Debug.Log("Start record");
-        var clip = Microphone.Start(null, true, 100, 44100);
-        yield return new WaitForSeconds(3f);
-        Microphone.End(null);
-        Debug.Log("End record");
-        audioClip = clip;
+        if (recording)
+        {
+            StopAllCoroutines();
+            WriteAudioClip(_mainClip);
+        }
+        else StartCoroutine(RecordClipRoutine(_mainClip));
     }
 
-    private IEnumerator RecordClipFormRoutine()
+    private IEnumerator RecordClipRoutine(bool _mainClip)
     {
         Debug.Log("Start record");
-        var clip = Microphone.Start(null, true, 100, 44100);
+        recording = true;
+        if (_mainClip) recClipIcon.sprite = stopRecImg;
+        else recClipFormIcon.sprite = stopRecImg;
+        clipTmp = Microphone.Start(null, true, 3, 44100);
         yield return new WaitForSeconds(3f);
+        WriteAudioClip(_mainClip);
+    }
+
+    private void WriteAudioClip(bool _mainClip)
+    {
         Microphone.End(null);
+        recording = false;
+        if (_mainClip)
+        {
+            audioClip = clipTmp;
+            recClipIcon.sprite = recImg;
+        }
+        else
+        {
+            audioClipForm = clipTmp;
+            recClipFormIcon.sprite = recImg;
+        }
         Debug.Log("End record");
-        audioClipForm = clip;
     }
 
     private void PlayAudio(AudioClip clip)
