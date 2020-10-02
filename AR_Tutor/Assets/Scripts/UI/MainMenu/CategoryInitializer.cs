@@ -38,15 +38,15 @@ public class CategoryInitializer : MonoBehaviour
     {
         var element = GetComponent<EditableElement>();
 
-        if (element.visible)
+        if (element.Visible)
         {
             patientManager.HideCategory(game, index);
-            element.visible = false;
+            element.Visible = false;
         }
         else
         {
             patientManager.ShowCategory(game, index);
-            element.visible = true;
+            element.Visible = true;
         }
     }
 

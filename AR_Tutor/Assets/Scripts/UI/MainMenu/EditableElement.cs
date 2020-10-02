@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class EditableElement : MonoBehaviour
 {
     [SerializeField] private GameObject deleteBtn, selectImageBtn;
-    public bool visible { get; set; } = true;
+    public bool Visible { get; set; } = true;
 
-    public void ConfigurateElement(MenuMode mode)
+    public virtual void ConfigurateElement(MenuMode mode)
     {
         if (mode == MenuMode.CustomizeMenu)
         {
@@ -18,7 +18,7 @@ public class EditableElement : MonoBehaviour
         }
         else
         {
-            if (!visible) gameObject.SetActive(false);
+            if (!Visible) gameObject.SetActive(false);
             else gameObject.SetActive(true);
 
             deleteBtn.SetActive(false);

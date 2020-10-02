@@ -14,7 +14,7 @@ public class VariantCardSelector : MonoBehaviour
     private VariantGameLogic gameLogic;
     private List<VariantCardSelectable> selectedCards = new List<VariantCardSelectable>();
     [SerializeField] private List<string> selectedCardsKeys = new List<string>();
-    private int maxCardCount;
+    [SerializeField] private int maxCardCount;
     public StringUnityEvent SelectEvent = new StringUnityEvent();
     public StringUnityEvent UnselectEvent = new StringUnityEvent();
     #endregion

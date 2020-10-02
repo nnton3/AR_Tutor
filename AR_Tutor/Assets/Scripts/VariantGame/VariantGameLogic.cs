@@ -53,7 +53,7 @@ public class VariantGameLogic : MonoBehaviour
                 break;
             case 4:
                 size = 150;
-                pos = new Vector2(-270 + 180 * index, 0);
+                pos = new Vector2(-90 + 180 * ((index < 2) ? index : index - 2), (index > 1) ? -90 : 90    );
                 break;
             case 6:
                 size = 150;

@@ -26,7 +26,7 @@ public class VariantCardSelectable : MonoBehaviour
 
     private void OnClickEventHandler()
     {
-        if (mainUIControl.mode == MenuMode.CustomizeMenu) return;
+        if (mainUIControl.Mode == MenuMode.CustomizeMenu) return;
 
         if (Selected) Unselect();
         else Select();
@@ -37,14 +37,14 @@ public class VariantCardSelectable : MonoBehaviour
         if (!selector.CanSelect()) return;
         Selected = true;
         img.color = selectedClr;
-        selector.SelectEvent.Invoke(GetComponent<CardInitializer>().key);
+        selector.SelectEvent.Invoke(GetComponent<CardBase>().Key);
     }
 
     public void Unselect()
     {
         Selected = false;
         img.color = defaultClr;
-        selector.UnselectEvent.Invoke(GetComponent<CardInitializer>().key);
+        selector.UnselectEvent.Invoke(GetComponent<CardBase>().Key);
     }
 
     public Button GetBtn() { return btn; }

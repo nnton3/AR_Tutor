@@ -66,6 +66,13 @@ public class CardStorage : MonoBehaviour
             cards.Add(key, card);
     }
 
+    /// <summary>
+    /// Добавить карточку в хранилище и сохранить локально
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="key"></param>
+    /// <param name="imageKey"></param>
+    /// <param name="audioKey"></param>
     public void AddNewCardToBase(CardData card, string key, string imageKey, string audioKey)
     {
         if (cards.ContainsKey(key)) return;
@@ -74,6 +81,11 @@ public class CardStorage : MonoBehaviour
         saveSystem.SaveCustomCardFromLocal(card, key, imageKey, audioKey);
     }
 
+    /// <summary>
+    /// Обновить картинку для карточки в хранилище и сохранить эти изменения локально
+    /// </summary>
+    /// <param name="_cardKey"></param>
+    /// <param name="_cardImg"></param>
     public void UpdateCustomCardImage(string _cardKey, Sprite _cardImg)
     {
         // Local save

@@ -4,36 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardInitializer : MonoBehaviour
+public class CardBase : MonoBehaviour
 {
     #region Variables
     [SerializeField] protected Text title;
-    [SerializeField] protected Button selectBtn, selectImageBtn, deleteBtn;
+    [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] protected Image image;
-    private CategoryManager categoryManager;
-    private CardCreator cardCreator;
-    private SaveSystem saveSystem;
-    protected PatientDataManager patientManager;
+    private EditableElement editableElement;
     private Texture2D texture;
     private AudioClip audioClip;
     private AudioSource source;
-    public int categoryIndex { get; private set; }
-    public string key { get; private set; }
-    public GameName game { get; private set; }
+    protected GameName game;
+    protected int categoryIndex;
+    public string Key { get; protected set; }
     #endregion
 
     public virtual void Initialize(GameName _game, int _categoryIndex, string cardKey, CardData data)
     {
-        categoryManager = FindObjectOfType<CategoryManager>();
-        patientManager = FindObjectOfType<PatientDataManager>();
-        saveSystem = FindObjectOfType<SaveSystem>();
-        cardCreator = FindObjectOfType<CardCreator>();
         source = FindObjectOfType<AudioSource>();
+        editableElement = GetComponent<EditableElement>();
 
         ConfigurateUI(data);
         categoryIndex = _categoryIndex;
-        key = cardKey;
-
+        Key = cardKey;
+        
         BindBtns(data);
     }
 
@@ -41,13 +35,13 @@ public class CardInitializer : MonoBehaviour
     {
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
-            categoryManager.SetUpNewImage(game, categoryIndex, key);
+            Signals.SetImageEvent.Invoke(game, categoryIndex, Key);
         });
 
         if (source != null)
             selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
 
-        deleteBtn.onClick.AddListener(HideCard);
+        switchVisibleBtn.onClick.AddListener(SwitchVisible);
     }
 
     private void ConfigurateUI(CardData data)
@@ -68,17 +62,10 @@ public class CardInitializer : MonoBehaviour
             audioClip = data.audioClip;
     }
 
-    protected virtual void HideCard()
+    protected virtual void SwitchVisible()
     {
-        var element = GetComponent<EditableElement>();
-
-        if (element.visible)
-        {
-            patientManager.HideCard(game, categoryIndex, key);
-            element.visible = false;
-        }
-        else
-            element.visible = true;
+        editableElement.Visible = !editableElement.Visible;
+        Signals.SwitchCardVisibleEvent.Invoke(game, categoryIndex, Key);
     }
 
     public Button GetSelectBtn() { return selectBtn; }
