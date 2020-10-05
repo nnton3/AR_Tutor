@@ -10,6 +10,7 @@ public static class Signals
     public static CardUnityEvent SwitchCardVisibleEvent = new CardUnityEvent();
     public static CardUnityEvent DeleteCardFromCategory = new CardUnityEvent();
     public static StringUnityEvent SelectCardFromLibrary = new StringUnityEvent();
+    public static StringUnityEvent VariantGameCardSelect = new StringUnityEvent();
 
     public static void Reset()
     {
@@ -17,5 +18,6 @@ public static class Signals
         SetImageEvent.RemoveAllListeners();
         SwitchCardVisibleEvent.RemoveAllListeners();
         DeleteCardFromCategory.RemoveAllListeners();
+        VariantGameCardSelect.RemoveAllListeners();
     }
 }

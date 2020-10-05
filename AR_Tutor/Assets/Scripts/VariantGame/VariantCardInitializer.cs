@@ -5,37 +5,24 @@ using UnityEngine;
 
 public class VariantCardInitializer : CardBase
 {
-    private RectTransform rect;
-    private bool isActive;
     [SerializeField] private Vector2 startPos;
+    private RectTransform rect;
 
-    public void Initialize(CardData _data)
+    public override void Initialize(GameName _game, int _categoryIndex, string cardKey, CardData _data)
     {
+        Key = cardKey;
+
         rect = GetComponent<RectTransform>();
         title.text = _data.Title;
         image.sprite = _data.img;
-        selectBtn.onClick.AddListener(OnClickEventHandler);
+        selectBtn.onClick.AddListener(Active);
         startPos = rect.localPosition;
-    }
-
-    private void OnClickEventHandler()
-    {
-        if (isActive) Desactive();
-        else Active();
     }
 
     private void Active()
     {
-        isActive = true;
+        Signals.VariantGameCardSelect.Invoke(Key);
         rect.localPosition = Vector2.zero;
         rect.localScale = Vector3.one * 2;
-        transform.SetAsLastSibling();
-    }
-
-    private void Desactive()
-    {
-        isActive = false;
-        rect.localPosition = startPos;
-        rect.localScale = Vector3.one;
     }
 }
