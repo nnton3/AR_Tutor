@@ -3,12 +3,14 @@ using System.Collections;
 
 public class MainMenuInitializer : MonoBehaviour
 {
+    #region Variables
     private VariantGameMenu variantGameUI;
     private CardStorage cardStorage;
     private MainMenuUIControl mainMenuUI;
     private PatientDataManager patientManager;
     private SaveSystem saveSystem;
     private LibraryUIControl library;
+    #endregion
 
     private void Awake()
     {
