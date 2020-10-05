@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveSystem : MonoBehaviour
@@ -27,7 +24,7 @@ public class SaveSystem : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey(patientLogin))
         {
-            Debug.Log("U haven't patient data in local storage");
+            Debug.Log("U haven't category data in local storage");
             return null;
         }
         else
@@ -36,7 +33,7 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Categories
-    public void SaveCustomCategoryFromLocal(CategoryData _categoryData, string _key, string _imageKey, string _audioKey)
+    public void SaveCustomCategoryFromLocal(CategoryData _categoryData, string _categoryKey, string _imageKey, string _audioKey)
     {
         categorySaveData.games.Add((int)_categoryData.game);
         categorySaveData.titles.Add(_categoryData.title);

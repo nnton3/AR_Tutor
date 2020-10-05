@@ -43,16 +43,15 @@ public class CardStorage : MonoBehaviour
         {
             var img = saveSystem.LoadImage(customCardsData.imageAddres[i]);
             Rect imgRect = new Rect(0, 0, img.width, img.height);
-            if (img.width < img.height)
-                imgRect = new Rect(0, 0, img.width, img.width);
-            else imgRect = new Rect(0, 0, img.height, img.height);
+            var size = (img.width < img.height) ? img.width : img.height;
+            imgRect = new Rect(0, 0, size, size);
 
             var card = new CardData(
                 customCardsData.cardTitles[i],
                 customCardsData.cardTitleForms[i],
                 Sprite.Create(
-                    saveSystem.LoadImage(customCardsData.imageAddres[i]),
-                    new Rect(0, 0, img.width, img.height),
+                    img,
+                    imgRect,
                     Vector2.zero),
                 saveSystem.LoadAudio(customCardsData.audioAddres[i]),
                 true);
