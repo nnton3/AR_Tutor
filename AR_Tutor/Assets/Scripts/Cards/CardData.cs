@@ -28,11 +28,11 @@ public struct CardSaveData
     public List<string> keys, imageAddres, audioAddres, cardTitles, cardTitleForms;
 
     public CardSaveData(
-        List<string> _cardTitles,
-        List<string> _cardTitleForms,
-        List<string> _keys,
-        List<string> _imageAddres, 
-        List<string> _audioAddres)
+        List<string> _cardTitles = null,
+        List<string> _cardTitleForms = null,
+        List<string> _keys = null,
+        List<string> _imageAddres = null, 
+        List<string> _audioAddres = null)
     {
         if (_cardTitles == null) cardTitles = new List<string>();
         else cardTitles = _cardTitles;

@@ -31,7 +31,7 @@ public class CardStorage : MonoBehaviour
     {
         for (int i = 0; i < startCardPack.cards.Length; i++)
         {
-            var cardKey = $"startPack_{i}";
+            var cardKey = $"startPack_card_{i}";
             cards.Add(cardKey, startCardPack.cards[i]);
         }
     }
