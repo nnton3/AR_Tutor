@@ -16,14 +16,14 @@ MonoBehaviour:
   - visible: 1
     categoryName: "\u0421\u0435\u043C\u044C\u044F"
     cardKeys:
-    - startPack_0
-    - startPack_1
-    - startPack_2
+    - startPack_card_0
+    - startPack_card_1
+    - startPack_card_2
     cardVisibleValue: 010101
   - visible: 1
     categoryName: "\u0415\u0434\u0430"
     cardKeys:
-    - startPack_3
-    - startPack_4
-    - startPack_5
+    - startPack_card_3
+    - startPack_card_4
+    - startPack_card_5
     cardVisibleValue: 010101

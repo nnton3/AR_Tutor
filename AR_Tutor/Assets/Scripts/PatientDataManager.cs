@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum GameName { Variant, Buttons, WordBook, WordComposing}
+public enum GameName { Variant = 0, Buttons = 1, WordBook = 2, WordComposing = 3}
 
 public class PatientDataManager : MonoBehaviour
 {

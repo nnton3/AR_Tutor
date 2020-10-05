@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class SaveSystem : MonoBehaviour
 {
     [SerializeField] private Button testDelete;
-    private CardSaveData cardSaveData = new CardSaveData(null, null, null, null, null);
+    private CategorySaveData categorySaveData = new CategorySaveData();
+    private CardSaveData cardSaveData = new CardSaveData();
 
     public void Initialize()
     {
@@ -34,6 +35,36 @@ public class SaveSystem : MonoBehaviour
     }
     #endregion
 
+    #region Categories
+    public void SaveCustomCategoryFromLocal(CategoryData _categoryData, string _key, string _imageKey, string _audioKey)
+    {
+        categorySaveData.games.Add((int)_categoryData.game);
+        categorySaveData.titles.Add(_categoryData.title);
+        categorySaveData.imgAddresses.Add(_imageKey);
+        categorySaveData.clipAddresses.Add(_audioKey);
+        categorySaveData.visibles.Add(_categoryData.visible);
+
+        UpdateCustomCategoryLocal();
+    }
+
+    public CategorySaveData LoadCustomCategoriesFromLocal()
+    {
+        if (!PlayerPrefs.HasKey("Custom_categories")) return new CategorySaveData();
+        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString("Custom_categories"));
+    }
+
+    private void UpdateCustomCategoryLocal()
+    {
+        var json = JsonUtility.ToJson(categorySaveData);
+        PlayerPrefs.SetString("Custom_categories", json);
+    }
+
+    public CategorySaveData GetCustomCategoryData()
+    {
+        return categorySaveData;
+    }
+    #endregion
+
     #region Cards
     public void SaveCustomCardFromLocal(CardData cardData, string key, string imageKey, string audioKey)
     {
@@ -48,7 +79,7 @@ public class SaveSystem : MonoBehaviour
 
     private CardSaveData LoadCustomCardsFromLocal()
     {
-        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData(null, null, null, null, null);
+        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData();
         else return JsonUtility.FromJson<CardSaveData>(PlayerPrefs.GetString("Custom_cards"));
     }
 
