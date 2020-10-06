@@ -19,12 +19,23 @@ public struct PatientData
 [Serializable]
 public struct PatientGameData
 {
-    public VariantCategoryData[] VariantGameConfig;
+    public List<string> CategoriesKeys;
+    public List<int> Games;
+    public List<bool> CategoriesVisible;
+    public List<List<string>> CardKeys;
+    public List<List<bool>> CardsVisible;
 
-    public PatientGameData(VariantCategoryData[] variantGameConfig = null)
+    public PatientGameData(
+        List<string> _categoriesKeys, 
+        List<int> _games,
+        List<bool> _categoriesVisible, 
+        List<List<string>> _cardKeys,
+        List<List<bool>> _cardsVisible)
     {
-        if (variantGameConfig == null)
-            VariantGameConfig = Resources.Load<VariantGameConfig>("DefaultVariantGameConfig").Categories;
-        else  VariantGameConfig = variantGameConfig;
+        CategoriesKeys = _categoriesKeys;
+        Games = _games;
+        CategoriesVisible = _categoriesVisible;
+        CardKeys = _cardKeys;
+        CardsVisible = _cardsVisible;
     }
 }

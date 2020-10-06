@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public struct VariantCategoryData
 {
-    //public Sprite icon;
     public bool visible;
     public string categoryName;
     public List<string> cardKeys;

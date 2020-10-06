@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class CardBase : MonoBehaviour
@@ -15,17 +12,17 @@ public class CardBase : MonoBehaviour
     private AudioClip audioClip;
     private AudioSource source;
     protected GameName game;
-    protected int categoryIndex;
+    protected string categoryKey;
     public string Key { get; protected set; }
     #endregion
 
-    public virtual void Initialize(GameName _game, int _categoryIndex, string cardKey, CardData data)
+    public virtual void Initialize(GameName _game, string _categoryKey, string cardKey, CardData data)
     {
         source = FindObjectOfType<AudioSource>();
         editableElement = GetComponent<EditableElement>();
 
         ConfigurateUI(data);
-        categoryIndex = _categoryIndex;
+        categoryKey = _categoryKey;
         Key = cardKey;
         
         BindBtns(data);
@@ -35,7 +32,7 @@ public class CardBase : MonoBehaviour
     {
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
-            Signals.SetImageEvent.Invoke(game, categoryIndex, Key);
+            Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key);
         });
 
         if (source != null)
@@ -65,7 +62,7 @@ public class CardBase : MonoBehaviour
     protected virtual void SwitchVisible()
     {
         editableElement.Visible = !editableElement.Visible;
-        Signals.SwitchCardVisibleEvent.Invoke(game, categoryIndex, Key);
+        Signals.SwitchCardVisibleEvent.Invoke(categoryKey, Key, editableElement.Visible);
     }
 
     public Button GetSelectBtn() { return selectBtn; }

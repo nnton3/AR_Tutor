@@ -26,7 +26,7 @@ public class LibraryUIControl : MonoBehaviour
             CreateCardInstance(card.Key, card.Value);
     }
 
-    public void AddCard(GameName _game, int _category, string _cardKey)
+    public void AddCard(string _category, string _cardKey)
     {
         if (libraryCards.Find((card) => card.cardKey == _cardKey))
         {

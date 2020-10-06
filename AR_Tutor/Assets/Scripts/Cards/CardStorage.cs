@@ -7,7 +7,6 @@ public class CardStorage : MonoBehaviour
 {
     #region Variables
     private SaveSystem saveSystem;
-    private LibraryUIControl libraryControl;
 
     [SerializeField] private CardPack startCardPack;
     public Dictionary<string, CardData> cards = new Dictionary<string, CardData>();
@@ -16,7 +15,6 @@ public class CardStorage : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        libraryControl = FindObjectOfType<LibraryUIControl>();
 
         FillCardBase();
     }
@@ -39,6 +37,9 @@ public class CardStorage : MonoBehaviour
     private void AddCustomCards()
     {
         var customCardsData = saveSystem.GetCustomCardsData();
+
+        if (customCardsData.keys == null) return;
+
         for (int i = 0; i < customCardsData.keys.Count; i++)
         {
             var img = saveSystem.LoadImage(customCardsData.imageAddres[i]);

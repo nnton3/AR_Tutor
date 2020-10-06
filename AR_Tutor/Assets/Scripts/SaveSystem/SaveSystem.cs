@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class SaveSystem : MonoBehaviour
 {
+    private PatientDataManager patientDataManager;
     [SerializeField] private Button testDelete;
     private CategorySaveData categorySaveData = new CategorySaveData();
     private CardSaveData cardSaveData = new CardSaveData();
@@ -20,15 +21,15 @@ public class SaveSystem : MonoBehaviour
         PlayerPrefs.SetString(login, json);
     }
 
-    public PatientGameData? LoadPatientDataFromLocal(string patientLogin)
+    public PatientGameData? LoadPatientDataFromLocal(string _login)
     {
-        if (!PlayerPrefs.HasKey(patientLogin))
+        if (!PlayerPrefs.HasKey(_login))
         {
             Debug.Log("U haven't category data in local storage");
             return null;
         }
         else
-            return JsonUtility.FromJson<PatientGameData>(PlayerPrefs.GetString(patientLogin));
+            return JsonUtility.FromJson<PatientGameData>(PlayerPrefs.GetString(_login));
     }
     #endregion
 
@@ -39,21 +40,20 @@ public class SaveSystem : MonoBehaviour
         categorySaveData.titles.Add(_categoryData.title);
         categorySaveData.imgAddresses.Add(_imageKey);
         categorySaveData.clipAddresses.Add(_audioKey);
-        categorySaveData.visibles.Add(_categoryData.visible);
 
         UpdateCustomCategoryLocal();
     }
 
     public CategorySaveData LoadCustomCategoriesFromLocal()
     {
-        if (!PlayerPrefs.HasKey("Custom_categories")) return new CategorySaveData();
-        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString("Custom_categories"));
+        if (!PlayerPrefs.HasKey($"{patientDataManager.GetPatientLogin()}_Custom_categories")) return new CategorySaveData();
+        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString($"{patientDataManager.GetPatientLogin()}_Custom_categories"));
     }
 
     private void UpdateCustomCategoryLocal()
     {
         var json = JsonUtility.ToJson(categorySaveData);
-        PlayerPrefs.SetString("Custom_categories", json);
+        PlayerPrefs.SetString($"{patientDataManager.GetPatientLogin()}_Custom_categories", json);
     }
 
     public CategorySaveData GetCustomCategoryData()

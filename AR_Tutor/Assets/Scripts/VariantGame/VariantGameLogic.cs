@@ -39,7 +39,7 @@ public class VariantGameLogic : MonoBehaviour
         currentCards.Add(instance);
         ConfigurateElement(index, count);
         var initializer = instance.GetComponent<VariantCardInitializer>();
-        initializer.Initialize(0, 0, _key, data);
+        initializer.Initialize(0, "", _key, data);
     }
 
     private void ConfigurateElement(int index, int count)

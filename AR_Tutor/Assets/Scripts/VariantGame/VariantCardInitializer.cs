@@ -8,7 +8,7 @@ public class VariantCardInitializer : CardBase
     [SerializeField] private Vector2 startPos;
     private RectTransform rect;
 
-    public override void Initialize(GameName _game, int _categoryIndex, string cardKey, CardData _data)
+    public override void Initialize(GameName _game, string _categoryKey, string cardKey, CardData _data)
     {
         Key = cardKey;
 

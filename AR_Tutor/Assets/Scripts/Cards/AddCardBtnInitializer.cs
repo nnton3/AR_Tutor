@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class AddCardBtnInitializer : CardBase
 {
-    public override void Initialize(GameName _game, int _categoryIndex, string _cardKey, CardData _data)
+    public override void Initialize(GameName _game, string _categoryKey, string _cardKey, CardData _data)
     {
         game = _game;
-        categoryIndex = _categoryIndex;
+        categoryKey = _categoryKey;
         title.text = "Add new card";
     }
 }

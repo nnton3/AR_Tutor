@@ -10,12 +10,13 @@ public class CategoryManager : MonoBehaviour
     private MenuTransitionController transitionController;
     private VariantGameMenu variantMenu;
     private PatientDataManager patientDataManager;
-    private CardStorage storage;
-    private LibraryUIControl libraryControl;
+    private CardStorage cardStorage;
+    private CategoryStorage categoryStorage;
+    private LibraryUIControl cardLibraryControl;
     private CardCreator cardCreator;
 
     private GameName gameName;
-    private int categoryIndex;
+    private string categoryKey;
     private bool methodSelected;
     private SelectionMethod method;
     private Coroutine routine;
@@ -29,11 +30,12 @@ public class CategoryManager : MonoBehaviour
         transitionController = FindObjectOfType<MenuTransitionController>();
         variantMenu = FindObjectOfType<VariantGameMenu>();
         patientDataManager = FindObjectOfType<PatientDataManager>();
-        storage = FindObjectOfType<CardStorage>();
-        libraryControl = FindObjectOfType<LibraryUIControl>();
+        cardStorage = FindObjectOfType<CardStorage>();
+        cardLibraryControl = FindObjectOfType<LibraryUIControl>();
         cardCreator = FindObjectOfType<CardCreator>();
 
-        Signals.SetImageEvent.AddListener(SetUpNewImage);
+        Signals.SetImgForCardEvent.AddListener(SetUpNewImgForCard);
+        Signals.SetImgForCategoryEvent.AddListener(SetUpImgForCategory);
         BindBtn();
     }
 
@@ -52,11 +54,18 @@ public class CategoryManager : MonoBehaviour
         });
     }
 
+    #region Add category in game
+    public void SelectAddCategoryMethod(GameName _game)
+    {
+        Debug.Log("Select method to add category");
+    }
+    #endregion
+
     #region Add card in category
-    public void SelectAddMethod(GameName game, int _categoryIndex)
+    public void SelectAddMethod(GameName game, string _categoryKey)
     {
         gameName = game;
-        categoryIndex = _categoryIndex;
+        categoryKey = _categoryKey;
         transitionController.ActivatePanel(new GameObject[] { addMethodSeletor });
         StartSelectMethodRoutine();
     }
@@ -102,19 +111,19 @@ public class CategoryManager : MonoBehaviour
 
     private void OpenLibrary()
     {
-        libraryControl.BindCardsForSelect();
+        cardLibraryControl.BindCardsForSelect();
         methodSelected = false;
         transitionController.ActivatePanel(new GameObject[] { libraryPanel });
         transitionController.AddEventToReturnBtn(() =>
         {
-            libraryControl.ClearBtnsEvents();
+            cardLibraryControl.ClearBtnsEvents();
             StartSelectMethodRoutine();
         });
     }
 
     public void AddCard(string _cardKey)
     {
-        Signals.AddCardEvent.Invoke(gameName, categoryIndex, _cardKey);
+        Signals.AddCardEvent.Invoke(categoryKey, _cardKey);
     }
 
     public void AddCardFromLibrary(string _cardKey)
@@ -128,13 +137,13 @@ public class CategoryManager : MonoBehaviour
         else
         {
             Debug.Log("card exist, select new");
-            libraryControl.BindCardsForSelect();
+            cardLibraryControl.BindCardsForSelect();
         }
     }
 
     private bool CardIsValid(string _key)
     {
-        return !patientDataManager.CardExists(gameName, categoryIndex, _key);
+        return !patientDataManager.CardExists(gameName, categoryKey, _key);
     }
     #endregion
 
@@ -142,14 +151,14 @@ public class CategoryManager : MonoBehaviour
     /// Установить для карточки новую картинку
     /// </summary>
     /// <param name="_game"></param>
-    /// <param name="_categoryIndex"></param>
+    /// <param name="_categoryKey"></param>
     /// <param name="_cardKey"></param>
-    public void SetUpNewImage(GameName _game,int _categoryIndex , string _cardKey)
+    public void SetUpNewImgForCard(GameName _game, string _categoryKey , string _cardKey)
     {
         gameName = _game;
-        categoryIndex = _categoryIndex;
+        categoryKey = _categoryKey;
 
-        var cardData = storage.cards[_cardKey];
+        var cardData = cardStorage.cards[_cardKey];
 
         Sprite sprite = null;
 
@@ -165,25 +174,65 @@ public class CategoryManager : MonoBehaviour
                 if (cardData.IsCustom)
                     UpdateCardImage(_cardKey, sprite);
                 else
-                    SetUpImgToBaseCard(_game, _categoryIndex, _cardKey, sprite);
+                    SetUpImgToBaseCard(_categoryKey, _cardKey, sprite);
             }
         });
     }
 
-    private void SetUpImgToBaseCard(GameName _game, int _categoryIndex, string _cardKey, Sprite sprite)
+    private void SetUpImgForCategory(GameName _game, string _categoryKey)
     {
-        cardCreator.CreateCard(_cardKey, sprite);
-        patientDataManager.DeleteCardFromCategory(gameName, categoryIndex, _cardKey);
-        Signals.DeleteCardFromCategory.Invoke(gameName, categoryIndex, _cardKey);
+        gameName = _game;
+        categoryKey = _categoryKey;
+
+        var categoryData = categoryStorage.Categories[_categoryKey];
+
+        Sprite sprite = null;
+
+        NativeGallery.GetImageFromGallery((path) =>
+        {
+            if (path != null)
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(path, -1, false);
+
+                var size = (texture.width < texture.height) ? texture.width : texture.height;
+                sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
+
+                if (categoryData.IsCustom)
+                    UpdateCategoryImage(_categoryKey, sprite);
+                else
+                    SetUpImgToBaseCategory(_game, _categoryKey, sprite);
+            }
+        });
     }
 
     private void UpdateCardImage(string _cardKey, Sprite _cardImg)
     {
         /// Обновить картинку для карточки в библиотеке и сохранить изменения локально
-        storage.UpdateCustomCardImage(_cardKey, _cardImg);
+        cardStorage.UpdateCustomCardImage(_cardKey, _cardImg);
 
         /// Обновить картинку для карточки во всех меню
-        libraryControl.UpdateCardImg(_cardKey, _cardImg);
+        cardLibraryControl.UpdateCardImg(_cardKey, _cardImg);
         variantMenu.UpdateCardImg(_cardKey, _cardImg);
+    }
+
+    private void SetUpImgToBaseCard(string _categoryKey, string _cardKey, Sprite sprite)
+    {
+        cardCreator.CreateCard(_cardKey, sprite);
+        Signals.DeleteCardFromCategory.Invoke(categoryKey, _cardKey);
+    }
+
+    private void UpdateCategoryImage(string _categoryKey, Sprite _categoryImg)
+    {
+        categoryStorage.UpdateCustomCategoryImg(_categoryKey, _categoryImg);
+
+        /// TODO 
+        /// Добавить обновление библиотеки разделов
+        /// Добавить обновление во всех играх, где используется
+    }
+
+    private void SetUpImgToBaseCategory(GameName _game, string _categoryKey, Sprite _categoryImg)
+    {
+        /// TODO 
+        /// Доделать замену старого раздела на кастомный с новой картинкой
     }
 }

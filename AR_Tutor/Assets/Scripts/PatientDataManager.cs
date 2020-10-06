@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public enum GameName { Variant = 0, Buttons = 1, WordBook = 2, WordComposing = 3}
 
@@ -6,15 +7,11 @@ public class PatientDataManager : MonoBehaviour
 {
     #region Variables
     private SaveSystem saveSystem;
-    private PatientGameData? patientData;
+    private CategoryStorage categoryStorage;
+    public PatientGameData PatientData { get; private set; }
     [SerializeField] private PatientGameData testData;
     [SerializeField] private string login;
     #endregion
-
-    public PatientGameData? GetPatientData()
-    {
-        return patientData;
-    }
 
     public string GetPatientLogin()
     {
@@ -24,108 +21,86 @@ public class PatientDataManager : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        Signals.AddCardEvent.AddListener(AddCardToCategory);
-        patientData = new PatientGameData(null);
+        categoryStorage = FindObjectOfType<CategoryStorage>();
+        PatientData = new PatientGameData();
         var loadData = saveSystem.LoadPatientDataFromLocal(login);
 
-        if (loadData != null) patientData = loadData;
+        if (loadData != null) PatientData = loadData.Value;
+        else PatientData = new PatientGameData();
 
-        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
+        Signals.AddCardEvent.AddListener(AddCardToCategory);
         Signals.DeleteCardFromCategory.AddListener(DeleteCardFromCategory);
-        testData = patientData.Value;
+        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
+        Signals.SwitchCategoryVisibleEvent.AddListener(SwitchCategoryVisible);
+        testData = PatientData;
     }
 
     public void UpdatePatientData()
     {
-        saveSystem.SavePatientDataFromLocal(patientData, login);
+        saveSystem.SavePatientDataFromLocal(PatientData, login);
     }
 
     #region Category management
-    public void HideCategory(GameName game, int index)
+    public void SwitchCategoryVisible(string _categoryKey, bool _visible)
     {
-        switch (game)
-        {
-            case GameName.Variant:
-                if (patientData.HasValue)
-                    patientData.Value.VariantGameConfig[index].visible = false;
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void ShowCategory(GameName game, int index)
-    {
-        switch (game)
-        {
-            case GameName.Variant:
-                if (patientData.HasValue)
-                    patientData.Value.VariantGameConfig[index].visible = true;
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
+        var index = GetCategoryIndex(_categoryKey);
+        PatientData.CategoriesVisible[index] = _visible;
+        UpdatePatientData();
     }
     #endregion
 
     #region Card management
-    public void SwitchCardVisible(GameName _game, int _categoryIndex, string _cardKey)
+    public void SwitchCardVisible(string _categoryKey, string _cardKey, bool _visible)
     {
-        switch (_game)
-        {
-            case GameName.Variant:
-                if (patientData.HasValue)
-                {
-                    int index = patientData.Value.VariantGameConfig[_categoryIndex].cardKeys.IndexOf(_cardKey);
-                    patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue[index] = 
-                        !patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue[index];
-                }
-                    
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
+        var categoryIndex = GetCategoryIndex(_categoryKey);
+        var cardIndex = GetCardIndex(_categoryKey, _cardKey);
+
+        var data = PatientData;
+        data.CardsVisible[categoryIndex][cardIndex] = _visible;
+        PatientData = data;
+        UpdatePatientData();
     }
 
-    public bool CardExists(GameName game, int categoryIndex, string cardIndex)
+    public bool CardExists(GameName game, string categoryIndex, string cardIndex)
     {
-        if (patientData.Value.VariantGameConfig[categoryIndex].cardKeys.Contains(cardIndex))
-            return true;
+        if (GetCardIndex(categoryIndex, cardIndex) < 0)
+            return false;
 
-        return false;
+        return true;
     }
 
-    public void AddCardToCategory(GameName game, int _categoryIndex, string _cardKey)
+    public void AddCardToCategory(string _categoryIndex, string _cardKey)
     {
-        switch (game)
-        {
-            case GameName.Variant:
-                if (patientData.Value.VariantGameConfig[_categoryIndex].cardKeys.Contains(_cardKey)) return;
+        var categoryIndex = GetCategoryIndex(_categoryIndex);
+        if (categoryIndex < 0) return;
+        if (PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 
-                patientData.Value.VariantGameConfig[_categoryIndex].cardKeys.Add(_cardKey);
-                patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue.Add(true);
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
+        PatientData.CardKeys[categoryIndex].Add(_cardKey);
     }
 
-    public void DeleteCardFromCategory(GameName game, int _categoryIndex, string _cardKey)
+    public void DeleteCardFromCategory(string _categoryIndex, string _cardKey)
     {
-        switch (game)
-        {
-            case GameName.Variant:
-                patientData.Value.VariantGameConfig[_categoryIndex].cardKeys.Remove(_cardKey);
-                patientData.Value.VariantGameConfig[_categoryIndex].cardVisibleValue.Remove(true);
-                UpdatePatientData();
-                break;
-            default:
-                break;
-        }
+        var categoryIndex = GetCategoryIndex(_categoryIndex);
+        if (categoryIndex < 0) return;
+        if (!PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
+
+        PatientData.CardKeys[categoryIndex].Remove(_cardKey);
     }
     #endregion
+
+    public int GetCategoryIndex(string _categoryKey)
+    {
+        var targetCategory = PatientData.CategoriesKeys.Find((key) => key == _categoryKey);
+        if (targetCategory == null) return -1;
+        return PatientData.CategoriesKeys.IndexOf(targetCategory);
+    } 
+
+    public int GetCardIndex(string _categoryKey, string _cardKey)
+    {
+        var categoryIndex = GetCategoryIndex(_categoryKey);
+        if (categoryIndex < 0) return -1;
+        var targetCard = PatientData.CardKeys[categoryIndex].Find((key) => key == _cardKey);
+        if (targetCard == null) return -1;
+        return PatientData.CardKeys[categoryIndex].IndexOf(targetCard);
+    }
 }
