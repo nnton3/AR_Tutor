@@ -6,20 +6,20 @@ public class CustomCardInitializer : CardBase
 {
     private VariantGameMenu variantMenu;
 
-    public override void Initialize(GameName _game, int _categoryIndex, string cardKey, CardData data)
+    public override void Initialize(GameName _game, string _categoryKey, string cardKey, CardData data)
     {
-        base.Initialize(_game, _categoryIndex, cardKey, data);
+        base.Initialize(_game, _categoryKey, cardKey, data);
         variantMenu = FindObjectOfType<VariantGameMenu>();
     }
 
     protected override void SwitchVisible()
     {
-        Signals.DeleteCardFromCategory.Invoke(game, categoryIndex, Key);
+        Signals.DeleteCardFromCategory.Invoke(categoryKey, Key);
         DeleteFromMenu();
     }
 
     private void DeleteFromMenu()
     {
-        Signals.DeleteCardFromCategory.Invoke(game, categoryIndex, Key);
+        Signals.DeleteCardFromCategory.Invoke(categoryKey, Key);
     }
 }

@@ -8,10 +8,10 @@ public class LibraryCardSelector : MonoBehaviour
     {
         categoryManager = FindObjectOfType<CategoryManager>();
 
-        Signals.SelectCardFromLibrary.AddListener(SelectedCardIsValid);
+        Signals.SelectCardFromLibrary.AddListener(SelectedCard);
     }
 
-    private void SelectedCardIsValid(string cardKey)
+    private void SelectedCard(string cardKey)
     {
         categoryManager.AddCardFromLibrary(cardKey);
     }

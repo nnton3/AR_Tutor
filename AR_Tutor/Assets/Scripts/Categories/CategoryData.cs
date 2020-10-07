@@ -1,23 +1,37 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New cardpack", menuName = "Configs/CategoryPack")]
-public class CategoryPack: ScriptableObject
+[System.Serializable]
+public struct TestData
 {
-    public CategoryData[] categoryDatas = new CategoryData[] { };
+    public int testInt;
+    public TestData(int _testInt)
+    {
+        testInt = _testInt;
+    }
 }
 
 [System.Serializable]
 public struct CategoryData
 {
-    public GameName game;
+    public int game;
     public string title;
     public Sprite img;
     public AudioClip clip;
     public bool visible;
+    public bool IsCustom;
     public List<string> cardKeys;
+    public List<bool> cardsVisible;
 
-    public CategoryData(GameName _game, string _title, Sprite _img, AudioClip _clip, bool _visible, List<string> _cardKeys)
+    public CategoryData(
+        int _game,
+        string _title,
+        Sprite _img,
+        AudioClip _clip,
+        bool _visible,
+        List<string> _cardKeys,
+        List<bool> _cardsVisible,
+        bool _isCustom)
     {
         game = _game;
         title = _title;
@@ -25,15 +39,17 @@ public struct CategoryData
         clip = _clip;
         visible = _visible;
         cardKeys = _cardKeys;
+        cardsVisible = _cardsVisible;
+        IsCustom = _isCustom;
     }
 }
 
+[System.Serializable]
 public struct CategorySaveData
 {
     public List<int> games;
     public List<string> titles, keys, imgAddresses, clipAddresses;
-    public List<List<string>> cardKeys;
-    public List<bool> visibles;
+    [System.NonSerialized] public List<List<string>> cardKeys;
 
     public CategorySaveData(
         List<int> _games = null,
@@ -41,8 +57,7 @@ public struct CategorySaveData
         List<string> _keys = null,
         List<string> _imgAddresses = null,
         List<string> _clipAddresses = null,
-        List<List<string>> _cardKeys = null,
-        List<bool> _visibles = null)
+        List<List<string>> _cardKeys = null)
     {
         if (_games == null) games = new List<int>();
         else games = _games;
@@ -61,8 +76,5 @@ public struct CategorySaveData
 
         if (_cardKeys == null) cardKeys = new List<List<string>>();
         else cardKeys = _cardKeys;
-
-        if (_visibles == null) visibles = new List<bool>();
-        else visibles = _visibles;
     }
 }

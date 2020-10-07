@@ -1,31 +1,36 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class MainMenuInitializer : MonoBehaviour
 {
     #region Variables
     private VariantGameMenu variantGameUI;
     private CardStorage cardStorage;
+    private CategoryStorage categoryStorage;
     private MainMenuUIControl mainMenuUI;
     private PatientDataManager patientManager;
     private SaveSystem saveSystem;
-    private LibraryUIControl library;
+    private CardLibraryUIControl cardLibrary;
+    private CategoryLibraryUIControl categoryLibrary;
     #endregion
 
     private void Awake()
     {
         variantGameUI = FindObjectOfType<VariantGameMenu>();
         cardStorage = FindObjectOfType<CardStorage>();
+        categoryStorage = FindObjectOfType<CategoryStorage>();
         mainMenuUI = FindObjectOfType<MainMenuUIControl>();
         patientManager = FindObjectOfType<PatientDataManager>();
         saveSystem = FindObjectOfType<SaveSystem>();
-        library = FindObjectOfType<LibraryUIControl>();
+        cardLibrary = FindObjectOfType<CardLibraryUIControl>();
+        categoryLibrary = FindObjectOfType<CategoryLibraryUIControl>();
 
         if (patientManager != null) patientManager.Initialize();
         if (saveSystem != null) saveSystem.Initialize();
+        if (categoryStorage != null) categoryStorage.Initialize();
         if (cardStorage != null) cardStorage.Initialize();
         if (variantGameUI != null) variantGameUI.Initialize();
-        if (library != null) library.Initialize();
+        if (categoryLibrary != null) categoryLibrary.Initialize();
+        if (cardLibrary != null) cardLibrary.Initialize();
         if (mainMenuUI != null) mainMenuUI.Initialize();
     }
 }

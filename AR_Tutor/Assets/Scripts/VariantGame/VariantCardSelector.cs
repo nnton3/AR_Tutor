@@ -15,8 +15,8 @@ public class VariantCardSelector : MonoBehaviour
     private List<VariantCardSelectable> selectedCards = new List<VariantCardSelectable>();
     [SerializeField] private List<string> selectedCardsKeys = new List<string>();
     [SerializeField] private int maxCardCount;
-    public StringUnityEvent SelectEvent = new StringUnityEvent();
-    public StringUnityEvent UnselectEvent = new StringUnityEvent();
+    public StringEvent SelectEvent = new StringEvent();
+    public StringEvent UnselectEvent = new StringEvent();
     #endregion
 
     public void Initialize(List<GameObject> cards)
@@ -94,5 +94,3 @@ public class VariantCardSelector : MonoBehaviour
         UnselectEvent.RemoveAllListeners();
     }
 }
-
-public class StringUnityEvent : UnityEvent<string> { }

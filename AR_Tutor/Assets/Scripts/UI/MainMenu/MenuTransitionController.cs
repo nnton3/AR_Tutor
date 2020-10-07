@@ -80,7 +80,8 @@ public class MenuTransitionController : MonoBehaviour
 
     public void DisposeReturnBtn()
     {
-        disposable.Dispose();
+        if (disposable != null)
+            disposable.Dispose();
     }
 
     private void OnDestroy()

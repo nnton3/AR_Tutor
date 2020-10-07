@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class LibraryUIControl : MonoBehaviour
+public class CardLibraryUIControl : MonoBehaviour
 {
     [SerializeField] private GameObject libraryCardPref, libraryPanel;
     private CardStorage storage;
@@ -26,7 +23,7 @@ public class LibraryUIControl : MonoBehaviour
             CreateCardInstance(card.Key, card.Value);
     }
 
-    public void AddCard(GameName _game, int _category, string _cardKey)
+    public void AddCard(string _category, string _cardKey)
     {
         if (libraryCards.Find((card) => card.cardKey == _cardKey))
         {
@@ -43,8 +40,6 @@ public class LibraryUIControl : MonoBehaviour
         initializer.Initialize(key, data);
         libraryCards.Add(initializer);
     }
-
-    private void DeleteCard() { }
 
     public void BindCardsForSelect()
     {

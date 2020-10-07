@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class CategoryInitializer : MonoBehaviour
 {
+    #region Variables
     [SerializeField] private Image img;
     [SerializeField] private Text title;
     [SerializeField] private Button selectBtn, selectImageBtn, deleteBtn;
@@ -11,27 +12,32 @@ public class CategoryInitializer : MonoBehaviour
     private CategoryManager addCard;
     private Sprite lastSprite;
     private PatientDataManager patientManager;
-    public int index { get; private set; }
+    public string categoryKey { get; private set; }
     public GameName game { get; private set; }
+    #endregion
 
-    public void Initialize(GameName _game, int categoryIndex, string _title = "new category", Sprite _img = null)
+    public void Initialize(GameName _game, string _categoryKey, CategoryData _categoryData)
     {
         addCard = FindObjectOfType<CategoryManager>();
         patientManager = FindObjectOfType<PatientDataManager>();
 
-        if (title != null) title.text = _title;
-        if (img != null) img.sprite = _img;
+        if (title != null) title.text = _categoryData.title;
+        if (img != null) img.sprite = _categoryData.img;
 
+        BindBtn();
+
+        categoryKey = _categoryKey;
+        game = _game;
+    }
+
+    private void BindBtn()
+    {
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
-            if (image == null) return;
-            //addCard.PickImage(image, lastSprite);
+            Signals.SetImgForCardEvent.Invoke(game, categoryKey, null);
         });
 
         deleteBtn.onClick.AddListener(HideCategory);
-
-        index = categoryIndex;
-        game = _game;
     }
 
     private void HideCategory()
@@ -40,12 +46,12 @@ public class CategoryInitializer : MonoBehaviour
 
         if (element.Visible)
         {
-            patientManager.HideCategory(game, index);
+            patientManager.SwitchCategoryVisible(categoryKey, false);
             element.Visible = false;
         }
         else
         {
-            patientManager.ShowCategory(game, index);
+            patientManager.SwitchCategoryVisible(categoryKey, true);
             element.Visible = true;
         }
     }

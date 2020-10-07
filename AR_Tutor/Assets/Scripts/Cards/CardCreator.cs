@@ -76,9 +76,9 @@ public class CardCreator : MonoBehaviour
 
     private void CreateCard(string _title, string _titleForm, Sprite _image1data, AudioClip _audioClip)
     {
-        var cardKey = $"{patientDataManager.GetPatientLogin()}_{_title}_{saveSystem.GetCustomCardsData().keys.Count}";
-        var image1Key = $"{patientDataManager.GetPatientLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image1";
-        var audio1Key = $"{patientDataManager.GetPatientLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
+        var cardKey = $"{patientDataManager.GetUserLogin()}_{_title}_{saveSystem.GetCustomCardsData().keys.Count}";
+        var image1Key = $"{patientDataManager.GetUserLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image1";
+        var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
 
         data = new CardData(
             _title,
