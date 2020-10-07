@@ -17,11 +17,23 @@ public class CategoryCreator : MonoBehaviour
     [SerializeField] private Sprite recImg, stopRecImg;
     [SerializeField] private string title;
     private AudioSource source;
+    private CategoryData categoryData;
+
+    private PatientDataManager patientDataManager;
+    private CategoryManager categoryManager;
+    private CategoryStorage storage;
+    private SaveSystem saveSystem;
+    private MenuTransitionController transitionController;
     #endregion
 
     private void Awake()
     {
         source = FindObjectOfType<AudioSource>();
+        patientDataManager = FindObjectOfType<PatientDataManager>();
+        categoryManager = FindObjectOfType<CategoryManager>();
+        saveSystem = FindObjectOfType<SaveSystem>();
+        storage = FindObjectOfType<CategoryStorage>();
+        transitionController = FindObjectOfType<MenuTransitionController>();
 
         BindUI();
     }
@@ -34,15 +46,39 @@ public class CategoryCreator : MonoBehaviour
         recAudio2Btn.onClick.AddListener(() => RecordBtnOnClick());
         playAudioBtn.onClick.AddListener(() => PlayAudio(clip));
         setUpImgBtn.onClick.AddListener(() => PickImage(image, imageData));
-        applyBtn.onClick.AddListener(() => CreateCategory());
+        applyBtn.onClick.AddListener(() =>
+        {
+            if (DataIsValid())
+            {
+                CreateCategory();
+                transitionController.ReturnToBack(2);
+            }
+        });
     }
 
     private void CreateCategory()
     {
-        if (DataIsValid())
-        {
+        var categoryKey = $"{patientDataManager.GetUserLogin()}{title}{saveSystem.GetCustomCategoryData().keys.Count}";
+        var image1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}image1";
+        var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}audio1";
 
-        }
+        Debug.Log(image == null);
+        categoryData = new CategoryData(
+            (int)categoryManager.gameName,
+            title,
+            image.sprite,
+            clip,
+            true,
+            new List<string>(),
+            new List<bool>(),
+            true);
+
+        saveSystem.SaveImage(image.sprite.texture, image1Key);
+        saveSystem.SaveAudio(clip, audio1Key);
+
+        storage.AddCategoryToBase(categoryData, categoryKey, image1Key, audio1Key);
+        categoryManager.AddCategory(categoryKey);
+        ResetFields();
     }
 
     #region Audio

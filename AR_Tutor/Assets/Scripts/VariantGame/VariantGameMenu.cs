@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class VariantGameMenu : MonoBehaviour
 {
     #region Variables
+    private PatientDataManager patientDataManager;
     private CardStorage cardStorage;
     private CategoryStorage categoryStorage;
     private CategoryManager categoryManager;
@@ -27,12 +28,14 @@ public class VariantGameMenu : MonoBehaviour
         cardSelector = FindObjectOfType<VariantCardSelector>();
         transitionController = FindObjectOfType<MenuTransitionController>();
         categoryStorage = FindObjectOfType<CategoryStorage>();
+        patientDataManager = FindObjectOfType<PatientDataManager>();
 
         ConfigurateCategories();
         
         BindBtns();
         HidePanels();
 
+        Signals.AddCategoryEvent.AddListener(AddNewCategory);
         Signals.AddCardEvent.AddListener(AddNewCard);
         Signals.DeleteCardFromCategory.AddListener(DeleteCard);
         cardSelector.Initialize(Cards);
@@ -40,20 +43,24 @@ public class VariantGameMenu : MonoBehaviour
 
     private void ConfigurateCategories()
     {
-        foreach (var category in categoryStorage.VariantCategories)
+        foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
         {
+            CategoryData data = new CategoryData();
+            if (!categoryStorage.VariantCategories.ContainsKey(categoryKey)) continue;
+            data = categoryStorage.VariantCategories[categoryKey];
+
             var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
             var initializer = obj.GetComponent<CategoryInitializer>();
-            initializer.Initialize(GameName.Variant, category.Key, category.Value);
+            initializer.Initialize(GameName.Variant, categoryKey, data);
             CategoriesBtns.Add(initializer.GetSelectBtn());
 
             var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
             CategoriesPanels.Add(categoryPanel);
 
-            ConfigurateCards(category.Value, categoryPanel, category.Key);
+            ConfigurateCards(data, categoryPanel, categoryKey);
 
             var editableElem = obj.GetComponent<EditableElement>();
-            editableElem.Visible = (category.Value.visible);
+            editableElem.Visible = (data.visible);
             mainMenu.AddEditableElement(editableElem);
         }
 
@@ -77,10 +84,32 @@ public class VariantGameMenu : MonoBehaviour
         CreateAddCardBtn(_categoryPanel, _categoryKey);
     }
 
+    private void AddNewCategory(string _categoryKey)
+    {
+        var game = categoryStorage.Categories[_categoryKey].game;
+        if ((GameName)game != GameName.Variant) return;
+
+        CategoryData data = new CategoryData();
+        if (!categoryStorage.VariantCategories.ContainsKey(_categoryKey)) return;
+        data = categoryStorage.VariantCategories[_categoryKey];
+
+        var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
+        var initializer = obj.GetComponent<CategoryInitializer>();
+        initializer.Initialize(GameName.Variant, _categoryKey, data);
+        CategoriesBtns.Add(initializer.GetSelectBtn());
+
+        var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
+        CategoriesPanels.Add(categoryPanel);
+
+        var editableElem = obj.GetComponent<EditableElement>();
+        editableElem.Visible = (data.visible);
+        mainMenu.AddEditableElement(editableElem);
+    }
+
     public void AddNewCard(string _categoryKey, string _key)
     {
         var game = categoryStorage.Categories[_categoryKey].game;
-        if (game != GameName.Variant) return;
+        if ((GameName)game != GameName.Variant) return;
 
         var index = CategoriesBtns.IndexOf(CategoriesBtns.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey));
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
@@ -105,6 +134,7 @@ public class VariantGameMenu : MonoBehaviour
         return cardObj;
     }
 
+    #region Add btn
     private void CreateAddCardBtn(GameObject _categoryPanel, string _categoryKey)
     {
         CreateAddBtn(_categoryPanel, () => categoryManager.SelectAddMethod(GameName.Variant, _categoryKey), _categoryKey);
@@ -112,7 +142,7 @@ public class VariantGameMenu : MonoBehaviour
 
     private void CreateAddCategoryBtn()
     {
-        CreateAddBtn(categoriesSelector, () => categoryManager.SelectAddCategoryMethod(GameName.Variant));
+        CreateAddBtn(categoriesSelector, () => categoryManager.SelectAddMethod(GameName.Variant));
     }
 
     private void CreateAddBtn(GameObject _parent, UnityAction _action, string _categoryKey = null)
@@ -125,6 +155,7 @@ public class VariantGameMenu : MonoBehaviour
         var btn = init.GetSelectBtn();
         btn.onClick.AddListener(() => _action());
     }
+    #endregion
 
     public void UpdateCardImg(string _cardKey, Sprite _cardImg)
     {
@@ -138,7 +169,7 @@ public class VariantGameMenu : MonoBehaviour
     public void DeleteCard(string _categoryKey, string _key)
     {
         var game = categoryStorage.Categories[_categoryKey].game;
-        if (game != GameName.Variant) return;
+        if ((GameName)game != GameName.Variant) return;
 
          foreach (var card in Cards)
             if (card.GetComponent<CardBase>().Key == _key)

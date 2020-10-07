@@ -12,6 +12,7 @@ public class CardStorage : MonoBehaviour
     public Dictionary<string, CardData> cards = new Dictionary<string, CardData>();
     #endregion
 
+    #region Initialize
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
@@ -65,20 +66,21 @@ public class CardStorage : MonoBehaviour
         if (!cards.ContainsKey(key))
             cards.Add(key, card);
     }
+    #endregion
 
     /// <summary>
     /// Добавить карточку в хранилище и сохранить локально
     /// </summary>
     /// <param name="card"></param>
     /// <param name="key"></param>
-    /// <param name="imageKey"></param>
-    /// <param name="audioKey"></param>
-    public void AddNewCardToBase(CardData card, string key, string imageKey, string audioKey)
+    /// <param name="_imageAddress"></param>
+    /// <param name="_clipAddress"></param>
+    public void AddNewCardToBase(CardData card, string key, string _imageAddress, string _clipAddress)
     {
         if (cards.ContainsKey(key)) return;
 
         AddCustomCard(key, card);
-        saveSystem.SaveCustomCardFromLocal(card, key, imageKey, audioKey);
+        saveSystem.SaveCustomCardFromLocal(card, key, _imageAddress, _clipAddress);
     }
 
     /// <summary>

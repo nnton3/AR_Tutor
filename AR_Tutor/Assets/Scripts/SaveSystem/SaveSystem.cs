@@ -1,27 +1,31 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveSystem : MonoBehaviour
 {
     private PatientDataManager patientDataManager;
     [SerializeField] private Button testDelete;
-    private CategorySaveData categorySaveData = new CategorySaveData();
+    private CategorySaveData categorySaveData = new CategorySaveData(null, null, null, null, null, null);
     private CardSaveData cardSaveData = new CardSaveData();
 
     public void Initialize()
     {
+        patientDataManager = FindObjectOfType<PatientDataManager>();
+
         testDelete.onClick.AddListener(DeleteData);
         cardSaveData = LoadCustomCardsFromLocal();
+        categorySaveData = LoadCustomCategoriesFromLocal();
     }
 
     #region Patient
-    public void SavePatientDataFromLocal(PatientGameData? data, string login)
+    public void SavePatientDataFromLocal(PatientSaveGameData data, string _login)
     {
-        var json = JsonUtility.ToJson(data.Value);
-        PlayerPrefs.SetString(login, json);
+        var json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(_login, json);
     }
 
-    public PatientGameData? LoadPatientDataFromLocal(string _login)
+    public PatientSaveGameData? LoadPatientDataFromLocal(string _login)
     {
         if (!PlayerPrefs.HasKey(_login))
         {
@@ -29,31 +33,33 @@ public class SaveSystem : MonoBehaviour
             return null;
         }
         else
-            return JsonUtility.FromJson<PatientGameData>(PlayerPrefs.GetString(_login));
+            return JsonUtility.FromJson<PatientSaveGameData>(PlayerPrefs.GetString(_login));
     }
     #endregion
 
     #region Categories
     public void SaveCustomCategoryFromLocal(CategoryData _categoryData, string _categoryKey, string _imageKey, string _audioKey)
     {
-        categorySaveData.games.Add((int)_categoryData.game);
+        categorySaveData.games.Add(_categoryData.game);
         categorySaveData.titles.Add(_categoryData.title);
         categorySaveData.imgAddresses.Add(_imageKey);
         categorySaveData.clipAddresses.Add(_audioKey);
+        categorySaveData.keys.Add(_categoryKey);
+        categorySaveData.cardKeys.Add(new List<string>());
 
         UpdateCustomCategoryLocal();
     }
 
     public CategorySaveData LoadCustomCategoriesFromLocal()
     {
-        if (!PlayerPrefs.HasKey($"{patientDataManager.GetPatientLogin()}_Custom_categories")) return new CategorySaveData();
-        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString($"{patientDataManager.GetPatientLogin()}_Custom_categories"));
+        if (!PlayerPrefs.HasKey($"{patientDataManager.GetUserLogin()}_Custom_categories")) return new CategorySaveData(null, null, null, null, null, null);
+        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString($"{patientDataManager.GetUserLogin()}_Custom_categories"));
     }
 
     private void UpdateCustomCategoryLocal()
     {
         var json = JsonUtility.ToJson(categorySaveData);
-        PlayerPrefs.SetString($"{patientDataManager.GetPatientLogin()}_Custom_categories", json);
+        PlayerPrefs.SetString($"{patientDataManager.GetUserLogin()}_Custom_categories", json);
     }
 
     public CategorySaveData GetCustomCategoryData()

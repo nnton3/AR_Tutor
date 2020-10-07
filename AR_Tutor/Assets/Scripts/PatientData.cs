@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +16,16 @@ public struct PatientData
 }
 
 [Serializable]
-public struct PatientGameData
+public struct PatientCategoryData
+{
+    public string CategoryKeys;
+    public bool CategoryVisible;
+    public List<string> CardKeys;
+    public List<bool> CardsVisible;
+}
+
+[Serializable]
+public struct PatientSaveGameData
 {
     public List<string> CategoriesKeys;
     public List<int> Games;
@@ -25,7 +33,7 @@ public struct PatientGameData
     public List<List<string>> CardKeys;
     public List<List<bool>> CardsVisible;
 
-    public PatientGameData(
+    public PatientSaveGameData(
         List<string> _categoriesKeys, 
         List<int> _games,
         List<bool> _categoriesVisible, 

@@ -1,25 +1,30 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New cardpack", menuName = "Configs/CategoryPack")]
-public class CategoryPack: ScriptableObject
+[System.Serializable]
+public struct TestData
 {
-    public CategoryData[] categoryDatas = new CategoryData[] { };
+    public int testInt;
+    public TestData(int _testInt)
+    {
+        testInt = _testInt;
+    }
 }
 
 [System.Serializable]
 public struct CategoryData
 {
-    public GameName game;
+    public int game;
     public string title;
     public Sprite img;
     public AudioClip clip;
-    public bool visible, IsCustom;
+    public bool visible;
+    public bool IsCustom;
     public List<string> cardKeys;
     public List<bool> cardsVisible;
 
     public CategoryData(
-        GameName _game,
+        int _game,
         string _title,
         Sprite _img,
         AudioClip _clip,
@@ -39,11 +44,12 @@ public struct CategoryData
     }
 }
 
+[System.Serializable]
 public struct CategorySaveData
 {
     public List<int> games;
     public List<string> titles, keys, imgAddresses, clipAddresses;
-    public List<List<string>> cardKeys;
+    [System.NonSerialized] public List<List<string>> cardKeys;
 
     public CategorySaveData(
         List<int> _games = null,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameName { Variant = 0, Buttons = 1, WordBook = 2, WordComposing = 3}
@@ -7,27 +8,60 @@ public class PatientDataManager : MonoBehaviour
 {
     #region Variables
     private SaveSystem saveSystem;
-    private CategoryStorage categoryStorage;
-    public PatientGameData PatientData { get; private set; }
-    [SerializeField] private PatientGameData testData;
-    [SerializeField] private string login;
+    public PatientSaveGameData PatientData { get; private set; }
+    [SerializeField] private PatientSaveGameData testData;
+    [SerializeField] private string userLogin;
+    [SerializeField] private string patientLogin;
+    [SerializeField] private CategoriesSO defaultCategoryPack;
+    [SerializeField] private CardPack defaultCardPack;
     #endregion
+
+    public string GetUserLogin()
+    {
+        return userLogin;
+    }
 
     public string GetPatientLogin()
     {
-        return login;
+        return patientLogin;
     }
 
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        categoryStorage = FindObjectOfType<CategoryStorage>();
-        PatientData = new PatientGameData();
-        var loadData = saveSystem.LoadPatientDataFromLocal(login);
 
-        if (loadData != null) PatientData = loadData.Value;
-        else PatientData = new PatientGameData();
+        PatientData = new PatientSaveGameData(null, null, null, null, null);
+        var loadData = saveSystem.LoadPatientDataFromLocal(patientLogin);
 
+        if (loadData != null)
+        {
+            Debug.Log("have data");
+            PatientData = loadData.Value;
+            //Debug.Log(PatientData.CardsVisible.Count);
+            if (PatientData.CardKeys == null)
+            {
+                Debug.Log("null");
+                var temp = PatientData;
+                temp.CardKeys = new List<List<string>>();
+                temp.CardKeys.Add(new List<string>());
+                PatientData = temp;
+            }
+            if (PatientData.CardsVisible == null)
+            {
+                Debug.Log("null");
+                var temp = PatientData;
+                temp.CardsVisible = new List<List<bool>>();
+                temp.CardsVisible.Add(new List<bool>());
+                PatientData = temp;
+            }
+        }
+        else
+        {
+            Debug.Log("null data");
+            FillPatientDataByDefault();
+        }
+
+        Signals.AddCategoryEvent.AddListener(AddCategoryToGame);
         Signals.AddCardEvent.AddListener(AddCardToCategory);
         Signals.DeleteCardFromCategory.AddListener(DeleteCardFromCategory);
         Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
@@ -35,16 +69,59 @@ public class PatientDataManager : MonoBehaviour
         testData = PatientData;
     }
 
+    private void FillPatientDataByDefault()
+    {
+        PatientData = new PatientSaveGameData(
+            new List<string>(),
+            new List<int>(),
+            new List<bool>(),
+            new List<List<string>>(),
+            new List<List<bool>>());
+
+        for (int i = 0; i < defaultCategoryPack.categoryDatas.Length; i++)
+        {
+            string categoryKey = $"default_{defaultCategoryPack.categoryDatas[i].game.ToString()}_category{i}";
+
+            PatientData.CategoriesKeys.Add(categoryKey);
+            PatientData.CategoriesVisible.Add(defaultCategoryPack.categoryDatas[i].visible);
+            PatientData.Games.Add(defaultCategoryPack.categoryDatas[i].game);
+            PatientData.CardKeys.Add(defaultCategoryPack.categoryDatas[i].cardKeys);
+            PatientData.CardsVisible.Add(defaultCategoryPack.categoryDatas[i].cardsVisible);
+        }
+    }
+
     public void UpdatePatientData()
     {
-        saveSystem.SavePatientDataFromLocal(PatientData, login);
+        saveSystem.SavePatientDataFromLocal(PatientData, patientLogin);
     }
 
     #region Category management
     public void SwitchCategoryVisible(string _categoryKey, bool _visible)
     {
         var index = GetCategoryIndex(_categoryKey);
+        if (index < 0) return;
         PatientData.CategoriesVisible[index] = _visible;
+        UpdatePatientData();
+    }
+
+    public bool CategoryExist(GameName gameName, string _categoryKey)
+    {
+        if (GetCategoryIndex(_categoryKey) < 0)
+            return false;
+
+        return true;
+    }
+
+    private void AddCategoryToGame(string _categoryKey)
+    {
+        if (PatientData.CategoriesKeys.Contains(_categoryKey)) return;
+        
+        PatientData.CategoriesKeys.Add(_categoryKey);
+        PatientData.Games.Add(FindObjectOfType<CategoryStorage>().Categories[_categoryKey].game);
+        PatientData.CategoriesVisible.Add(true);
+        PatientData.CardKeys.Add(new List<string>() { "startPack_card_0" });
+        PatientData.CardsVisible.Add(new List<bool>() { true});
+
         UpdatePatientData();
     }
     #endregion
@@ -54,6 +131,8 @@ public class PatientDataManager : MonoBehaviour
     {
         var categoryIndex = GetCategoryIndex(_categoryKey);
         var cardIndex = GetCardIndex(_categoryKey, _cardKey);
+        if (categoryIndex < 0) return;
+        if (cardIndex < 0) return;
 
         var data = PatientData;
         data.CardsVisible[categoryIndex][cardIndex] = _visible;
@@ -76,6 +155,7 @@ public class PatientDataManager : MonoBehaviour
         if (PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 
         PatientData.CardKeys[categoryIndex].Add(_cardKey);
+        UpdatePatientData();
     }
 
     public void DeleteCardFromCategory(string _categoryIndex, string _cardKey)
@@ -85,6 +165,7 @@ public class PatientDataManager : MonoBehaviour
         if (!PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 
         PatientData.CardKeys[categoryIndex].Remove(_cardKey);
+        UpdatePatientData();
     }
     #endregion
 
