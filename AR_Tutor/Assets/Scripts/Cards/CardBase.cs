@@ -28,7 +28,7 @@ public class CardBase : MonoBehaviour
         BindBtns(data);
     }
 
-    private void BindBtns(CardData data)
+    protected void BindBtns(CardData data)
     {
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -38,6 +38,8 @@ public class CardBase : MonoBehaviour
         if (source != null)
             selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
 
+        if (switchVisibleBtn == null)
+            Debug.Log(gameObject.name);
         switchVisibleBtn.onClick.AddListener(SwitchVisible);
     }
 

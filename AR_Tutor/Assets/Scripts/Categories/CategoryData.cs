@@ -49,7 +49,7 @@ public struct CategorySaveData
 {
     public List<int> games;
     public List<string> titles, keys, imgAddresses, clipAddresses;
-    [System.NonSerialized] public List<List<string>> cardKeys;
+    public List<bool> isCustom;
 
     public CategorySaveData(
         List<int> _games = null,
@@ -57,7 +57,7 @@ public struct CategorySaveData
         List<string> _keys = null,
         List<string> _imgAddresses = null,
         List<string> _clipAddresses = null,
-        List<List<string>> _cardKeys = null)
+        List<bool> _isCustom = null)
     {
         if (_games == null) games = new List<int>();
         else games = _games;
@@ -74,7 +74,7 @@ public struct CategorySaveData
         if (_clipAddresses == null) clipAddresses = new List<string>();
         else clipAddresses = _clipAddresses;
 
-        if (_cardKeys == null) cardKeys = new List<List<string>>();
-        else cardKeys = _cardKeys;
+        if (_isCustom == null) isCustom = new List<bool>();
+        else isCustom = _isCustom;
     }
 }

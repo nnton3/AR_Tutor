@@ -14,6 +14,7 @@ public class CustomCardInitializer : CardBase
 
     protected override void SwitchVisible()
     {
+        Debug.Log("deleted");
         Signals.DeleteCardFromCategory.Invoke(categoryKey, Key);
         DeleteFromMenu();
     }

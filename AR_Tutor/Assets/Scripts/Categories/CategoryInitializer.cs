@@ -9,7 +9,6 @@ public class CategoryInitializer : MonoBehaviour
     [SerializeField] private Text title;
     [SerializeField] private Button selectBtn, selectImageBtn, deleteBtn;
     [SerializeField] private Image image;
-    private CategoryManager addCard;
     private Sprite lastSprite;
     private PatientDataManager patientManager;
     public string categoryKey { get; private set; }
@@ -18,7 +17,6 @@ public class CategoryInitializer : MonoBehaviour
 
     public void Initialize(GameName _game, string _categoryKey, CategoryData _categoryData)
     {
-        addCard = FindObjectOfType<CategoryManager>();
         patientManager = FindObjectOfType<PatientDataManager>();
 
         if (title != null) title.text = _categoryData.title;
