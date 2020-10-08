@@ -43,6 +43,7 @@ public class CardLibraryUIControl : MonoBehaviour
 
     public void BindCardsForSelect()
     {
+        Debug.Log("work");
         foreach (var card in libraryCards)
             card.EnableSelectable();
     }

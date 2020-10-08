@@ -37,7 +37,6 @@ public class PatientDataManager : MonoBehaviour
         {
             Debug.Log("have data");
             PatientData = loadData.Value;
-            //Debug.Log(PatientData.CardsVisible.Count);
             if (PatientData.CardKeys == null)
             {
                 Debug.Log("null");
@@ -60,6 +59,12 @@ public class PatientDataManager : MonoBehaviour
             Debug.Log("null data");
             FillPatientDataByDefault();
         }
+
+        string debug = "";
+        foreach (var item in PatientData.CategoriesVisible)
+            debug += $"{item}";
+
+        Debug.Log(debug);
 
         Signals.AddCategoryEvent.AddListener(AddCategoryToGame);
         Signals.AddCardEvent.AddListener(AddCardToCategory);
@@ -85,8 +90,8 @@ public class PatientDataManager : MonoBehaviour
             PatientData.CategoriesKeys.Add(categoryKey);
             PatientData.CategoriesVisible.Add(defaultCategoryPack.categoryDatas[i].visible);
             PatientData.Games.Add(defaultCategoryPack.categoryDatas[i].game);
-            PatientData.CardKeys.Add(defaultCategoryPack.categoryDatas[i].cardKeys);
-            PatientData.CardsVisible.Add(defaultCategoryPack.categoryDatas[i].cardsVisible);
+            PatientData.CardKeys.Add(new List<string>(defaultCategoryPack.categoryDatas[i].cardKeys));
+            PatientData.CardsVisible.Add(new List<bool>(defaultCategoryPack.categoryDatas[i].cardsVisible));
         }
     }
 
@@ -101,6 +106,11 @@ public class PatientDataManager : MonoBehaviour
         var index = GetCategoryIndex(_categoryKey);
         if (index < 0) return;
         PatientData.CategoriesVisible[index] = _visible;
+        string debug = "";
+        foreach (var item in PatientData.CategoriesVisible)
+            debug += $"{item}";
+
+        Debug.Log(debug);
         UpdatePatientData();
     }
 
@@ -119,8 +129,8 @@ public class PatientDataManager : MonoBehaviour
         PatientData.CategoriesKeys.Add(_categoryKey);
         PatientData.Games.Add(FindObjectOfType<CategoryStorage>().Categories[_categoryKey].game);
         PatientData.CategoriesVisible.Add(true);
-        PatientData.CardKeys.Add(new List<string>() { "startPack_card_0" });
-        PatientData.CardsVisible.Add(new List<bool>() { true});
+        PatientData.CardKeys.Add(new List<string>());
+        PatientData.CardsVisible.Add(new List<bool>());
 
         UpdatePatientData();
     }
@@ -155,6 +165,8 @@ public class PatientDataManager : MonoBehaviour
         if (PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 
         PatientData.CardKeys[categoryIndex].Add(_cardKey);
+        PatientData.CardsVisible[categoryIndex].Add(true);
+        Debug.Log("card added and save in patient data");
         UpdatePatientData();
     }
 
@@ -165,6 +177,7 @@ public class PatientDataManager : MonoBehaviour
         if (!PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 
         PatientData.CardKeys[categoryIndex].Remove(_cardKey);
+        PatientData.CardsVisible[categoryIndex].Add(false);
         UpdatePatientData();
     }
     #endregion

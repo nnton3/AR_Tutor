@@ -21,19 +21,24 @@ public class SaveSystem : MonoBehaviour
     #region Patient
     public void SavePatientDataFromLocal(PatientSaveGameData data, string _login)
     {
-        var json = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString(_login, json);
+        ES3.Save(_login, data);
+
+        //var json = JsonUtility.ToJson(data);
+        //PlayerPrefs.SetString(_login, json);
     }
 
     public PatientSaveGameData? LoadPatientDataFromLocal(string _login)
     {
-        if (!PlayerPrefs.HasKey(_login))
-        {
-            Debug.Log("U haven't category data in local storage");
-            return null;
-        }
-        else
-            return JsonUtility.FromJson<PatientSaveGameData>(PlayerPrefs.GetString(_login));
+        if (ES3.KeyExists(_login))
+            return ES3.Load<PatientSaveGameData>(_login);
+        else return null;
+        //if (!PlayerPrefs.HasKey(_login))
+        //{
+        //    Debug.Log("U haven't category data in local storage");
+        //    return null;
+        //}
+        //else
+        //    return JsonUtility.FromJson<PatientSaveGameData>(PlayerPrefs.GetString(_login));
     }
     #endregion
 
@@ -45,15 +50,18 @@ public class SaveSystem : MonoBehaviour
         categorySaveData.imgAddresses.Add(_imageKey);
         categorySaveData.clipAddresses.Add(_audioKey);
         categorySaveData.keys.Add(_categoryKey);
-        categorySaveData.cardKeys.Add(new List<string>());
+        categorySaveData.isCustom.Add(true);
 
         UpdateCustomCategoryLocal();
     }
 
     public CategorySaveData LoadCustomCategoriesFromLocal()
     {
-        if (!PlayerPrefs.HasKey($"{patientDataManager.GetUserLogin()}_Custom_categories")) return new CategorySaveData(null, null, null, null, null, null);
-        else return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString($"{patientDataManager.GetUserLogin()}_Custom_categories"));
+        string key = $"{patientDataManager.GetUserLogin()}_Custom_categories";
+        if (!PlayerPrefs.HasKey(key))
+            return new CategorySaveData(null, null, null, null, null, null);
+        else
+            return JsonUtility.FromJson<CategorySaveData>(PlayerPrefs.GetString(key));
     }
 
     private void UpdateCustomCategoryLocal()
@@ -82,7 +90,7 @@ public class SaveSystem : MonoBehaviour
 
     private CardSaveData LoadCustomCardsFromLocal()
     {
-        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData();
+        if (!PlayerPrefs.HasKey("Custom_cards")) return new CardSaveData(null, null, null, null,null);
         else return JsonUtility.FromJson<CardSaveData>(PlayerPrefs.GetString("Custom_cards"));
     }
 
@@ -132,6 +140,7 @@ public class SaveSystem : MonoBehaviour
     private void DeleteData()
     {
         Debug.Log("clear data");
+        ES3.DeleteFile();
         PlayerPrefs.DeleteAll();
     }
 }

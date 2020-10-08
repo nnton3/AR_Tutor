@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e82eb5528321144ba9515d7febaee24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  img: {fileID: 8725859803931658098}
   title: {fileID: 4476282635991499624}
   selectBtn: {fileID: 7870078881923257333}
   selectImageBtn: {fileID: 1890910607834931258}
-  deleteBtn: {fileID: 512722858693469017}
+  switchVisibleBtn: {fileID: 512722858693469017}
   image: {fileID: 8725859803931658098}
 --- !u!1001 &5629607807123671714
 PrefabInstance:
@@ -133,7 +132,7 @@ PrefabInstance:
     - target: {fileID: 1891663712709193401, guid: 36deec809b1cf7840ad7cf20fd62bc15,
         type: 3}
       propertyPath: m_Name
-      value: CustomCardPref Variant
+      value: CustomCardPref
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1972230007437199374, guid: 36deec809b1cf7840ad7cf20fd62bc15, type: 3}

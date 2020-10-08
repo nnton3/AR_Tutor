@@ -190,11 +190,7 @@ public class CategoryManager : MonoBehaviour
             AddCard(_cardKey);
             transitionController.ReturnToBack(2);
         }
-        else
-        {
-            Debug.Log("card exist, select new");
-            cardLibraryControl.BindCardsForSelect();
-        }
+        else Debug.Log("card exist, select new");
     }
 
     private bool CardIsValid(string _categoryKey, string _cardKey)

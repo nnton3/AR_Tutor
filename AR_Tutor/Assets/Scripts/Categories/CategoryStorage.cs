@@ -33,7 +33,7 @@ public class CategoryStorage : MonoBehaviour
     {
         for (int i = 0; i < startCategoryPack.categoryDatas.Length; i++)
         {
-            string key = null;
+            string key = "";
             switch ((GameName)startCategoryPack.categoryDatas[i].game)
             {
                 case GameName.Variant:
@@ -51,7 +51,29 @@ public class CategoryStorage : MonoBehaviour
                 default:
                     break;
             }
-            AddCategory(key, startCategoryPack.categoryDatas[i]);
+
+            CategoryData categoryData = startCategoryPack.categoryDatas[i];
+            if (patientDataManager.PatientData.CategoriesKeys.Contains(key))
+            {
+                var index = patientDataManager.PatientData.CategoriesKeys.IndexOf(key);
+
+                if (patientDataManager.PatientData.CategoriesVisible != null)
+                    if (patientDataManager.PatientData.CategoriesVisible.Count - 1 >= index)
+                        categoryData.visible = patientDataManager.PatientData.CategoriesVisible[index];
+
+                if (index >= 0)
+                {
+                    if (patientDataManager.PatientData.CardKeys != null)
+                        if (patientDataManager.PatientData.CardKeys.Count - 1 >= index)
+                            categoryData.cardKeys = patientDataManager.PatientData.CardKeys[index];
+
+                    if (patientDataManager.PatientData.CardsVisible != null)
+                        if (patientDataManager.PatientData.CardsVisible.Count - 1 >= index)
+                            categoryData.cardsVisible = patientDataManager.PatientData.CardsVisible[index];
+                }
+            }
+
+            AddCategory(key, categoryData);
         }
     }
 
@@ -71,7 +93,21 @@ public class CategoryStorage : MonoBehaviour
             var clip = saveSystem.LoadAudio(categories.clipAddresses[i]);
 
             var index = patientDataManager.GetCategoryIndex(categories.keys[i]);
-            Debug.Log(patientDataManager.PatientData.CardsVisible.Count);
+
+            List<string> cardKeys = new List<string>();
+            List<bool> cardsVisible = new List<bool>();
+            /// if u have card keys in custom categories
+            if (index >= 0)
+            {
+                if (patientDataManager.PatientData.CardKeys != null)
+                    if (patientDataManager.PatientData.CardKeys.Count >= index - 1)
+                        cardKeys = patientDataManager.PatientData.CardKeys[index];
+
+                if (patientDataManager.PatientData.CardsVisible != null)
+                    if (patientDataManager.PatientData.CardsVisible.Count >= index - 1)
+                        cardsVisible = patientDataManager.PatientData.CardsVisible[index];
+            }
+
             var category = new CategoryData(
                 categories.games[i],
                 categories.titles[i],
@@ -81,9 +117,8 @@ public class CategoryStorage : MonoBehaviour
                     Vector2.zero),
                 clip,
                 patientDataManager.PatientData.CategoriesVisible[index],
-                (categories.cardKeys == null)? new List<string>(): categories.cardKeys[i],
-                new List<bool>(),
-                //(index < 0) ? new List<bool>() : patientDataManager.PatientData.CardsVisible[index],
+                cardKeys,
+                cardsVisible,
                 true);
 
             AddCategory(categories.keys[i], category);

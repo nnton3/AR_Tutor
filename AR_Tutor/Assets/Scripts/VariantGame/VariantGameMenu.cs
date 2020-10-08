@@ -15,7 +15,7 @@ public class VariantGameMenu : MonoBehaviour
     private MenuTransitionController transitionController;
 
     [SerializeField] private GameObject categoryCardPref, categoryPanelPref, cardPref, customCardPref, addCardBtnPref, categoriesSelector, VariantGameParent;
-    [SerializeField] private List<Button> CategoriesBtns = new List<Button>();
+    [SerializeField] private List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
     [SerializeField] private List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
     [SerializeField] private Button[] gameModes = new Button[] { };
     #endregion
@@ -50,17 +50,19 @@ public class VariantGameMenu : MonoBehaviour
             data = categoryStorage.VariantCategories[categoryKey];
 
             var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
-            var initializer = obj.GetComponent<CategoryInitializer>();
-            initializer.Initialize(GameName.Variant, categoryKey, data);
-            CategoriesBtns.Add(initializer.GetSelectBtn());
-
             var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
             CategoriesPanels.Add(categoryPanel);
+
+            var initializer = obj.GetComponent<CategoryInitializer>();
+            initializer.Initialize(GameName.Variant, categoryKey, data);
+            CategoryCards.Add(initializer);
 
             ConfigurateCards(data, categoryPanel, categoryKey);
 
             var editableElem = obj.GetComponent<EditableElement>();
             editableElem.Visible = (data.visible);
+            Debug.Log(data.visible);
+            editableElem.ConfigurateElement(mainMenu.Mode);
             mainMenu.AddEditableElement(editableElem);
         }
 
@@ -70,16 +72,33 @@ public class VariantGameMenu : MonoBehaviour
     private void ConfigurateCards(CategoryData _categoryData, GameObject _categoryPanel, string _categoryKey)
     {
         if (cardStorage == null) return;
+        string debug = "";
+        if (_categoryData.cardKeys != null)
+            if (_categoryData.cardKeys.Count > 0)
+                foreach (var key in _categoryData.cardKeys)
+                {
+                    debug += $"Try to add card {key}\n";
+                    if (!cardStorage.cards.ContainsKey(key))
+                    {
+                        Debug.Log($"Key {key} not found in card storage");
+                        continue;
+                    }
 
-        if (_categoryData.cardKeys.Count > 0)
-            foreach (var key in _categoryData.cardKeys)
-            {
-                GameObject cardObj = AddCardInMenu(_categoryPanel, _categoryKey, key);
-                var editableElem = cardObj.GetComponent<EditableElement>();
-                editableElem.Visible = _categoryData.cardsVisible[_categoryData.cardKeys.IndexOf(key)];
-                editableElem.ConfigurateElement(mainMenu.Mode);
-                mainMenu.AddEditableElement(editableElem);
-            }
+                    GameObject cardObj = AddCardInMenu(_categoryPanel, _categoryKey, key);
+                    var editableElem = cardObj.GetComponent<EditableElement>();
+
+                    int index = -1;
+                    bool visible = true;
+                    index = _categoryData.cardKeys.IndexOf(key);
+                    if (index >= 0)
+                        if (_categoryData.cardsVisible != null)
+                            if (_categoryData.cardsVisible.Count - 1 >= index)
+                                visible = _categoryData.cardsVisible[index];
+                
+                    editableElem.Visible = visible;
+                    editableElem.ConfigurateElement(mainMenu.Mode);
+                    mainMenu.AddEditableElement(editableElem);
+                }
 
         CreateAddCardBtn(_categoryPanel, _categoryKey);
     }
@@ -94,16 +113,22 @@ public class VariantGameMenu : MonoBehaviour
         data = categoryStorage.VariantCategories[_categoryKey];
 
         var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
-        var initializer = obj.GetComponent<CategoryInitializer>();
-        initializer.Initialize(GameName.Variant, _categoryKey, data);
-        CategoriesBtns.Add(initializer.GetSelectBtn());
-
         var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
         CategoriesPanels.Add(categoryPanel);
+        categoryPanel.SetActive(false);
+
+        var initializer = obj.GetComponent<CategoryInitializer>();
+        initializer.Initialize(GameName.Variant, _categoryKey, data);
+        CategoryCards.Add(initializer);
 
         var editableElem = obj.GetComponent<EditableElement>();
         editableElem.Visible = (data.visible);
+        editableElem.ConfigurateElement(mainMenu.Mode);
         mainMenu.AddEditableElement(editableElem);
+
+        BindCategoryBtn(CategoryCards.Count - 1);
+
+        CreateAddCardBtn(categoryPanel, _categoryKey);
     }
 
     public void AddNewCard(string _categoryKey, string _key)
@@ -111,11 +136,12 @@ public class VariantGameMenu : MonoBehaviour
         var game = categoryStorage.Categories[_categoryKey].game;
         if ((GameName)game != GameName.Variant) return;
 
-        var index = CategoriesBtns.IndexOf(CategoriesBtns.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey));
+        var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey);
+        var index = CategoryCards.IndexOf(targetCard);
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
         
         var editableElem = cardObj.GetComponent<EditableElement>();
-        editableElem.ConfigurateElement(MenuMode.GameSelection);
+        editableElem.ConfigurateElement(mainMenu.Mode);
         mainMenu.AddEditableElement(editableElem);
         cardSelector.AddCard(cardObj);
     }
@@ -206,16 +232,19 @@ public class VariantGameMenu : MonoBehaviour
         }
 
         /// Bind categories btns
-        for (int i = 0; i < CategoriesBtns.Count; i++)
-        {
-            var btn = CategoriesBtns[i];
-            var panel = CategoriesPanels[i];
+        for (int i = 0; i < CategoryCards.Count; i++)
+            BindCategoryBtn(i);
+    }
 
-            btn.onClick.AddListener(() =>
-            {
-                transitionController.ActivatePanel(new GameObject[] { panel });
-                transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll());
-            });
-        }
+    private void BindCategoryBtn(int i)
+    {
+        var btn = CategoryCards[i].GetSelectBtn();
+        var panel = CategoriesPanels[i];
+
+        btn.onClick.AddListener(() =>
+        {
+            transitionController.ActivatePanel(new GameObject[] { panel });
+            transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll());
+        });
     }
 }
