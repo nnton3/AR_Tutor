@@ -153,12 +153,36 @@ public class CategoryStorage : MonoBehaviour
     public void UpdateCustomCategoryImg(string _categoryKey, Sprite _categoryImg)
     {
         var categoryData = saveSystem.GetCustomCategoryData();
-        var address = categoryData.keys.IndexOf(categoryData.keys.Find((key) => key == _categoryKey));
-        saveSystem.SaveImage(_categoryImg.texture, categoryData.imgAddresses[address]);
+        var index = categoryData.keys.IndexOf(categoryData.keys.Find((key) => key == _categoryKey));
+        if (index >= 0)
+            saveSystem.SaveImage(_categoryImg.texture, categoryData.imgAddresses[index]);
 
-        var data = Categories[_categoryKey];
-        data.img = _categoryImg;
-        Categories[_categoryKey] = data;
+        SwapImg(Categories);
+
+        switch ((GameName)categoryData.games[index])
+        {
+            case GameName.Variant:
+                SwapImg(VariantCategories);
+                break;
+            case GameName.Buttons:
+                SwapImg(ButtonsCategories);
+                break;
+            case GameName.WordBook:
+                SwapImg(WordBookCategories);
+                break;
+            case GameName.WordComposing:
+                SwapImg(WordComposingCategories);
+                break;
+            default:
+                break;
+        }
+
+        void SwapImg(Dictionary<string, CategoryData> targetGame)
+        {
+            var data = targetGame[_categoryKey];
+            data.img = _categoryImg;
+            targetGame[_categoryKey] = data;
+        }
     }
 
     public void AddCategoryToBase(CategoryData _data, string _categoryKey, string _imageAddress, string _clipAddress)

@@ -37,6 +37,7 @@ public class VariantGameMenu : MonoBehaviour
 
         Signals.AddCategoryEvent.AddListener(AddNewCategory);
         Signals.AddCardEvent.AddListener(AddNewCard);
+        Signals.DeleteCategoryFromGame.AddListener(DeleteCategory);
         Signals.DeleteCardFromCategory.AddListener(DeleteCard);
         cardSelector.Initialize(Cards);
     }
@@ -183,6 +184,12 @@ public class VariantGameMenu : MonoBehaviour
     }
     #endregion
 
+    public void UpdateCategoryImage(string _categoryKey, Sprite _categoryImg)
+    {
+        var targetInstance = CategoryCards.Find((card) => card.categoryKey == _categoryKey);
+        targetInstance.UpdateImg(_categoryImg);
+    }
+
     public void UpdateCardImg(string _cardKey, Sprite _cardImg)
     {
         var validCards = Cards.FindAll((card) => card.GetComponent<CardBase>().Key == _cardKey);
@@ -192,19 +199,32 @@ public class VariantGameMenu : MonoBehaviour
         Debug.Log("Variant game updated");
     }
 
-    public void DeleteCard(string _categoryKey, string _key)
+    public void DeleteCategory(GameName _game, string _categoryKey)
     {
         var game = categoryStorage.Categories[_categoryKey].game;
         if ((GameName)game != GameName.Variant) return;
 
-         foreach (var card in Cards)
+        var target = CategoryCards.Find((category) => category.categoryKey == _categoryKey);
+        if (target != null)
+        {
+            mainMenu.DeleteEditableElement(target.GetComponent<EditableElement>());
+            CategoryCards.Remove(target);
+            Destroy(target.gameObject);
+        }
+    }
+
+    private void DeleteCard(string _categoryKey, string _key)
+    {
+        var game = categoryStorage.Categories[_categoryKey].game;
+        if ((GameName)game != GameName.Variant) return;
+
+        foreach (var card in Cards)
             if (card.GetComponent<CardBase>().Key == _key)
             {
                 mainMenu.DeleteEditableElement(card.GetComponent<EditableElement>());
                 Cards.Remove(card);
                 cardSelector.RemoveCard(card);
-                Destroy(card.gameObject);
-                return;
+                Destroy(card);
             }
     }
 

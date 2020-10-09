@@ -55,4 +55,9 @@ public class CategoryInitializer : MonoBehaviour
     }
 
     public Button GetSelectBtn() { return selectBtn; }
+
+    public void UpdateImg(Sprite _sprite)
+    {
+        img.sprite = _sprite;
+    }
 }
