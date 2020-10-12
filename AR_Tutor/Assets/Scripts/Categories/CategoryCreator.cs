@@ -50,30 +50,36 @@ public class CategoryCreator : MonoBehaviour
         {
             if (DataIsValid())
             {
-                CreateCategory();
+                CreateCategory(title, image.sprite, clip);
                 transitionController.ReturnToBack(2);
             }
         });
     }
 
-    private void CreateCategory()
+    public void CreateCategory(string _categoryKey, Sprite _categoryImg)
     {
-        var categoryKey = $"{patientDataManager.GetUserLogin()}{title}{saveSystem.GetCustomCategoryData().keys.Count}";
+        var data = storage.Categories[_categoryKey];
+        CreateCategory(data.title, _categoryImg, data.clip, data.cardKeys, data.cardsVisible);
+    }
+
+    private void CreateCategory(string _title, Sprite _img, AudioClip _clip, List<string> _cardKeys = null, List<bool> _cardVisibles = null)
+    {
+        var categoryKey = $"{patientDataManager.GetUserLogin()}{_title}{saveSystem.GetCustomCategoryData().keys.Count}";
         var image1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}image1";
         var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}audio1";
 
         Debug.Log(image == null);
         categoryData = new CategoryData(
             (int)categoryManager.gameName,
-            title,
-            image.sprite,
-            clip,
+            _title,
+            _img,
+            _clip,
             true,
-            new List<string>(),
-            new List<bool>(),
+            (_cardKeys == null) ? new List<string>() : _cardKeys,
+            (_cardVisibles == null) ? new List<bool>() : _cardVisibles,
             true);
 
-        saveSystem.SaveImage(image.sprite.texture, image1Key);
+        saveSystem.SaveImage(_img.texture, image1Key);
         saveSystem.SaveAudio(clip, audio1Key);
 
         storage.AddCategoryToBase(categoryData, categoryKey, image1Key, audio1Key);
@@ -153,4 +159,5 @@ public class CategoryCreator : MonoBehaviour
 
         return true;
     }
+
 }

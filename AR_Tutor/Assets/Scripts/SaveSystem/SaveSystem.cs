@@ -126,9 +126,10 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Audio
-    public void SaveAudio(AudioClip clip, string _key)
+    public void SaveAudio(AudioClip _clip, string _key)
     {
-        SaveWav.Save(_key, clip);
+        if (_clip == null) return;
+        SaveWav.Save(_key, _clip);
     }
 
     public AudioClip LoadAudio(string _key)

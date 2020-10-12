@@ -32,7 +32,7 @@ public class CategoryInitializer : MonoBehaviour
     {
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
-            Signals.SetImgForCardEvent.Invoke(game, categoryKey, null);
+            Signals.SetImgForCategoryEvent.Invoke(game, categoryKey);
         });
 
         deleteBtn.onClick.AddListener(HideCategory);
@@ -55,4 +55,9 @@ public class CategoryInitializer : MonoBehaviour
     }
 
     public Button GetSelectBtn() { return selectBtn; }
+
+    public void UpdateImg(Sprite _sprite)
+    {
+        img.sprite = _sprite;
+    }
 }
