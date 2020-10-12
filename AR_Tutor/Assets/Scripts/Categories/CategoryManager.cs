@@ -35,6 +35,7 @@ public class CategoryManager : MonoBehaviour
         transitionController = FindObjectOfType<MenuTransitionController>();
         variantMenu = FindObjectOfType<VariantGameMenu>();
         patientDataManager = FindObjectOfType<PatientDataManager>();
+        categoryStorage = FindObjectOfType<CategoryStorage>();
         cardStorage = FindObjectOfType<CardStorage>();
         categoryLibraryControl = FindObjectOfType<CategoryLibraryUIControl>();
         cardLibraryControl = FindObjectOfType<CardLibraryUIControl>();
@@ -305,7 +306,7 @@ public class CategoryManager : MonoBehaviour
     private void SetUpImgToBaseCategory(GameName _game, string _categoryKey, Sprite _categoryImg)
     {
         categoryCreator.CreateCategory(_categoryKey, _categoryImg);
-        Signals.DeleteCategoryFromGame.Invoke(_game, _categoryKey);
+        Signals.DeleteCategoryFromGame.Invoke(_categoryKey);
         /// TODO : Доделать замену старого раздела на кастомный с новой картинкой
     }
     #endregion

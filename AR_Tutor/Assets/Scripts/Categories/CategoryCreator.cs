@@ -79,7 +79,7 @@ public class CategoryCreator : MonoBehaviour
             (_cardVisibles == null) ? new List<bool>() : _cardVisibles,
             true);
 
-        saveSystem.SaveImage(image.sprite.texture, image1Key);
+        saveSystem.SaveImage(_img.texture, image1Key);
         saveSystem.SaveAudio(clip, audio1Key);
 
         storage.AddCategoryToBase(categoryData, categoryKey, image1Key, audio1Key);

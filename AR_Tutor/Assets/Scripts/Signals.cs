@@ -11,7 +11,7 @@ public static class Signals
 {
     public static StringStringEvent AddCardEvent = new StringStringEvent();
     public static StringEvent AddCategoryEvent = new StringEvent();
-    public static CategoryEvent DeleteCategoryFromGame = new CategoryEvent();
+    public static StringEvent DeleteCategoryFromGame = new StringEvent();
     public static StringStringEvent DeleteCardFromCategory = new StringStringEvent();
     public static CardUnityEvent SetImgForCardEvent = new CardUnityEvent();
     public static CategoryEvent SetImgForCategoryEvent = new CategoryEvent();

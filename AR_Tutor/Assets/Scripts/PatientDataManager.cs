@@ -60,15 +60,10 @@ public class PatientDataManager : MonoBehaviour
             FillPatientDataByDefault();
         }
 
-        string debug = "";
-        foreach (var item in PatientData.CategoriesVisible)
-            debug += $"{item}";
-
-        Debug.Log(debug);
-
         Signals.AddCategoryEvent.AddListener(AddCategoryToGame);
         Signals.AddCardEvent.AddListener(AddCardToCategory);
-        Signals.DeleteCardFromCategory.AddListener(DeleteCardFromCategory);
+        Signals.DeleteCategoryFromGame.AddListener(RemoveCategoryFromGame);
+        Signals.DeleteCardFromCategory.AddListener(RemoveCardFromCategory);
         Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
         Signals.SwitchCategoryVisibleEvent.AddListener(SwitchCategoryVisible);
         testData = PatientData;
@@ -106,11 +101,7 @@ public class PatientDataManager : MonoBehaviour
         var index = GetCategoryIndex(_categoryKey);
         if (index < 0) return;
         PatientData.CategoriesVisible[index] = _visible;
-        string debug = "";
-        foreach (var item in PatientData.CategoriesVisible)
-            debug += $"{item}";
 
-        Debug.Log(debug);
         UpdatePatientData();
     }
 
@@ -131,7 +122,20 @@ public class PatientDataManager : MonoBehaviour
         PatientData.CategoriesVisible.Add(true);
         PatientData.CardKeys.Add(new List<string>());
         PatientData.CardsVisible.Add(new List<bool>());
+        Debug.Log("Category added from game");
+        UpdatePatientData();
+    }
 
+    private void RemoveCategoryFromGame(string _categoryKey)
+    {
+        Debug.Log("Start removed category");
+        var index = GetCategoryIndex(_categoryKey);
+        if (index < 0) return;
+
+        PatientData.CategoriesKeys.Remove(_categoryKey);
+        if (PatientData.CategoriesVisible.Count - 1 >= index)
+            PatientData.CategoriesVisible.RemoveAt(index);
+        Debug.Log("Category removed from game");
         UpdatePatientData();
     }
     #endregion
@@ -166,18 +170,21 @@ public class PatientDataManager : MonoBehaviour
 
         PatientData.CardKeys[categoryIndex].Add(_cardKey);
         PatientData.CardsVisible[categoryIndex].Add(true);
-        Debug.Log("card added and save in patient data");
+        Debug.Log("Card added and save in patient data");
         UpdatePatientData();
     }
 
-    public void DeleteCardFromCategory(string _categoryIndex, string _cardKey)
+    public void RemoveCardFromCategory(string _categoryKey, string _cardKey)
     {
-        var categoryIndex = GetCategoryIndex(_categoryIndex);
+        var categoryIndex = GetCategoryIndex(_categoryKey);
         if (categoryIndex < 0) return;
-        if (!PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
+        var cardIndex = GetCardIndex(_categoryKey, _cardKey);
+        if (cardIndex < 0) return;
 
         PatientData.CardKeys[categoryIndex].Remove(_cardKey);
-        PatientData.CardsVisible[categoryIndex].Add(false);
+        if (PatientData.CardsVisible[categoryIndex].Count - 1 >= cardIndex)
+            PatientData.CardsVisible[categoryIndex][cardIndex] = false;
+        Debug.Log("Card removed from category");
         UpdatePatientData();
     }
     #endregion

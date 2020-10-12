@@ -62,7 +62,6 @@ public class VariantGameMenu : MonoBehaviour
 
             var editableElem = obj.GetComponent<EditableElement>();
             editableElem.Visible = (data.visible);
-            Debug.Log(data.visible);
             editableElem.ConfigurateElement(mainMenu.Mode);
             mainMenu.AddEditableElement(editableElem);
         }
@@ -199,7 +198,7 @@ public class VariantGameMenu : MonoBehaviour
         Debug.Log("Variant game updated");
     }
 
-    public void DeleteCategory(GameName _game, string _categoryKey)
+    public void DeleteCategory(string _categoryKey)
     {
         var game = categoryStorage.Categories[_categoryKey].game;
         if ((GameName)game != GameName.Variant) return;
