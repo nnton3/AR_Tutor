@@ -34,7 +34,7 @@ public class MenuTransitionController : MonoBehaviour
     public void ReturnToBack()
     {
         DisposeReturnBtn();
-        if (transitionHistory.Count < 2) return;
+        if (transitionHistory.Count < 2) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
             foreach (var element in activeElements)
@@ -53,7 +53,7 @@ public class MenuTransitionController : MonoBehaviour
     public void ReturnToBack(int steps)
     {
         DisposeReturnBtn();
-        if (transitionHistory.Count - steps < 1) return;
+        if (transitionHistory.Count - steps < 1) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
             foreach (var element in activeElements)
@@ -70,6 +70,11 @@ public class MenuTransitionController : MonoBehaviour
         activeElements = previuseElements;
 
         if (transitionHistory.Count == 1) ReturnToMainMenuEvent?.Invoke();
+    }
+
+    private void ReturnToSignInScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     public void AddEventToReturnBtn(UnityAction action)

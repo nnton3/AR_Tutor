@@ -27,29 +27,31 @@ public class DataBaseControl : MonoBehaviour
         database.GetReference("users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(config));
     }
 
-    public void ReadUserData(string userId)
-    {
-        var routine = StartCoroutine(ReadUserDataRoutine(userId));
-    }
-
     public IEnumerator ReadUserDataRoutine(string userId)
     {
         var readTask = database.GetReference("users")
                 .GetValueAsync().ContinueWith(task =>
                 {
                     if (task.IsCompleted)
+                    {
+                        Debug.Log("bind snapshot");
                         snapshot = task.Result;
+                    }
                 });
 
         yield return new WaitUntil(() => readTask.IsCompleted);
 
-        if (snapshot.HasChild(userId))
+        userData = new UserData(new List<string>());
+        if (snapshot != null)
         {
-            var json = snapshot.Child(userId).GetRawJsonValue();
-            userData = JsonUtility.FromJson<UserData>(json);
+            if (snapshot.HasChild(userId))
+            {
+                Debug.Log("load users from cloud");
+                var json = snapshot.Child(userId).GetRawJsonValue();
+                userData = JsonUtility.FromJson<UserData>(json);
+            }
         }
-        else
-            userData = new UserData(new List<string>());
+        else Debug.Log("user not load and create as new");
     }
     #endregion
 
