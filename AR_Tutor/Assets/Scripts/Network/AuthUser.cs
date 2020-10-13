@@ -22,7 +22,8 @@ public class AuthUser : MonoBehaviour
 
     public void CreateUser(string email, string password)
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
@@ -54,7 +55,8 @@ public class AuthUser : MonoBehaviour
 
     private IEnumerator SignInRoutine(string email, string password)
     {
-        var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
