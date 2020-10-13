@@ -7,21 +7,24 @@ using UniRx;
 public class LoginUIControl : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private Button 
-        signUpBtn, 
-        signInBtn, 
-        addUserBtn, 
+    [SerializeField]
+    private Button
+        signUpBtn,
+        signInBtn,
+        addUserBtn,
         createPatientDataBtn,
         addPatientDataBtn;
     [SerializeField] private Text loadStatus;
-    [SerializeField] private InputField 
-        emailField, 
-        passwordField, 
+    [SerializeField]
+    private InputField
+        emailField,
+        passwordField,
         patientLoginFieldForCreate,
         patientLoginFieldForAdd,
         patientNameField,
         patientAgeField;
-    [SerializeField] private GameObject
+    [SerializeField]
+    private GameObject
         loginPanel,
         addUserPanel,
         patientSelector,

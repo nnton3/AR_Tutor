@@ -61,3 +61,7 @@ crashlytics-build.properties
 
 AR_Tutor/Library
 AR_Tutor/Temp
+AR_Tutor/Assets/Editor Default Resources
+AR_Tutor/Assets/Firebase
+AR_Tutor/Assets/Parse
+AR_Tutor/Assets/ExternalDependencyManager
