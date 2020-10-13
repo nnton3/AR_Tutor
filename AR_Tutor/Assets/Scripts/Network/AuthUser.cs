@@ -43,6 +43,12 @@ public class AuthUser : MonoBehaviour
 
     public void SignIn(string email, string password)
     {
+        if (email == "" || password == "")
+        {
+            Debug.Log("Email or password are not correct");
+            return;
+        }
+
         StartCoroutine(SignInRoutine(email, password));
     }
 
@@ -65,7 +71,10 @@ public class AuthUser : MonoBehaviour
 
         yield return new WaitUntil(() => authTask.IsCompleted);
 
-        IsSignIn = true;
-        status.text = "User signed in successfully";
+        if (newUser != null)
+        {
+            IsSignIn = true;
+            Debug.Log("User signed in successfully");
+        }
     }
 }

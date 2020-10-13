@@ -29,6 +29,8 @@ public class PatientDataManager : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
+        patientLogin = FindObjectOfType<SelectedPatient>()?.PatientLogin;
+        userLogin = FindObjectOfType<SelectedPatient>()?.UserLogin;
 
         PatientData = new PatientSaveGameData(null, null, null, null, null);
         var loadData = saveSystem.LoadPatientDataFromLocal(patientLogin);

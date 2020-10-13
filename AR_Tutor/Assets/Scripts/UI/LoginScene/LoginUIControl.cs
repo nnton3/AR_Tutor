@@ -86,7 +86,7 @@ public class LoginUIControl : MonoBehaviour
         if (patientAgeField != null) patientAgeField.onValueChanged.AddListener((value) => gameManager.PatientAge = value);
     }
 
-    public void AddPatientCardOnSelector(PatientData data, string patient)
+    public void AddPatientCardInSelector(PatientData data, string patient)
     {
         if (patientSelectorContent == null) return;
         if (patientCardPref == null) return;
@@ -96,7 +96,6 @@ public class LoginUIControl : MonoBehaviour
         card.GetComponent<Button>().onClick.AddListener(() =>
         {
             gameManager.SelectPatient(patient);
-            gameManager.LoadMenuScene();
         });
     }
 }

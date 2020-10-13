@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UniRx;
-using System;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,8 +32,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
-
         database = FindObjectOfType<DataBaseControl>();
         uiControl = FindObjectOfType<LoginUIControl>();
         auth = FindObjectOfType<AuthUser>();
@@ -90,7 +85,7 @@ public class GameManager : MonoBehaviour
     {
         uiControl.AddUserPanelActiveSelf = false;
         var data = new PatientData(patientName, patientAge);
-        uiControl.AddPatientCardOnSelector(data, PatientLogin);
+        uiControl.AddPatientCardInSelector(data, PatientLogin);
         SavePatientInDatabase(data);
         UpdateUserData(PatientLogin);
     }
@@ -114,19 +109,21 @@ public class GameManager : MonoBehaviour
         if (!patientsIdentifiers.Contains(identifier))
             patientsIdentifiers.Add(identifier);
 
-        uiControl.AddPatientCardOnSelector(patientData, identifier);
+        uiControl.AddPatientCardInSelector(patientData, identifier);
     }
 
+    public void SelectPatient(string _patinetLogin)
+    {
+        var selectPatientData = FindObjectOfType<SelectedPatient>();
+        if (selectPatientData == null)
+        {
+            var obj = Instantiate(new GameObject("SelectedPatientData"));
+            selectPatientData = obj.AddComponent<SelectedPatient>();
+        }
+        selectPatientData.SetUserLogin(email);
+        selectPatientData.SetSelectedPatientLogin(_patinetLogin);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
     #endregion
-
-    public void SelectPatient(string patientLogin)
-    {
-        selectedPatient = patientLogin;
-    }
-
-    public void LoadMenuScene()
-    {
-        SceneManager.LoadScene(1);
-    }
     #endregion
 }
