@@ -45,13 +45,12 @@ public class CardBase : MonoBehaviour
 
     private void ConfigurateUI(CardData data)
     {
-        if (data.Title == null)
+        if (string.IsNullOrWhiteSpace(data.Title))
         {
             title.text = "Add new card";
             return;
         }
-
-        if (title != null) title.text = data.Title;
+        else title.text = data.Title;
 
         if (image != null)
             if (data.img != null)
