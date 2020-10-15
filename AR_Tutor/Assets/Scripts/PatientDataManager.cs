@@ -29,8 +29,11 @@ public class PatientDataManager : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        patientLogin = FindObjectOfType<SelectedPatient>()?.PatientLogin;
-        userLogin = FindObjectOfType<SelectedPatient>()?.UserLogin;
+        if (FindObjectOfType<SelectedPatient>())
+        {
+            patientLogin = FindObjectOfType<SelectedPatient>()?.PatientLogin;
+            userLogin = FindObjectOfType<SelectedPatient>()?.UserLogin;
+        }
 
         PatientData = new PatientSaveGameData(null, null, null, null, null);
         var loadData = saveSystem.LoadPatientDataFromLocal(patientLogin);
@@ -164,9 +167,9 @@ public class PatientDataManager : MonoBehaviour
         return true;
     }
 
-    public void AddCardToCategory(string _categoryIndex, string _cardKey)
+    public void AddCardToCategory(string _categoryKey, string _cardKey)
     {
-        var categoryIndex = GetCategoryIndex(_categoryIndex);
+        var categoryIndex = GetCategoryIndex(_categoryKey);
         if (categoryIndex < 0) return;
         if (PatientData.CardKeys[categoryIndex].Contains(_cardKey)) return;
 

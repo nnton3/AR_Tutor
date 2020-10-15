@@ -6,6 +6,7 @@ public class StringBoolEvent : UnityEvent<string, bool> { }
 public class StringStringEvent : UnityEvent<string, string> { }
 public class StringStringBoolEvent : UnityEvent<string, string, bool> { }
 public class StringEvent : UnityEvent<string> { }
+public class BoolEvent : UnityEvent<bool> { }
 
 public static class Signals
 {
@@ -20,6 +21,7 @@ public static class Signals
     public static StringEvent SelectCardFromLibrary = new StringEvent();
     public static StringEvent SelectCategoryFromLibrary = new StringEvent();
     public static StringEvent VariantGameCardSelect = new StringEvent();
+    public static BoolEvent CardLoadEnd = new BoolEvent();
 
     public static void Reset()
     {

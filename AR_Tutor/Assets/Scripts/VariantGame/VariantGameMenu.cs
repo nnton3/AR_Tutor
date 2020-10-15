@@ -163,7 +163,12 @@ public class VariantGameMenu : MonoBehaviour
     #region Add btn
     private void CreateAddCardBtn(GameObject _categoryPanel, string _categoryKey)
     {
-        CreateAddBtn(_categoryPanel, () => categoryManager.SelectAddMethod(GameName.Variant, _categoryKey), _categoryKey);
+        CreateAddBtn(_categoryPanel, 
+            () =>
+            {
+                categoryManager.SelectAddMethod(GameName.Variant, _categoryKey);
+            },
+            _categoryKey);
     }
 
     private void CreateAddCategoryBtn()
