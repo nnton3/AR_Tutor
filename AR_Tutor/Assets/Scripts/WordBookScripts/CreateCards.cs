@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CreateCards : MonoBehaviour
 {
@@ -16,18 +17,17 @@ public class CreateCards : MonoBehaviour
 
     void Start()
     {
-        /*for (int i = 0; i < Cards.Length; i++)
-        {
-            
-        } */
+
     }
 
     public void CreateSubcards()
     {
+        FindObjectOfType<SubstrateController>().CloseBtn();
         foreach (Transform child in Content)
         {
             GameObject.Destroy(child.gameObject);
         }
+
 
         for (int i = 0; i < Subcards.Length; i++)
         {
@@ -35,49 +35,13 @@ public class CreateCards : MonoBehaviour
             GO.transform.SetParent(Content);
             GO.transform.localPosition = Vector2.zero;
             GO.transform.localScale = Vector2.one;
+            GO.GetComponent<Image>().sprite = GO.GetComponent<CardController>().ImageSprites[0];
         }
     }
 
-    public void CreatingCards(int num)
+    public void CreatingCards()
     {
-        //Debug.Log(1);
-        //if (SectionNumber == 0)
-        //{
-        //    TempCards = GameObject.FindGameObjectsWithTag("0");
-        //    for (int i = 0; i < TempCards.Length; i++)
-        //    {
-        //        Instantiate(TempCards[i], StartPos.transform.position, Quaternion.identity);
-        //    }
-        //}
-        /*
-        SectionNumber = num;
-        switch (SectionNumber)
-        {
-            case 0:
-                TempCards = GameObject.FindGameObjectsWithTag("0");
-                for (int i = 0; i < TempCards.Length; i++)
-                {
-                    Instantiate(TempCards[i], StartPos.transform.position, Quaternion.identity);
-                }
-                break;
-            case 1:
-                TempCards = GameObject.FindGameObjectsWithTag("1");
-                for (int i = 0; i < TempCards.Length; i++)
-                {
-                    Instantiate(TempCards[i], StartPos.transform.position, Quaternion.identity);
-                }
-                break;
-            case 2:
-                TempCards = GameObject.FindGameObjectsWithTag("2");
-                for (int i = 0; i < TempCards.Length; i++)
-                {
-                    Instantiate(TempCards[i], StartPos.transform.position, Quaternion.identity);
-                }
-                break;
-        }
-        */
 
-        //GameObject GO = Instantiate(Cards, Pos2.transform.position, Quaternion.identity);
     }
 
 }
