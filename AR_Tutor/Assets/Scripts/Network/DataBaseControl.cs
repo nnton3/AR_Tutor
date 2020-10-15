@@ -3,7 +3,6 @@ using Firebase.Database;
 using Firebase.Unity.Editor;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class DataBaseControl : MonoBehaviour
@@ -14,11 +13,12 @@ public class DataBaseControl : MonoBehaviour
     public UserData userData { get; private set; }
     public PatientData patientData { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
         FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://ar-tutor.firebaseio.com/");
 
         database = FirebaseDatabase.DefaultInstance;
+        //database.App.Options.DatabaseUrl = new System.Uri("https://ar-tutor.firebaseio.com/");
     }
 
     #region User data
@@ -27,29 +27,31 @@ public class DataBaseControl : MonoBehaviour
         database.GetReference("users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(config));
     }
 
-    public void ReadUserData(string userId)
-    {
-        var routine = StartCoroutine(ReadUserDataRoutine(userId));
-    }
-
     public IEnumerator ReadUserDataRoutine(string userId)
     {
         var readTask = database.GetReference("users")
                 .GetValueAsync().ContinueWith(task =>
                 {
                     if (task.IsCompleted)
+                    {
+                        Debug.Log("bind snapshot");
                         snapshot = task.Result;
+                    }
                 });
 
         yield return new WaitUntil(() => readTask.IsCompleted);
 
-        if (snapshot.HasChild(userId))
+        userData = new UserData(new List<string>());
+        if (snapshot != null)
         {
-            var json = snapshot.Child(userId).GetRawJsonValue();
-            userData = JsonUtility.FromJson<UserData>(json);
+            if (snapshot.HasChild(userId))
+            {
+                Debug.Log("load users from cloud");
+                var json = snapshot.Child(userId).GetRawJsonValue();
+                userData = JsonUtility.FromJson<UserData>(json);
+            }
         }
-        else
-            userData = new UserData(new List<string>());
+        else Debug.Log("user not load and create as new");
     }
     #endregion
 

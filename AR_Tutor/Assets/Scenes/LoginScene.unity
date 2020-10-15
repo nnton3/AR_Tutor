@@ -1722,8 +1722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b1c0a506326774385bc75552bbe02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  email: 
-  password: 
+  email: akarnomazov@gmail.com
+  password: Password1
   patientLogin: 
   patientName: 
   patientAge: 
@@ -1731,6 +1731,7 @@ MonoBehaviour:
     patients: []
   patients: []
   patientsIdentifiers: []
+  selectedPatient: 
 --- !u!4 &1184886538
 Transform:
   m_ObjectHideFlags: 0

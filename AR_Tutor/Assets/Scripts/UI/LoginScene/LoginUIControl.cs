@@ -7,21 +7,24 @@ using UniRx;
 public class LoginUIControl : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private Button 
-        signUpBtn, 
-        signInBtn, 
-        addUserBtn, 
+    [SerializeField]
+    private Button
+        signUpBtn,
+        signInBtn,
+        addUserBtn,
         createPatientDataBtn,
         addPatientDataBtn;
     [SerializeField] private Text loadStatus;
-    [SerializeField] private InputField 
-        emailField, 
-        passwordField, 
+    [SerializeField]
+    private InputField
+        emailField,
+        passwordField,
         patientLoginFieldForCreate,
         patientLoginFieldForAdd,
         patientNameField,
         patientAgeField;
-    [SerializeField] private GameObject
+    [SerializeField]
+    private GameObject
         loginPanel,
         addUserPanel,
         patientSelector,
@@ -86,7 +89,7 @@ public class LoginUIControl : MonoBehaviour
         if (patientAgeField != null) patientAgeField.onValueChanged.AddListener((value) => gameManager.PatientAge = value);
     }
 
-    public void AddPatientCardOnSelector(PatientData data, string patient)
+    public void AddPatientCardInSelector(PatientData data, string patient)
     {
         if (patientSelectorContent == null) return;
         if (patientCardPref == null) return;
@@ -96,7 +99,6 @@ public class LoginUIControl : MonoBehaviour
         card.GetComponent<Button>().onClick.AddListener(() =>
         {
             gameManager.SelectPatient(patient);
-            gameManager.LoadMenuScene();
         });
     }
 }
