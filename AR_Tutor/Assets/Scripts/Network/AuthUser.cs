@@ -22,7 +22,8 @@ public class AuthUser : MonoBehaviour
 
     public void CreateUser(string email, string password)
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
@@ -43,12 +44,19 @@ public class AuthUser : MonoBehaviour
 
     public void SignIn(string email, string password)
     {
+        if (email == "" || password == "")
+        {
+            Debug.Log("Email or password are not correct");
+            return;
+        }
+
         StartCoroutine(SignInRoutine(email, password));
     }
 
     private IEnumerator SignInRoutine(string email, string password)
     {
-        var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
@@ -59,13 +67,16 @@ public class AuthUser : MonoBehaviour
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                 return;
             }
-
+            Debug.Log("save user in variable");
             newUser = task.Result;
         });
 
         yield return new WaitUntil(() => authTask.IsCompleted);
-
-        IsSignIn = true;
-        status.text = "User signed in successfully";
+        Debug.Log("move next");
+        if (newUser != null)
+        {
+            IsSignIn = true;
+            Debug.Log("User signed in successfully");
+        }
     }
 }

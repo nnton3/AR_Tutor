@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "com.google.firebase.analytics": "6.15.2",
+    "com.google.external-dependency-manager": "1.2.161",
     "com.google.firebase.auth": "6.15.2",
     "com.google.firebase.database": "6.15.2",
+    "com.google.firebase.storage": "6.15.2",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.ide.rider": "1.1.4",
     "com.unity.ide.vscode": "1.2.0",
