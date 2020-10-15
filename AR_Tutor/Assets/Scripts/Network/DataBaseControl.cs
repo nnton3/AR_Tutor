@@ -3,7 +3,6 @@ using Firebase.Database;
 using Firebase.Unity.Editor;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class DataBaseControl : MonoBehaviour
@@ -14,11 +13,12 @@ public class DataBaseControl : MonoBehaviour
     public UserData userData { get; private set; }
     public PatientData patientData { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
         FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://ar-tutor.firebaseio.com/");
 
         database = FirebaseDatabase.DefaultInstance;
+        //database.App.Options.DatabaseUrl = new System.Uri("https://ar-tutor.firebaseio.com/");
     }
 
     #region User data
