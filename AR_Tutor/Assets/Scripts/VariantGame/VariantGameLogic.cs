@@ -86,10 +86,7 @@ public class VariantGameLogic : MonoBehaviour
     private void HideUnselectedCards(string key)
     {
         foreach (var card in currentCards)
-        {
-            Debug.Log(card.GetComponent<VariantCardInitializer>().Key != key);
             if (card.GetComponent<VariantCardInitializer>().Key != key) 
                 card.SetActive(false);
-        }
     }
 }

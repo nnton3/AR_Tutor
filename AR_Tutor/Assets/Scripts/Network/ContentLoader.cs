@@ -67,7 +67,10 @@ public class ContentLoader : MonoBehaviour
 
             storage.AddNewCardToBase(loadedCard, cardKey, image1Key, audio1Key);
             categoryManager.AddCard(cardKey);
+            Signals.CardLoadEnd.Invoke(true);
         }
+        else
+            Signals.CardLoadEnd.Invoke(false);
     }
 
     private IEnumerator LoadCardConfigFromCloud(string _cardKey)

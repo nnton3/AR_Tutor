@@ -45,68 +45,39 @@ public class VariantGameMenu : MonoBehaviour
     private void ConfigurateCategories()
     {
         foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
-        {
-            CategoryData data = new CategoryData();
-            if (!categoryStorage.VariantCategories.ContainsKey(categoryKey)) continue;
-            data = categoryStorage.VariantCategories[categoryKey];
-
-            var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
-            var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
-            CategoriesPanels.Add(categoryPanel);
-
-            var initializer = obj.GetComponent<CategoryInitializer>();
-            initializer.Initialize(GameName.Variant, categoryKey, data);
-            CategoryCards.Add(initializer);
-
-            ConfigurateCards(data, categoryPanel, categoryKey);
-
-            var editableElem = obj.GetComponent<EditableElement>();
-            editableElem.Visible = (data.visible);
-            editableElem.ConfigurateElement(mainMenu.Mode);
-            mainMenu.AddEditableElement(editableElem);
-        }
+            AddNewCategory(categoryKey);
 
         CreateAddCategoryBtn();
     }
 
     private void ConfigurateCards(CategoryData _categoryData, GameObject _categoryPanel, string _categoryKey)
     {
-        if (cardStorage == null) return;
-        string debug = "";
         if (_categoryData.cardKeys != null)
-            if (_categoryData.cardKeys.Count > 0)
-                foreach (var key in _categoryData.cardKeys)
+            for (int i = 0; i < _categoryData.cardKeys.Count; i++)
+            {
+                var key = _categoryData.cardKeys[i];
+                if (!cardStorage.cards.ContainsKey(key))
                 {
-                    debug += $"Try to add card {key}\n";
-                    if (!cardStorage.cards.ContainsKey(key))
-                    {
-                        Debug.Log($"Key {key} not found in card storage");
-                        continue;
-                    }
-
-                    GameObject cardObj = AddCardInMenu(_categoryPanel, _categoryKey, key);
-                    var editableElem = cardObj.GetComponent<EditableElement>();
-
-                    int index = -1;
-                    bool visible = true;
-                    index = _categoryData.cardKeys.IndexOf(key);
-                    if (index >= 0)
-                        if (_categoryData.cardsVisible != null)
-                            if (_categoryData.cardsVisible.Count - 1 >= index)
-                                visible = _categoryData.cardsVisible[index];
-                
-                    editableElem.Visible = visible;
-                    editableElem.ConfigurateElement(mainMenu.Mode);
-                    mainMenu.AddEditableElement(editableElem);
+                    Debug.Log($"Key {key} not found in card storage");
+                    continue;
                 }
+
+                GameObject cardObj = AddCardInMenu(_categoryPanel, _categoryKey, key);
+
+                bool visible = true;
+                if (_categoryData.cardsVisible != null)
+                    if (_categoryData.cardsVisible.Count - 1 >= i)
+                        visible = _categoryData.cardsVisible[i];
+
+                InitializeEditableElement(cardObj, visible);
+            }
 
         CreateAddCardBtn(_categoryPanel, _categoryKey);
     }
 
     private void AddNewCategory(string _categoryKey)
     {
-        var game = categoryStorage.Categories[_categoryKey].game;
-        if ((GameName)game != GameName.Variant) return;
+        if (!IsCategoryForThisGame(_categoryKey)) return;
 
         CategoryData data = new CategoryData();
         if (!categoryStorage.VariantCategories.ContainsKey(_categoryKey)) return;
@@ -121,28 +92,23 @@ public class VariantGameMenu : MonoBehaviour
         initializer.Initialize(GameName.Variant, _categoryKey, data);
         CategoryCards.Add(initializer);
 
-        var editableElem = obj.GetComponent<EditableElement>();
-        editableElem.Visible = (data.visible);
-        editableElem.ConfigurateElement(mainMenu.Mode);
-        mainMenu.AddEditableElement(editableElem);
+        InitializeEditableElement(obj, data.visible);
 
         BindCategoryBtn(CategoryCards.Count - 1);
 
-        CreateAddCardBtn(categoryPanel, _categoryKey);
+        ConfigurateCards(data, categoryPanel, _categoryKey);
     }
 
     public void AddNewCard(string _categoryKey, string _key)
     {
-        var game = categoryStorage.Categories[_categoryKey].game;
-        if ((GameName)game != GameName.Variant) return;
+        if (!IsCategoryForThisGame(_categoryKey)) return;
 
         var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey);
         var index = CategoryCards.IndexOf(targetCard);
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
-        
-        var editableElem = cardObj.GetComponent<EditableElement>();
-        editableElem.ConfigurateElement(mainMenu.Mode);
-        mainMenu.AddEditableElement(editableElem);
+
+        InitializeEditableElement(cardObj);
+
         cardSelector.AddCard(cardObj);
     }
 
@@ -158,6 +124,20 @@ public class VariantGameMenu : MonoBehaviour
         var initializer = cardObj.GetComponent<CardBase>();
         initializer.Initialize(GameName.Variant, _categoryKey, _cardKey, cardData);
         return cardObj;
+    }
+
+    private bool IsCategoryForThisGame(string _categoryKey)
+    {
+        var game = categoryStorage.Categories[_categoryKey].game;
+        return (GameName)game == GameName.Variant;
+    }
+
+    private void InitializeEditableElement(GameObject _obj, bool visible = true)
+    {
+        var editableElem = _obj.GetComponent<EditableElement>();
+        editableElem.Visible = visible;
+        editableElem.ConfigurateElement(mainMenu.Mode);
+        mainMenu.AddEditableElement(editableElem);
     }
 
     #region Add btn
@@ -176,13 +156,14 @@ public class VariantGameMenu : MonoBehaviour
         var instance = Instantiate(addCardBtnPref, _parent.transform);
         var editableElem = instance.GetComponent<EditableElement>();
         mainMenu.AddEditableElement(editableElem);
-        var init = instance.GetComponent<CardBase>();
-        init.Initialize(GameName.Variant, _categoryKey, null, new CardData());
-        var btn = init.GetSelectBtn();
+        var initialiser = instance.GetComponent<CardBase>();
+        initialiser.Initialize(GameName.Variant, _categoryKey, null, new CardData());
+        var btn = initialiser.GetSelectBtn();
         btn.onClick.AddListener(() => _action());
     }
     #endregion
 
+    #region Update Image
     public void UpdateCategoryImage(string _categoryKey, Sprite _categoryImg)
     {
         var targetInstance = CategoryCards.Find((card) => card.categoryKey == _categoryKey);
@@ -194,14 +175,13 @@ public class VariantGameMenu : MonoBehaviour
         var validCards = Cards.FindAll((card) => card.GetComponent<CardBase>().Key == _cardKey);
         foreach (var item in validCards)
             item.GetComponent<CardBase>().UpdateImg(_cardImg);
-
-        Debug.Log("Variant game updated");
     }
+    #endregion
 
+    #region Delete content
     public void DeleteCategory(string _categoryKey)
     {
-        var game = categoryStorage.Categories[_categoryKey].game;
-        if ((GameName)game != GameName.Variant) return;
+        if (!IsCategoryForThisGame(_categoryKey)) return;
 
         var target = CategoryCards.Find((category) => category.categoryKey == _categoryKey);
         if (target != null)
@@ -214,8 +194,7 @@ public class VariantGameMenu : MonoBehaviour
 
     private void DeleteCard(string _categoryKey, string _key)
     {
-        var game = categoryStorage.Categories[_categoryKey].game;
-        if ((GameName)game != GameName.Variant) return;
+        if (!IsCategoryForThisGame(_categoryKey)) return;
 
         foreach (var card in Cards)
             if (card.GetComponent<CardBase>().Key == _key)
@@ -226,6 +205,7 @@ public class VariantGameMenu : MonoBehaviour
                 Destroy(card);
             }
     }
+    #endregion
 
     private void HidePanels()
     {
