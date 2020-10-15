@@ -13,76 +13,60 @@ public class CloudStorage : MonoBehaviour
     private string imagesPath = "gs://ar-tutor.appspot.com/CardImages/";
     private string audiosPath = "gs://ar-tutor.appspot.com/CardAudio/";
     private FirebaseStorage storage;
-    private StorageReference storageImagesRef;
-    private StorageReference storageAudiosRef;
+    public Sprite LastLoadedSprite { get; private set; } = null;
+    public AudioClip LastLoadedClip { get; private set; } = null;
     #endregion
-    [SerializeField] private Image img;
-    [SerializeField] private AudioClip clip;
 
     private void Start()
     {
         //StartCoroutine(DownloadSpriteFromCloud("CardImages/Cutter.png"));
-        StartCoroutine(LoadAudio());
+        //StartCoroutine(LoadAudio());
     }
 
-    private IEnumerator DownloadSpriteFromCloud(string _path)
+    public IEnumerator DownloadSprite(string _path)
     {
         storage = FirebaseStorage.DefaultInstance;
 
-        var reference = storage.GetReference(_path);
+        var reference = storage.GetReference($"CardImages/{_path}");
         var downloadTask = reference.GetBytesAsync(long.MaxValue);
-        
+
         yield return new WaitUntil(() => downloadTask.IsCompleted);
-        Debug.Log("work");
+
         var texture = new Texture2D(100, 100);
         texture.LoadImage(downloadTask.Result);
-        
-        if (img != null)
-        {
-            img.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-        }
+
+        LastLoadedSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
     }
 
-    private IEnumerator LoadAudio()
+    public IEnumerator DownloadAudio(string _path)
     {
         Uri uri = null;
 
         storage = FirebaseStorage.DefaultInstance;
-        var reference = storage.GetReference("CardAudio/Boom.wav");
+        var reference = storage.GetReference($"CardAudio/{_path}");
         var getUriTask = reference.GetDownloadUrlAsync().ContinueWith((Task<Uri> task) =>
         {
-            Debug.Log("get URI");
             if (!task.IsFaulted && !task.IsCanceled)
-            {
-                Debug.Log("start loading");
                 uri = task.Result;
-            }
         });
 
         yield return new WaitUntil(() => getUriTask.IsCompleted);
 
         if (uri != null)
-        {
-            StartCoroutine(LoadRoutine(uri));
-            Debug.Log("get URI task complete");
-        }
+            yield return StartCoroutine(LoadRoutine(uri));
     }
 
     private IEnumerator LoadRoutine(Uri _uri)
     {
-        Debug.Log("stat load routine");
         using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(_uri, AudioType.WAV))
         {
-            Debug.Log("send request");
             yield return request.SendWebRequest();
-            Debug.Log("get result");
             if (request.isNetworkError)
                 Debug.Log("error");
             else
             {
                 Debug.Log("write data");
-                clip = DownloadHandlerAudioClip.GetContent(request);
-                FindObjectOfType<AudioSource>().PlayOneShot(clip);
+                LastLoadedClip = DownloadHandlerAudioClip.GetContent(request);
             }
         }
     }

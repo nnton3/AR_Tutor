@@ -67,12 +67,12 @@ public class AuthUser : MonoBehaviour
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                 return;
             }
-
+            Debug.Log("save user in variable");
             newUser = task.Result;
         });
 
         yield return new WaitUntil(() => authTask.IsCompleted);
-
+        Debug.Log("move next");
         if (newUser != null)
         {
             IsSignIn = true;
