@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+
+[Serializable]
+public struct Accounts
+{
+
+}
 
 [Serializable]
 public struct UserData
