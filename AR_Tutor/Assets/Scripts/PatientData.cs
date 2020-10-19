@@ -7,11 +7,27 @@ public struct PatientData
 {
     public string PatientName;
     public string PatientAge;
+    public Sprite img;
 
-    public PatientData(string patientName, string patientAge)
+    public PatientData(string _patientName, string _patientAge, Sprite _img = null)
     {
-        PatientName = patientName;
-        PatientAge = patientAge;
+        PatientName = _patientName;
+        PatientAge = _patientAge;
+        img = _img;
+    }
+}
+
+public struct PatientSaveData
+{
+    public string PatientName;
+    public string PatientAge;
+    public string imgAddress;
+
+    public PatientSaveData(string _patientName, string _patientAge, string _imgAddress)
+    {
+        PatientName = _patientName;
+        PatientAge = _patientAge;
+        imgAddress = _imgAddress;
     }
 }
 

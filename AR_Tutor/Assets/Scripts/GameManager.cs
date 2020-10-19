@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     private DataBaseControl database;
     private LoginUIControl uiControl;
     private AuthUser auth;
+    private UserSaveSystem saveSystem;
 
     public string Email { get => email; set => email = value; }
     public string Password { get => password; set => password = value; }
@@ -35,31 +37,64 @@ public class GameManager : MonoBehaviour
         database = FindObjectOfType<DataBaseControl>();
         uiControl = FindObjectOfType<LoginUIControl>();
         auth = FindObjectOfType<AuthUser>();
-    }
-
-    private void Start()
-    {
-        StartCoroutine(MenuProgressRoutine());
+        saveSystem = FindObjectOfType<UserSaveSystem>();
     }
 
     #region Login
-    private IEnumerator MenuProgressRoutine()
+    //private IEnumerator MenuProgressRoutine()
+    //{
+    //    while (!auth.IsSignIn)
+    //        yield return null;
+
+    //    uiControl.LoginPanelActiveSelf = false;
+
+    //    yield return StartCoroutine(database.ReadUserDataRoutine(auth.NewUser.UserId)); // Load user data
+
+    //    if (database.userData.patients.Count > 0)                       // If have patients
+    //    {
+    //        userData = database.userData;
+    //        patientsIdentifiers = database.userData.patients;           // Save list of patients
+    //        yield return StartCoroutine(LoadPatientsFromDatabase());    // Load and display patients data
+    //    }
+
+    //    uiControl.PatientSelectorActiveSelf = true;
+    //}
+    public IEnumerator EnterRoutine()
     {
-        while (!auth.IsSignIn)
-            yield return null;
-
-        uiControl.LoginPanelActiveSelf = false;
-
-        yield return StartCoroutine(database.ReadUserDataRoutine(auth.NewUser.UserId)); // Load user data
-
-        if (database.userData.patients.Count > 0)                       // If have patients
+        if (Email == "" || Password == "")
+            Debug.Log("Email or password are not correct");
+        else
         {
-            userData = database.userData;
-            patientsIdentifiers = database.userData.patients;           // Save list of patients
-            yield return StartCoroutine(LoadPatientsFromDatabase());    // Load and display patients data
-        }
+            yield return StartCoroutine(auth.SignInRoutine(Email, Password));
 
-        uiControl.PatientSelectorActiveSelf = true;
+            if (auth.NewUser != null)
+            {
+                var userData = saveSystem.LoadUserData(auth.NewUser.UserId);
+                if (userData.patients != null)
+                    foreach (var patient in userData.patients)
+                    {
+                        var saveData = saveSystem.LoadPatientsFromLocal(patient);
+
+                        Sprite targetSprite = null;
+                        var texture = saveSystem.LoadImage(saveData.imgAddress);
+
+                        if (texture != null)
+                            targetSprite = Sprite.Create(
+                                texture,
+                                new Rect(0, 0, texture.width, texture.width),
+                                Vector2.zero);
+
+                        var patientData = new PatientData(saveData.PatientName, saveData.PatientAge, targetSprite);
+                        uiControl.AddPatientCardInSelector(patientData, PatientLogin);
+                    }
+            }
+
+        }
+    }
+
+    public void TryToRegistry()
+    {
+
     }
 
     #region User
@@ -76,7 +111,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator AddPatient()
     {
         uiControl.AddUserPanelActiveSelf = false;
-        yield return StartCoroutine(LoadPatientRoutine(PatientLogin));
+        yield return null;//StartCoroutine(LoadPatientRoutine(PatientLogin));
 
         UpdateUserData(PatientLogin);
     }
@@ -86,30 +121,8 @@ public class GameManager : MonoBehaviour
         uiControl.AddUserPanelActiveSelf = false;
         var data = new PatientData(patientName, patientAge);
         uiControl.AddPatientCardInSelector(data, PatientLogin);
-        SavePatientInDatabase(data);
+        saveSystem.SavePatientInDatabase(PatientLogin, data);
         UpdateUserData(PatientLogin);
-    }
-
-    private void SavePatientInDatabase(PatientData data)
-    {
-        database.WritePatientData(PatientLogin, data);
-    }
-
-    private IEnumerator LoadPatientsFromDatabase()
-    {
-        foreach (var identifier in patientsIdentifiers)
-            yield return StartCoroutine(LoadPatientRoutine(identifier));
-    }
-
-    private IEnumerator LoadPatientRoutine(string identifier)
-    {
-        yield return StartCoroutine(database.ReadPatientDataRoutine(identifier));
-        var patientData = new PatientData(database.patientData.PatientName, database.patientData.PatientAge);
-        patients.Add(patientData);
-        if (!patientsIdentifiers.Contains(identifier))
-            patientsIdentifiers.Add(identifier);
-
-        uiControl.AddPatientCardInSelector(patientData, identifier);
     }
 
     public void SelectPatient(string _patinetLogin)

@@ -51,7 +51,7 @@ public class MainMenuUIControl : MonoBehaviour
             });
         }
 
-        returnBtn.onClick.AddListener(() => transitionController.ReturnToBack());
+        //returnBtn.onClick.AddListener(() => transitionController.ReturnToBack());
         settingsBtn.onClick.AddListener(() => SwitchMode());
     }
 

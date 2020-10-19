@@ -53,18 +53,20 @@ public class AuthUser : MonoBehaviour
         StartCoroutine(SignInRoutine(email, password));
     }
 
-    private IEnumerator SignInRoutine(string email, string password)
+    public IEnumerator SignInRoutine(string email, string password)
     {
         var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                newUser = null;
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                newUser = null;
                 return;
             }
             Debug.Log("save user in variable");
