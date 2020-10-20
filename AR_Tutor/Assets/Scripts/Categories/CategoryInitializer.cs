@@ -7,9 +7,9 @@ public class CategoryInitializer : MonoBehaviour
     #region Variables
     [SerializeField] private Image img;
     [SerializeField] private Text title;
-    [SerializeField] private Button selectBtn, selectImageBtn, deleteBtn;
+    [SerializeField] private Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] private Image image;
-    private Sprite lastSprite;
+    [SerializeField] private Sprite deleteSprite, addSprite;
     private PatientDataManager patientManager;
     public string categoryKey { get; private set; }
     public GameName game { get; private set; }
@@ -35,7 +35,7 @@ public class CategoryInitializer : MonoBehaviour
             Signals.SetImgForCategoryEvent.Invoke(game, categoryKey);
         });
 
-        deleteBtn.onClick.AddListener(HideCategory);
+        switchVisibleBtn.onClick.AddListener(HideCategory);
     }
 
     private void HideCategory()
@@ -52,6 +52,7 @@ public class CategoryInitializer : MonoBehaviour
             patientManager.SwitchCategoryVisible(categoryKey, true);
             element.Visible = true;
         }
+        switchVisibleBtn.GetComponent<Image>().sprite = (element.Visible) ? deleteSprite : addSprite;
     }
 
     public Button GetSelectBtn() { return selectBtn; }

@@ -22,6 +22,7 @@ public static class Signals
     public static StringEvent SelectCategoryFromLibrary = new StringEvent();
     public static StringEvent VariantGameCardSelect = new StringEvent();
     public static BoolEvent CardLoadEnd = new BoolEvent();
+    public static StringEvent ShowNotification = new StringEvent();
 
     public static void Reset()
     {

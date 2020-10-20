@@ -16,8 +16,10 @@ MonoBehaviour:
   title: {fileID: 8887794617088416053}
   selectBtn: {fileID: 2914139303111821736}
   selectImageBtn: {fileID: 6878373665804532327}
-  deleteBtn: {fileID: 4779647359792412932}
+  switchVisibleBtn: {fileID: 4779647359792412932}
   image: {fileID: 4346327720093687087}
+  deleteSprite: {fileID: 21300000, guid: 403ae64204b382f44818841552d62737, type: 3}
+  addSprite: {fileID: 21300000, guid: b84f921b79f863e49a56e79bc57af8b3, type: 3}
 --- !u!1001 &822288682864447743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 1891663712709193401, guid: 36deec809b1cf7840ad7cf20fd62bc15,
         type: 3}
       propertyPath: m_Name
-      value: CategoryPref Variant
+      value: CategoryPref
       objectReference: {fileID: 0}
     - target: {fileID: 1972230007437199374, guid: 36deec809b1cf7840ad7cf20fd62bc15,
         type: 3}

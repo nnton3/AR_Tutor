@@ -83,7 +83,7 @@ public class VariantGameMenu : MonoBehaviour
         if (!categoryStorage.VariantCategories.ContainsKey(_categoryKey)) return;
         data = categoryStorage.VariantCategories[_categoryKey];
 
-        var obj = Instantiate(categoryCardPref, categoriesSelector.transform);
+        var obj = Instantiate(categoryCardPref, categoriesSelector.transform.Find("Content"));
         var categoryPanel = Instantiate(categoryPanelPref, VariantGameParent.transform);
         CategoriesPanels.Add(categoryPanel);
         categoryPanel.SetActive(false);
@@ -118,7 +118,7 @@ public class VariantGameMenu : MonoBehaviour
         GameObject cardObj;
 
         cardObj = (!cardData.IsCustom) ? 
-            Instantiate(cardPref, _categoryPanel.transform) : Instantiate(customCardPref, _categoryPanel.transform);
+            Instantiate(cardPref, _categoryPanel.transform.Find("Content")) : Instantiate(customCardPref, _categoryPanel.transform.Find("Content"));
 
         Cards.Add(cardObj);
         var initializer = cardObj.GetComponent<CardBase>();
@@ -153,7 +153,7 @@ public class VariantGameMenu : MonoBehaviour
 
     private void CreateAddBtn(GameObject _parent, UnityAction _action, string _categoryKey = null)
     {
-        var instance = Instantiate(addCardBtnPref, _parent.transform);
+        var instance = Instantiate(addCardBtnPref, _parent.transform.Find("Content"));
         var editableElem = instance.GetComponent<EditableElement>();
         mainMenu.AddEditableElement(editableElem);
         var initialiser = instance.GetComponent<CardBase>();
@@ -225,14 +225,10 @@ public class VariantGameMenu : MonoBehaviour
 
             btn.onClick.AddListener(() =>
             {
-                transitionController.ActivatePanel(new GameObject[] { categoriesSelector });
+                transitionController.ActivatePanel(categoriesSelector);
                 cardSelector.SetMaxCard(maxCardCount);
             });
         }
-
-        /// Bind categories btns
-        for (int i = 0; i < CategoryCards.Count; i++)
-            BindCategoryBtn(i);
     }
 
     private void BindCategoryBtn(int i)
@@ -242,8 +238,11 @@ public class VariantGameMenu : MonoBehaviour
 
         btn.onClick.AddListener(() =>
         {
-            transitionController.ActivatePanel(new GameObject[] { panel });
-            transitionController.AddEventToReturnBtn(() => cardSelector.UnselectAll());
+            transitionController.ActivatePanel(panel);
+            transitionController.AddEventToReturnBtn(() =>
+            {
+                cardSelector.UnselectAll();
+            });
         });
     }
 }

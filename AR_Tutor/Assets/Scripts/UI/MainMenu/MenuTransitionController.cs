@@ -52,8 +52,6 @@ public class MenuTransitionController : MonoBehaviour
 
     public void ReturnToBack()
     {
-        Debug.Log("work");
-        //DisposeReturnBtn();
         if (transitionHistory.Count < 2) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
@@ -68,11 +66,11 @@ public class MenuTransitionController : MonoBehaviour
         activeElements = previuseElements;
 
         if (transitionHistory.Count == 1) ReturnToMainMenuEvent?.Invoke();
+        DisposeReturnBtn();
     }
 
     public void ReturnToBack(int steps)
     {
-        DisposeReturnBtn();
         if (transitionHistory.Count - steps < 1) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
@@ -90,6 +88,7 @@ public class MenuTransitionController : MonoBehaviour
         activeElements = previuseElements;
 
         if (transitionHistory.Count == 1) ReturnToMainMenuEvent?.Invoke();
+        DisposeReturnBtn();
     }
 
     private void ReturnToSignInScene()
@@ -100,10 +99,8 @@ public class MenuTransitionController : MonoBehaviour
     public void AddEventToReturnBtn(UnityAction action)
     {
         disposable = backBtn.OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                action();
-            }).AddTo(this);
+            .Subscribe(_ => action())
+            .AddTo(this);
     }
 
     public void SwitchBackBtnRender(bool _isVisible)
