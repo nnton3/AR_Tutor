@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class VariantCardSelector : MonoBehaviour
@@ -44,7 +41,7 @@ public class VariantCardSelector : MonoBehaviour
     {
         gameLogic.FillPanel(selectedCardsKeys.ToArray());
         UnselectAll();
-        transitionController.ActivatePanel(new GameObject[] { variantGamePanel });
+        transitionController.ActivatePanel(variantGamePanel);
         transitionController.AddEventToReturnBtn(() => gameLogic.ClearOldData());
     }
 

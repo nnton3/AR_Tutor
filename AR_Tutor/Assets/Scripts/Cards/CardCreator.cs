@@ -84,10 +84,9 @@ public class CardCreator : MonoBehaviour
             _audioClip,
             true);
 
-        saveSystem.SaveImage(_image1data.texture, image1Key);
-        saveSystem.SaveAudio(_audioClip, audio1Key);
+        saveSystem.SaveCustomCardFromLocal(data,cardKey,image1Key,audio1Key);
 
-        storage.AddNewCardToBase(data, cardKey, image1Key, audio1Key);
+        storage.AddNewCardToBase(data, cardKey);
         categoryManager.AddCard(cardKey);
         ResetFields();
     }

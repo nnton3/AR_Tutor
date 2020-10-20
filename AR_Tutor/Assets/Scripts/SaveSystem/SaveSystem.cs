@@ -85,6 +85,9 @@ public class SaveSystem : MonoBehaviour
         cardSaveData.imageAddres.Add(imageKey);
         cardSaveData.audioAddres.Add(audioKey);
 
+        SaveImage(cardData.img.texture, imageKey);
+        SaveAudio(cardData.audioClip, audioKey);
+
         UpdateCustomCardLocal();
     }
 

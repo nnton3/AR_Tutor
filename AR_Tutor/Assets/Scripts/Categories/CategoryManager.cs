@@ -132,7 +132,7 @@ public class CategoryManager : MonoBehaviour
         libraryPanel = categoryLibrary;
         currentAddedObj = AddedObj.Category;
         categoryLibraryControl.FillLibrary(_game);
-        transitionController.ActivatePanel(new GameObject[] { methodSelectorPanel });
+        transitionController.ActivatePanel(methodSelectorPanel);
         StartSelectMethodRoutine();
     }
 
@@ -140,7 +140,7 @@ public class CategoryManager : MonoBehaviour
     {
         categoryLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { libraryPanel });
+        transitionController.ActivatePanel(libraryPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             categoryLibraryControl.ClearBtnsEvents();
@@ -151,7 +151,7 @@ public class CategoryManager : MonoBehaviour
     private void OpenCreateCategoryPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { createPanel });
+        transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             categoryCreator.ResetFields();
@@ -194,7 +194,7 @@ public class CategoryManager : MonoBehaviour
         createPanel = createCardPanel;
         libraryPanel = cardLibrary;
         currentAddedObj = AddedObj.Card;
-        transitionController.ActivatePanel(new GameObject[] { methodSelectorPanel });
+        transitionController.ActivatePanel(methodSelectorPanel);
         StartSelectMethodRoutine();
     }
 
@@ -202,7 +202,7 @@ public class CategoryManager : MonoBehaviour
     {
         cardLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { libraryPanel });
+        transitionController.ActivatePanel(libraryPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             cardLibraryControl.ClearBtnsEvents();
@@ -213,7 +213,7 @@ public class CategoryManager : MonoBehaviour
     private void OpenCreateCardPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { createPanel });
+        transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             cardCreator.ResetFields();

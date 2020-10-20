@@ -8,6 +8,7 @@ public class AddCardBtnInitializer : CardBase
     {
         game = _game;
         categoryKey = _categoryKey;
+        if (title == null) return;
         title.text = "Add new card";
     }
 }

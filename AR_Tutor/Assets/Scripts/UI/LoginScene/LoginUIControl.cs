@@ -14,30 +14,26 @@ public class LoginUIControl : MonoBehaviour
         selectSignInBtn,
         selectSignUpBtn,
         signBtn,
-        addUserBtn,
-        createPatientDataBtn,
-        addPatientDataBtn;
+        addPatientBtn,
+        addPatientFromCloudBtn;
     [SerializeField] private Text loadStatus;
     [SerializeField]
     private InputField
         emailField,
         passwordField,
-        patientLoginFieldForCreate,
-        patientLoginFieldForAdd,
-        patientNameField,
-        patientAgeField;
+        patientLoginFieldForAdd;
     [SerializeField]
     private GameObject
         helloPanel,
         authTypePanel,
         loginPanel,
-        addUserPanel,
+        addPatientPanel,
         patientSelector,
         patientSelectorContent,
         patientCardPref,
         backBtn;
 
-    private GameManager loginMenuControl;
+    private LoginManager loginMenuControl;
     private AuthUser authentication;
     private UserData config;
 
@@ -50,13 +46,17 @@ public class LoginUIControl : MonoBehaviour
     }
     public bool AddUserPanelActiveSelf
     {
-        get => addUserPanel.activeSelf;
-        set => addUserPanel.SetActive(value);
+        get => addPatientPanel.activeSelf;
+        set => addPatientPanel.SetActive(value);
     }
     public bool PatientSelectorActiveSelf
     {
         get => patientSelector.activeSelf;
-        set => patientSelector.SetActive(value);
+        set
+        {
+            if (value)
+                transitionController.ActivatePanel(patientSelector);
+        }
     }
     public bool LoginPanelActiveSelf
     {
@@ -77,33 +77,35 @@ public class LoginUIControl : MonoBehaviour
 
     private void Initialize()
     {
-        loginMenuControl = FindObjectOfType<GameManager>();
+        loginMenuControl = FindObjectOfType<LoginManager>();
         authentication = FindObjectOfType<AuthUser>();
         transitionController = FindObjectOfType<MenuTransitionController>();
     }
 
     private void BindBtns()
     {
-        if (skipHelloScreenBtn != null) skipHelloScreenBtn.onClick.AddListener(() => transitionController.ActivatePanel(authTypePanel));
+        if (skipHelloScreenBtn != null) skipHelloScreenBtn.onClick.AddListener(() =>
+        {
+            if (!loginMenuControl.HasEnter())
+                transitionController.ActivatePanel(authTypePanel);
+            else
+            {
+                loginMenuControl.ConfigurateUserData(PlayerPrefs.GetString("lastUser"));
+                transitionController.ActivatePanel(patientSelector);
+            }
+        });
         if (selectSignInBtn != null) selectSignInBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignIn));
         if (selectSignUpBtn != null) selectSignUpBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignUp));
-        if (addUserBtn != null) addUserBtn.onClick.AddListener(() =>
-        {
-            if (addUserPanel != null)
-                addUserPanel.SetActive(true);
-        });
-        if (createPatientDataBtn != null) createPatientDataBtn.onClick.AddListener(() => loginMenuControl.CreatePatient());
-        if (addPatientDataBtn != null) addPatientDataBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.AddPatient()));
+        if (addPatientBtn != null) addPatientBtn.onClick.AddListener(() => transitionController.ActivatePanel(addPatientPanel));
+        if (addPatientFromCloudBtn != null) addPatientFromCloudBtn.onClick.AddListener(
+            () => StartCoroutine(loginMenuControl.AddPatient(patientLoginFieldForAdd.text))
+            );
     }
 
     private void BindFields()
     {
         if (emailField != null) emailField.onValueChanged.AddListener((value) => loginMenuControl.Email = value);
         if (passwordField != null) passwordField.onValueChanged.AddListener((value) => loginMenuControl.Password = value);
-        if (patientLoginFieldForCreate != null) patientLoginFieldForCreate.onValueChanged.AddListener((value) => loginMenuControl.PatientLogin = value);
-        if (patientLoginFieldForAdd != null) patientLoginFieldForAdd.onValueChanged.AddListener((value) => loginMenuControl.PatientLogin = value);
-        if (patientNameField != null) patientNameField.onValueChanged.AddListener((value) => loginMenuControl.PatientName = value);
-        if (patientAgeField != null) patientAgeField.onValueChanged.AddListener((value) => loginMenuControl.PatientAge = value);
     }
 
     public void AddPatientCardInSelector(PatientData data, string patient)
@@ -126,7 +128,7 @@ public class LoginUIControl : MonoBehaviour
         switch (_authType)
         {
             case AuthType.SignIn:
-                signBtn.onClick.AddListener(() => authentication.SignIn(loginMenuControl.Email, loginMenuControl.Password));
+                signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.EnterRoutine()));
                 btnText.text = "войти";
                 break;
             case AuthType.SignUp:

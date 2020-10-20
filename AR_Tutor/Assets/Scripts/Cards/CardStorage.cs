@@ -71,16 +71,15 @@ public class CardStorage : MonoBehaviour
     /// <summary>
     /// Добавить карточку в хранилище и сохранить локально
     /// </summary>
-    /// <param name="card"></param>
+    /// <param name="data"></param>
     /// <param name="key"></param>
     /// <param name="_imageAddress"></param>
     /// <param name="_clipAddress"></param>
-    public void AddNewCardToBase(CardData card, string key, string _imageAddress, string _clipAddress)
+    public void AddNewCardToBase(CardData data, string key)
     {
         if (cards.ContainsKey(key)) return;
 
-        AddCustomCard(key, card);
-        saveSystem.SaveCustomCardFromLocal(card, key, _imageAddress, _clipAddress);
+        AddCustomCard(key, data);
     }
 
     /// <summary>
