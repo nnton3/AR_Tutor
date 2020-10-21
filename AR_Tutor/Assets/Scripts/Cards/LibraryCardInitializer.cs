@@ -15,7 +15,7 @@ public class LibraryCardInitializer : MonoBehaviour
         if (img != null) img.sprite = data.img;
         cardKey = _cardKey;
 
-        btn = GetComponent<Button>();
+        btn = GetComponentInChildren<Button>();
     }
 
     public void EnableSelectable()

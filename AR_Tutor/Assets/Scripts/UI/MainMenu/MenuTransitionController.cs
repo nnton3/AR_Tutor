@@ -13,8 +13,13 @@ public class MenuTransitionController : MonoBehaviour
     private GameObject[] oldElements = new GameObject[] { };
     private IDisposable disposable;
     [SerializeField] private Button backBtn;
-    public UnityEvent ReturnToMainMenuEvent = new UnityEvent();
+    [HideInInspector] public UnityEvent ReturnToMainMenuEvent = new UnityEvent();
     #endregion
+
+    private void Awake()
+    {
+        if (backBtn != null) backBtn.onClick.AddListener(ReturnToBack);
+    }
 
     public void ActivatePanel(GameObject[] nextObjs)
     {
@@ -31,9 +36,22 @@ public class MenuTransitionController : MonoBehaviour
         DisposeReturnBtn();
     }
 
+    public void ActivatePanel(GameObject nextObj)
+    {
+        transitionHistory.Push(activeElements);
+
+        if (activeElements.Length > 0)
+            foreach (var element in activeElements)
+                element.SetActive(false);
+
+        nextObj.SetActive(true);
+
+        activeElements = new GameObject[] { nextObj };
+        DisposeReturnBtn();
+    }
+
     public void ReturnToBack()
     {
-        DisposeReturnBtn();
         if (transitionHistory.Count < 2) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
@@ -48,11 +66,11 @@ public class MenuTransitionController : MonoBehaviour
         activeElements = previuseElements;
 
         if (transitionHistory.Count == 1) ReturnToMainMenuEvent?.Invoke();
+        DisposeReturnBtn();
     }
 
     public void ReturnToBack(int steps)
     {
-        DisposeReturnBtn();
         if (transitionHistory.Count - steps < 1) ReturnToSignInScene();
 
         if (activeElements.Length > 0)
@@ -70,6 +88,7 @@ public class MenuTransitionController : MonoBehaviour
         activeElements = previuseElements;
 
         if (transitionHistory.Count == 1) ReturnToMainMenuEvent?.Invoke();
+        DisposeReturnBtn();
     }
 
     private void ReturnToSignInScene()
@@ -80,7 +99,13 @@ public class MenuTransitionController : MonoBehaviour
     public void AddEventToReturnBtn(UnityAction action)
     {
         disposable = backBtn.OnClickAsObservable()
-            .Subscribe(_ => action()).AddTo(this);
+            .Subscribe(_ => action())
+            .AddTo(this);
+    }
+
+    public void SwitchBackBtnRender(bool _isVisible)
+    {
+        backBtn.GetComponent<Image>().enabled = _isVisible;
     }
 
     public void DisposeReturnBtn()

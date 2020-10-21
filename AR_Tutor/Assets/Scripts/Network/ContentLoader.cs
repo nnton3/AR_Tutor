@@ -62,12 +62,14 @@ public class ContentLoader : MonoBehaviour
             var image1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}image1";
             var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
 
-            saveSystem.SaveImage(loadedCard.img.texture, image1Key);
-            saveSystem.SaveAudio(loadedCard.audioClip, audio1Key);
+            saveSystem.SaveCustomCardFromLocal(loadedCard, cardKey, image1Key, audio1Key);
 
-            storage.AddNewCardToBase(loadedCard, cardKey, image1Key, audio1Key);
+            storage.AddNewCardToBase(loadedCard, cardKey);
             categoryManager.AddCard(cardKey);
+            Signals.CardLoadEnd.Invoke(true);
         }
+        else
+            Signals.CardLoadEnd.Invoke(false);
     }
 
     private IEnumerator LoadCardConfigFromCloud(string _cardKey)

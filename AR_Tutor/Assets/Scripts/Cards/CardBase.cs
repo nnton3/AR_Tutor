@@ -7,6 +7,7 @@ public class CardBase : MonoBehaviour
     [SerializeField] protected Text title;
     [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] protected Image image;
+    [SerializeField] private Sprite deleteSprite, addSprite;
     private EditableElement editableElement;
     private Texture2D texture;
     private AudioClip audioClip;
@@ -38,20 +39,18 @@ public class CardBase : MonoBehaviour
         if (source != null)
             selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
 
-        if (switchVisibleBtn == null)
-            Debug.Log(gameObject.name);
         switchVisibleBtn.onClick.AddListener(SwitchVisible);
     }
 
     private void ConfigurateUI(CardData data)
     {
-        if (data.Title == null)
+        if (string.IsNullOrWhiteSpace(data.Title))
         {
+            if (title == null) return;
             title.text = "Add new card";
             return;
         }
-
-        if (title != null) title.text = data.Title;
+        else title.text = data.Title;
 
         if (image != null)
             if (data.img != null)
@@ -64,6 +63,7 @@ public class CardBase : MonoBehaviour
     protected virtual void SwitchVisible()
     {
         editableElement.Visible = !editableElement.Visible;
+        switchVisibleBtn.GetComponent<Image>().sprite = (editableElement.Visible) ? deleteSprite : addSprite;
         Signals.SwitchCardVisibleEvent.Invoke(categoryKey, Key, editableElement.Visible);
     }
 

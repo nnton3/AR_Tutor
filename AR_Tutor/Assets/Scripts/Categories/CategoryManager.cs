@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CategoryManager : MonoBehaviour
 {
-    private enum SelectionMethod { AddNew, FromLibrary}
+    private enum SelectionMethod { AddNew, FromLibrary, FromCloud}
     private enum AddedObj { Card, Category}
 
     #region Variables
@@ -17,6 +17,7 @@ public class CategoryManager : MonoBehaviour
     private CategoryLibraryUIControl categoryLibraryControl;
     private CategoryCreator categoryCreator;
     private CardCreator cardCreator;
+    private ContentLoader contentLoader;
 
     public GameName gameName { get; private set; }
     private string categoryKey;
@@ -25,7 +26,7 @@ public class CategoryManager : MonoBehaviour
     private Coroutine routine;
 
     [SerializeField] private GameObject methodSelectorPanel, createCardPanel, createCategoryPanel, cardLibrary, categoryLibrary;
-    [SerializeField] private Button selectCardFromLibraryBtn, createNewCardBtn;
+    [SerializeField] private Button selectCardFromLibraryBtn, createNewCardBtn, downloadCardFromCloudBtn;
     private GameObject createPanel, libraryPanel;
     private AddedObj currentAddedObj;
     #endregion
@@ -41,9 +42,19 @@ public class CategoryManager : MonoBehaviour
         cardLibraryControl = FindObjectOfType<CardLibraryUIControl>();
         categoryCreator = FindObjectOfType<CategoryCreator>();
         cardCreator = FindObjectOfType<CardCreator>();
+        contentLoader = FindObjectOfType<ContentLoader>();
 
         Signals.SetImgForCardEvent.AddListener(SetUpNewImgForCard);
         Signals.SetImgForCategoryEvent.AddListener(SetUpImgForCategory);
+        Signals.CardLoadEnd.AddListener((value) =>
+        {
+            if (value)
+            {
+                transitionController.ReturnToBack();
+                Debug.Log("load end");
+            }
+            else Debug.Log("load error");
+        });
         BindBtn();
     }
 
@@ -58,6 +69,12 @@ public class CategoryManager : MonoBehaviour
         createNewCardBtn.onClick.AddListener(() =>
         {
             method = SelectionMethod.AddNew;
+            methodSelected = true;
+        });
+
+        downloadCardFromCloudBtn.onClick.AddListener(() =>
+        {
+            method = SelectionMethod.FromCloud;
             methodSelected = true;
         });
     }
@@ -81,20 +98,30 @@ public class CategoryManager : MonoBehaviour
         switch (method)
         {
             case SelectionMethod.AddNew:
-                if (currentAddedObj == AddedObj.Category)
-                    OpenCreateCategoryPanel();
-                else
-                    OpenCreateCardPanel();
+                OpenCreatePanel();
                 break;
             case SelectionMethod.FromLibrary:
-                if (currentAddedObj == AddedObj.Card)
-                    OpenCardLibrary();
-                else
-                    OpenCategoryLibrary();
+                OpenLibrary();
                 break;
             default:
                 break;
         }
+    }
+
+    private void OpenCreatePanel()
+    {
+        if (currentAddedObj == AddedObj.Category)
+            OpenCreateCategoryPanel();
+        else
+            OpenCreateCardPanel();
+    }
+
+    private void OpenLibrary()
+    {
+        if (currentAddedObj == AddedObj.Card)
+            OpenCardLibrary();
+        else
+            OpenCategoryLibrary();
     }
 
     #region Add category in game
@@ -105,7 +132,7 @@ public class CategoryManager : MonoBehaviour
         libraryPanel = categoryLibrary;
         currentAddedObj = AddedObj.Category;
         categoryLibraryControl.FillLibrary(_game);
-        transitionController.ActivatePanel(new GameObject[] { methodSelectorPanel });
+        transitionController.ActivatePanel(methodSelectorPanel);
         StartSelectMethodRoutine();
     }
 
@@ -113,7 +140,7 @@ public class CategoryManager : MonoBehaviour
     {
         categoryLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { libraryPanel });
+        transitionController.ActivatePanel(libraryPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             categoryLibraryControl.ClearBtnsEvents();
@@ -124,7 +151,7 @@ public class CategoryManager : MonoBehaviour
     private void OpenCreateCategoryPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { createPanel });
+        transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             categoryCreator.ResetFields();
@@ -161,12 +188,13 @@ public class CategoryManager : MonoBehaviour
     #region Add card in category
     public void SelectAddMethod(GameName game, string _categoryKey)
     {
+        Debug.Log("save game and category");
         gameName = game;
         categoryKey = _categoryKey;
         createPanel = createCardPanel;
         libraryPanel = cardLibrary;
         currentAddedObj = AddedObj.Card;
-        transitionController.ActivatePanel(new GameObject[] { methodSelectorPanel });
+        transitionController.ActivatePanel(methodSelectorPanel);
         StartSelectMethodRoutine();
     }
 
@@ -174,7 +202,7 @@ public class CategoryManager : MonoBehaviour
     {
         cardLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { libraryPanel });
+        transitionController.ActivatePanel(libraryPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             cardLibraryControl.ClearBtnsEvents();
@@ -185,7 +213,7 @@ public class CategoryManager : MonoBehaviour
     private void OpenCreateCardPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(new GameObject[] { createPanel });
+        transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             cardCreator.ResetFields();

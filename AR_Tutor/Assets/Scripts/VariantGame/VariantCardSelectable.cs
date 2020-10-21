@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class VariantCardSelectable : MonoBehaviour
@@ -42,9 +40,13 @@ public class VariantCardSelectable : MonoBehaviour
 
     public void Unselect()
     {
+        if (!Selected) return;
+
         Selected = false;
         img.color = defaultClr;
-        selector.UnselectEvent.Invoke(GetComponent<CardBase>().Key);
+
+        if (selector != null)
+            selector.UnselectEvent.Invoke(GetComponent<CardBase>().Key);
     }
 
     public Button GetBtn() { return btn; }

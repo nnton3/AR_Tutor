@@ -28,7 +28,7 @@ public class MainMenuUIControl : MonoBehaviour
         BindBtns();
         SwitchEditableElemets();
 
-        transitionController.ActivatePanel(new GameObject[] { gameSelector });
+        transitionController.ActivatePanel(gameSelector);
         transitionController.ReturnToMainMenuEvent.AddListener(() => settingsBtn.gameObject.SetActive(true));
     }
 
@@ -45,13 +45,12 @@ public class MainMenuUIControl : MonoBehaviour
                 settingsBtn.gameObject.SetActive(false);
 
                 if (Mode == MenuMode.GameSelection)
-                    transitionController.ActivatePanel(new GameObject[] { panel });
+                    transitionController.ActivatePanel(panel);
                 else
-                    transitionController.ActivatePanel(new GameObject[] { panel_settings });
+                    transitionController.ActivatePanel(panel_settings);
             });
         }
 
-        returnBtn.onClick.AddListener(() => transitionController.ReturnToBack());
         settingsBtn.onClick.AddListener(() => SwitchMode());
     }
 
