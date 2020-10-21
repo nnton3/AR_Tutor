@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardLibraryUIControl : MonoBehaviour
 {
     [SerializeField] private GameObject libraryCardPref, libraryPanel;
+    [SerializeField] private GridLayoutGroup grid;
     private CardStorage storage;
     private List<LibraryCardInitializer> libraryCards = new List<LibraryCardInitializer>();
 
@@ -39,11 +42,11 @@ public class CardLibraryUIControl : MonoBehaviour
         var initializer = instance.GetComponent<LibraryCardInitializer>();
         initializer.Initialize(key, data);
         libraryCards.Add(initializer);
+        UIInstruments.CalculateContentSize(grid, libraryCards.Count);
     }
 
     public void BindCardsForSelect()
     {
-        Debug.Log("work");
         foreach (var card in libraryCards)
             card.EnableSelectable();
     }
