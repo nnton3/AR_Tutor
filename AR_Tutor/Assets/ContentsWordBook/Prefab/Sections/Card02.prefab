@@ -126,6 +126,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c29167e2c0a20c8409ee2fc00210a74f, type: 3}
   - {fileID: 21300000, guid: ecac1b88b4dead045a74b5b0cbdeb29b, type: 3}
   CardClip: {fileID: 8300000, guid: 49aa9292e9774ac4f9a92282ab1e58a3, type: 3}
+  AdditionSnd: {fileID: 8300000, guid: 78116622879d4da4cb2431976be810c6, type: 3}
   TempSpriteNumber: 0
   Cont: {fileID: 0}
   Substr: {fileID: 0}

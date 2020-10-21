@@ -573,14 +573,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 294253146}
         m_MethodName: CreateSubcards
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &294253146
 MonoBehaviour:
@@ -599,6 +599,7 @@ MonoBehaviour:
   - {fileID: 7765289253471411453, guid: db284b8b7e027384d85b7da588d022e4, type: 3}
   - {fileID: 5710821039138858740, guid: 1e058e35c750a0947a5f52002ab35efa, type: 3}
   - {fileID: 6934544787825756636, guid: 850714ad8b6822f4eb3259bf5537c3fa, type: 3}
+  SectionClip: {fileID: 8300000, guid: 78116622879d4da4cb2431976be810c6, type: 3}
 --- !u!1 &306165036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1633,14 +1634,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 593092330}
         m_MethodName: CreateSubcards
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &593092330
 MonoBehaviour:
@@ -1659,6 +1660,7 @@ MonoBehaviour:
   - {fileID: 511653532545047858, guid: 194570fbd8b907e4aabcede5a4075330, type: 3}
   - {fileID: 7962837534261388718, guid: 99919c90dbbeac54cba5021c605b8b94, type: 3}
   - {fileID: 1212582220900390834, guid: 82a11fe9cb1473b4b88316a5d25aa534, type: 3}
+  SectionClip: {fileID: 8300000, guid: 49aa9292e9774ac4f9a92282ab1e58a3, type: 3}
 --- !u!1 &609575339
 GameObject:
   m_ObjectHideFlags: 0
@@ -3463,6 +3465,7 @@ RectTransform:
   - {fileID: 293929680}
   - {fileID: 830849627}
   - {fileID: 1821697292}
+  - {fileID: 1904868282}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4386,6 +4389,7 @@ MonoBehaviour:
   TempNum: 0
   Content: {fileID: 560466844}
   SFX: {fileID: 1278993908}
+  AddSndBtn: {fileID: 1904868281}
   CanSwipe: 0
   CanSwipe1: 0
   firstPressPos: {x: 0, y: 0}
@@ -4425,6 +4429,7 @@ MonoBehaviour:
   - {fileID: 511653532545047858, guid: 194570fbd8b907e4aabcede5a4075330, type: 3}
   - {fileID: 7962837534261388718, guid: 99919c90dbbeac54cba5021c605b8b94, type: 3}
   - {fileID: 1212582220900390834, guid: 82a11fe9cb1473b4b88316a5d25aa534, type: 3}
+  SectionClip: {fileID: 0}
 --- !u!114 &1824172356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4481,14 +4486,14 @@ MonoBehaviour:
         m_CallState: 0
       - m_Target: {fileID: 1824172355}
         m_MethodName: CreateSubcards
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1824172357
 MonoBehaviour:
@@ -4649,6 +4654,135 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899116853}
+  m_CullTransparentMesh: 0
+--- !u!1 &1904868281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1904868282}
+  - component: {fileID: 1904868285}
+  - component: {fileID: 1904868284}
+  - component: {fileID: 1904868283}
+  m_Layer: 5
+  m_Name: AddSnd
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1904868282
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904868281}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1478211034}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -120, y: -120}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1904868283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904868281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1904868284}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1821697295}
+        m_MethodName: PlayAddSnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1904868284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904868281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 14c8d52244dc76c438152b2036e0ae73, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1904868285
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904868281}
   m_CullTransparentMesh: 0
 --- !u!1 &1956520744
 GameObject:
@@ -5018,6 +5152,7 @@ GameObject:
   - component: {fileID: 1982483735}
   - component: {fileID: 1982483734}
   - component: {fileID: 1982483733}
+  - component: {fileID: 1982483736}
   m_Layer: 5
   m_Name: CardSprite
   m_TagString: Untagged
@@ -5081,6 +5216,60 @@ RectTransform:
   m_AnchoredPosition: {x: -1.8, y: -1.9}
   m_SizeDelta: {x: 433.2666, y: 433.347}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1982483736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982483732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1982483733}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1821697295}
+        m_MethodName: PushToPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &2008613121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5438,14 +5627,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2104369555}
         m_MethodName: CreateSubcards
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &2104369555
 MonoBehaviour:
@@ -5464,6 +5653,7 @@ MonoBehaviour:
   - {fileID: 1742923726624761907, guid: 781c8a8894de76e4e813ad7ec5d62806, type: 3}
   - {fileID: 6714356744237502042, guid: 5436c3a3f141ce2419e9367d3d092fa2, type: 3}
   - {fileID: 8716399977988309051, guid: 7ef40caee13891d4b9f6184c556f182d, type: 3}
+  SectionClip: {fileID: 8300000, guid: 1aa353defddb62d4d9e63c948b958744, type: 3}
 --- !u!1 &2134161206
 GameObject:
   m_ObjectHideFlags: 0

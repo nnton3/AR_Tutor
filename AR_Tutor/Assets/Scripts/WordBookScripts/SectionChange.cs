@@ -9,7 +9,8 @@ namespace WordBook
         public Transform Content;
         private void Start()
         {
-            Content.transform.GetChild(0).GetComponent<CreateCards>().CreateSubcards();
+            Content.transform.GetChild(0).GetComponent<CreateCards>().CreateSubcards(false);
+            
         }
     }
 }

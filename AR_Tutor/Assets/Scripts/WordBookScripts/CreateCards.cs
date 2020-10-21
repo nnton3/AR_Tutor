@@ -14,13 +14,14 @@ public class CreateCards : MonoBehaviour
 
     public Transform Content;
     public GameObject[] Subcards;
+    public AudioClip SectionClip;
 
     void Start()
     {
 
     }
 
-    public void CreateSubcards()
+    public void CreateSubcards(bool PlaySnd)
     {
         FindObjectOfType<SubstrateController>().CloseBtn();
         foreach (Transform child in Content)
@@ -37,6 +38,11 @@ public class CreateCards : MonoBehaviour
             GO.transform.localScale = Vector2.one;
             GO.GetComponent<Image>().sprite = GO.GetComponent<CardController>().ImageSprites[0];
         }
+        if (PlaySnd)
+        {
+            FindObjectOfType<SubstrateController>().SFX.PlayOneShot(SectionClip);
+        }
+        
     }
 
     public void CreatingCards()

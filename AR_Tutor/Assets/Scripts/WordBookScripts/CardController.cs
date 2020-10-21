@@ -19,6 +19,7 @@ public class CardController : MonoBehaviour
     public Sprite[] ImageSprites;
     //public AudioSource SFX;
     public AudioClip CardClip;
+    public AudioClip AdditionSnd;
     public int TempSpriteNumber;
     public GameObject Cont;
     public GameObject Substr;
@@ -31,13 +32,16 @@ public class CardController : MonoBehaviour
         btn.onClick.AddListener(ScaleUp);
         Substr = GameObject.Find("Substrate");
         SubstratePanel = GameObject.Find("SubstratePanel");
+        //GetComponent<SubstrateController>().CardSprite.GetComponent<Button>().onClick.AddListener(PushToPlaySnd);
 
     }
 
-    public void SendSpriteToFrame()
-    {
+    
 
-    }
+    //public void PushToPlaySnd()
+    //{
+    //    FindObjectOfType<SubstrateController>().SFX.PlayOneShot(CardClip);
+    //}
 
     public void ScaleUp()
     {
@@ -46,12 +50,10 @@ public class CardController : MonoBehaviour
         //gameObject.transform.localScale = Vector2.zero;
         SubstrateController Subs = FindObjectOfType<SubstrateController>();
         PartNumber = transform.GetSiblingIndex();
-        //Subs.CardSprite.sprite = Subs.SubCards[PartNumber];// Subs.SubCards[TempNum].GetComponent<CardController>().ImageSprites[0];
         Subs.GetCards();
         Subs.CreateBigCard(PartNumber);
         FindObjectOfType<SubstrateController>().SFX.PlayOneShot(CardClip);
-        //Substr.GetComponent<SubstrateController>().CreateBigCard();
-        //FindObjectOfType<SubstrateController>().GetSpritesToFrame();
+        //GetComponent<SubstrateController>().CardSprite.GetComponent<Button>().onClick.AddListener(PushToPlaySnd);
     }
 
     public void ScaleDown()
