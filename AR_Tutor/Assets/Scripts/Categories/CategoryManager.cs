@@ -25,7 +25,7 @@ public class CategoryManager : MonoBehaviour
     private SelectionMethod method;
     private Coroutine routine;
 
-    [SerializeField] private GameObject methodSelectorPanel, createCardPanel, createCategoryPanel, cardLibrary, categoryLibrary;
+    [SerializeField] private GameObject categoryMethodSelectorPanel, cardMethodSelectorPanel, createCardPanel, createCategoryPanel, cardLibrary, categoryLibrary;
     [SerializeField] private Button selectCardFromLibraryBtn, createNewCardBtn, downloadCardFromCloudBtn;
     private GameObject createPanel, libraryPanel;
     private AddedObj currentAddedObj;
@@ -132,7 +132,7 @@ public class CategoryManager : MonoBehaviour
         libraryPanel = categoryLibrary;
         currentAddedObj = AddedObj.Category;
         categoryLibraryControl.FillLibrary(_game);
-        transitionController.ActivatePanel(methodSelectorPanel);
+        transitionController.ActivatePanel(categoryMethodSelectorPanel);
         StartSelectMethodRoutine();
     }
 
@@ -194,7 +194,7 @@ public class CategoryManager : MonoBehaviour
         createPanel = createCardPanel;
         libraryPanel = cardLibrary;
         currentAddedObj = AddedObj.Card;
-        transitionController.ActivatePanel(methodSelectorPanel);
+        transitionController.ActivatePanel(cardMethodSelectorPanel);
         StartSelectMethodRoutine();
     }
 

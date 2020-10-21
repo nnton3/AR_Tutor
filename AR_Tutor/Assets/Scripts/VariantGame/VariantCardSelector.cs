@@ -7,11 +7,11 @@ public class VariantCardSelector : MonoBehaviour
     #region Variables
     [SerializeField] private Button startGameBtn;
     [SerializeField] private GameObject variantGamePanel;
+    [SerializeField] private List<string> selectedCardsKeys = new List<string>();
+    [SerializeField] private int maxCardCount;
     private MenuTransitionController transitionController;
     private VariantGameLogic gameLogic;
     private List<VariantCardSelectable> selectedCards = new List<VariantCardSelectable>();
-    [SerializeField] private List<string> selectedCardsKeys = new List<string>();
-    [SerializeField] private int maxCardCount;
     public StringEvent SelectEvent = new StringEvent();
     public StringEvent UnselectEvent = new StringEvent();
     #endregion
@@ -30,7 +30,10 @@ public class VariantCardSelector : MonoBehaviour
         startGameBtn.onClick.AddListener(() =>
         {
             if (DataIsValid())
+            {
+                startGameBtn.gameObject.SetActive(false);
                 StartGame();
+            }
         });
         SelectEvent.AddListener((key) => selectedCardsKeys.Add(key));
         UnselectEvent.AddListener((key) => selectedCardsKeys.Remove(key));
@@ -42,7 +45,15 @@ public class VariantCardSelector : MonoBehaviour
         gameLogic.FillPanel(selectedCardsKeys.ToArray());
         UnselectAll();
         transitionController.ActivatePanel(variantGamePanel);
-        transitionController.AddEventToReturnBtn(() => gameLogic.ClearOldData());
+        transitionController.AddEventToReturnBtn(() =>
+        {
+            startGameBtn.gameObject.SetActive(true);
+            gameLogic.ClearOldData();
+            transitionController.AddEventToReturnBtn(() =>
+            {
+                startGameBtn.gameObject.SetActive(false);
+            });
+        });
     }
 
     private bool DataIsValid()

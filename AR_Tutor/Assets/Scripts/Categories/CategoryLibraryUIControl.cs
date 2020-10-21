@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
+using UnityEngine.UI;
 
 public class CategoryLibraryUIControl : MonoBehaviour
 {
     [SerializeField] private GameObject libraryCategoryPref, libraryPanel;
+    [SerializeField] private GridLayoutGroup grid;
     private CategoryStorage categoryStorage;
     private List<LibraryCategoryInitializer> cards = new List<LibraryCategoryInitializer>();
 
@@ -52,6 +52,7 @@ public class CategoryLibraryUIControl : MonoBehaviour
         var initializer = instance.GetComponent<LibraryCategoryInitializer>();
         initializer.Initialize(_categoryKey, _data);
         cards.Add(initializer);
+        UIInstruments.CalculateContentSize(grid, cards.Count);
     }
 
     private void CreateCard(string _categoryKey)

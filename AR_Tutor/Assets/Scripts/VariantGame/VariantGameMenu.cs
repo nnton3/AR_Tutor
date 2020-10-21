@@ -18,6 +18,7 @@ public class VariantGameMenu : MonoBehaviour
     [SerializeField] private List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
     [SerializeField] private List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
     [SerializeField] private Button[] gameModes = new Button[] { };
+    [SerializeField] private Button startGameBtn;
     #endregion
 
     public void Initialize()
@@ -42,6 +43,7 @@ public class VariantGameMenu : MonoBehaviour
         cardSelector.Initialize(Cards);
     }
 
+    #region Start cofiguration
     private void ConfigurateCategories()
     {
         foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
@@ -74,6 +76,7 @@ public class VariantGameMenu : MonoBehaviour
 
         CreateAddCardBtn(_categoryPanel, _categoryKey);
     }
+    #endregion
 
     private void AddNewCategory(string _categoryKey)
     {
@@ -217,7 +220,6 @@ public class VariantGameMenu : MonoBehaviour
 
     private void BindBtns()
     {
-        /// Bind mode btns
         for (int i = 0; i < gameModes.Length; i++)
         {
             var btn = gameModes[i];
@@ -239,8 +241,11 @@ public class VariantGameMenu : MonoBehaviour
         btn.onClick.AddListener(() =>
         {
             transitionController.ActivatePanel(panel);
+            startGameBtn.gameObject.SetActive(true);
+
             transitionController.AddEventToReturnBtn(() =>
             {
+                startGameBtn.gameObject.SetActive(false);
                 cardSelector.UnselectAll();
             });
         });
