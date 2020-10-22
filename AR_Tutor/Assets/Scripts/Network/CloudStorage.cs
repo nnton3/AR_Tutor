@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Storage;
 using System.Threading.Tasks;
@@ -13,17 +12,14 @@ public class CloudStorage : MonoBehaviour
     private string imagesPath = "gs://ar-tutor.appspot.com/CardImages/";
     private string audiosPath = "gs://ar-tutor.appspot.com/CardAudio/";
     private FirebaseStorage storage;
-    public Sprite LastLoadedSprite { get; private set; } = null;
-    public AudioClip LastLoadedClip { get; private set; } = null;
+    public Sprite Img1 { get; private set; } = null;
+    public Sprite Img2 { get; private set; } = null;
+    public Sprite Img3 { get; private set; } = null;
+    public AudioClip Clip1 { get; private set; } = null;
+    public AudioClip Clip2 { get; private set; } = null;
     #endregion
 
-    private void Start()
-    {
-        //StartCoroutine(DownloadSpriteFromCloud("CardImages/Cutter.png"));
-        //StartCoroutine(LoadAudio());
-    }
-
-    public IEnumerator DownloadSprite(string _path)
+    public IEnumerator DownloadSprite(string _path, int _index)
     {
         storage = FirebaseStorage.DefaultInstance;
 
@@ -35,10 +31,23 @@ public class CloudStorage : MonoBehaviour
         var texture = new Texture2D(100, 100);
         texture.LoadImage(downloadTask.Result);
 
-        LastLoadedSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        switch (_index)
+        {
+            case 1:
+                Img1 = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                break;
+            case 2:
+                Img2 = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                break;
+            case 3:
+                Img3 = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                break;
+            default:
+                break;
+        }
     }
 
-    public IEnumerator DownloadAudio(string _path)
+    public IEnumerator DownloadAudio(string _path, int _index)
     {
         Uri uri = null;
 
@@ -53,10 +62,10 @@ public class CloudStorage : MonoBehaviour
         yield return new WaitUntil(() => getUriTask.IsCompleted);
 
         if (uri != null)
-            yield return StartCoroutine(LoadRoutine(uri));
+            yield return StartCoroutine(LoadRoutine(uri, _index));
     }
 
-    private IEnumerator LoadRoutine(Uri _uri)
+    private IEnumerator LoadRoutine(Uri _uri, int _index)
     {
         using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(_uri, AudioType.WAV))
         {
@@ -66,7 +75,10 @@ public class CloudStorage : MonoBehaviour
             else
             {
                 Debug.Log("write data");
-                LastLoadedClip = DownloadHandlerAudioClip.GetContent(request);
+                if (_index == 1)
+                    Clip1 = DownloadHandlerAudioClip.GetContent(request);
+                if (_index == 2)
+                    Clip2 = DownloadHandlerAudioClip.GetContent(request);
             }
         }
     }

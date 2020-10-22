@@ -193,4 +193,51 @@ public class CategoryStorage : MonoBehaviour
 
         saveSystem.SaveCustomCategoryFromLocal(_data, _categoryKey, _imageAddress, _clipAddress);
     }
+
+    public bool HasCategory(GameName _game, string _categoryKey)
+    {
+        switch (_game)
+        {
+            case GameName.Variant:
+                if (VariantCategories.ContainsKey(_categoryKey)) return true;
+                break;
+            case GameName.Buttons:
+                if (ButtonsCategories.ContainsKey(_categoryKey)) return true;
+                break;
+            case GameName.WordBook:
+                if (WordBookCategories.ContainsKey(_categoryKey)) return true;
+                break;
+            case GameName.WordComposing:
+                if (WordComposingCategories.ContainsKey(_categoryKey)) return true;
+                break;
+            default:
+                break;
+        }
+        return false;
+
+    }
+
+    public CategoryData GetData(GameName _game, string _categoryKey)
+    {
+        CategoryData data = new CategoryData();
+        switch (_game)
+        {
+            case GameName.Variant:
+                data = VariantCategories[_categoryKey];
+                break;
+            case GameName.Buttons:
+                data = ButtonsCategories[_categoryKey];
+                break;
+            case GameName.WordBook:
+                data = WordBookCategories[_categoryKey];
+                break;
+            case GameName.WordComposing:
+                data = WordComposingCategories[_categoryKey];
+                break;
+            default:
+                break;
+        }
+
+        return data;
+    }
 }

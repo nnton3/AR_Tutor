@@ -12,7 +12,7 @@ public class LibraryCardInitializer : MonoBehaviour
     public void Initialize(string _cardKey, CardData data)
     {
         if (title != null) title.text = data.Title;
-        if (img != null) img.sprite = data.img;
+        if (img != null) img.sprite = data.img1;
         cardKey = _cardKey;
 
         btn = GetComponentInChildren<Button>();

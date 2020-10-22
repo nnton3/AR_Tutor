@@ -24,6 +24,12 @@ public static class Signals
     public static BoolEvent CardLoadEnd = new BoolEvent();
     public static StringEvent ShowNotification = new StringEvent();
 
+    public static StringEvent WordBookCardSelect = new StringEvent();
+    public static UnityEvent LeftSwipeEvent = new UnityEvent();
+    public static UnityEvent RightSwipeEvent = new UnityEvent();
+    public static UnityEvent UpSwipeEvent = new UnityEvent();
+    public static UnityEvent DownSwipeEvent = new UnityEvent();
+
     public static void Reset()
     {
         AddCardEvent.RemoveAllListeners();

@@ -335,7 +335,6 @@ public class CategoryManager : MonoBehaviour
     {
         categoryCreator.CreateCategory(_categoryKey, _categoryImg);
         Signals.DeleteCategoryFromGame.Invoke(_categoryKey);
-        /// TODO : Доделать замену старого раздела на кастомный с новой картинкой
     }
     #endregion
     #endregion

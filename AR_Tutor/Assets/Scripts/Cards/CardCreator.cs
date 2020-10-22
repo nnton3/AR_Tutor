@@ -59,7 +59,7 @@ public class CardCreator : MonoBehaviour
         {
             if (CardDataIsValid())
             {
-                CreateCard(cardName, cardNameForm, image1.sprite, audioClip);
+                CreateCard(cardName, cardNameForm, image1.sprite, image2.sprite, image3.sprite, audioClip, audioClipForm);
                 transitionController.ReturnToBack(2);
             }
         });
@@ -68,23 +68,29 @@ public class CardCreator : MonoBehaviour
     public void CreateCard(string baseCardKey, Sprite newImg)
     {
         var oldData = storage.cards[baseCardKey];
-        CreateCard(oldData.Title, oldData.TitleForm, newImg, oldData.audioClip);
+        CreateCard(oldData.Title, oldData.TitleForm, newImg, oldData.img2, oldData.img3, oldData.audioClip1, oldData.audioClip2);
     }
 
-    private void CreateCard(string _title, string _titleForm, Sprite _image1data, AudioClip _audioClip)
+    private void CreateCard(
+        string _title, string _titleForm,
+        Sprite _image1data, Sprite _image2data, Sprite _image3data,
+        AudioClip _audioClip, AudioClip _audioClipForm)
     {
         var cardKey = $"{patientDataManager.GetUserLogin()}_{_title}_{saveSystem.GetCustomCardsData().keys.Count}";
         var image1Key = $"{patientDataManager.GetUserLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image1";
+        var image2Key = $"{patientDataManager.GetUserLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image2";
+        var image3Key = $"{patientDataManager.GetUserLogin()}_{saveSystem.GetCustomCardsData().keys.Count}_image3";
         var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
+        var audio2Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio2";
 
         data = new CardData(
             _title,
             _titleForm,
-            _image1data,
-            _audioClip,
+            _image1data, _image2data, _image3data,
+            _audioClip, _audioClipForm,
             true);
 
-        saveSystem.SaveCustomCardFromLocal(data,cardKey,image1Key,audio1Key);
+        saveSystem.SaveCustomCardFromLocal(data, cardKey, image1Key, image2Key, image3Key, audio1Key, audio2Key);
 
         storage.AddNewCardToBase(data, cardKey);
         categoryManager.AddCard(cardKey);
@@ -197,10 +203,10 @@ public class CardCreator : MonoBehaviour
         if (cardName == "") return false;
         if (cardNameForm == null) return false;
         if (image1data == null) return false;
-        //if (image2data == null) return false;
-        //if (image3data == null) return false;
+        if (image2data == null) return false;
+        if (image3data == null) return false;
         if (audioClip == null) return false;
-        //if (audioClipForm == null) return false;
+        if (audioClipForm == null) return false;
 
         return true;
     }

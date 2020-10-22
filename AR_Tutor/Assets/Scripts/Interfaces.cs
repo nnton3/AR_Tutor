@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public interface IGameMenu
 {
@@ -25,4 +26,11 @@ public interface IGameMenu
     /// <param name="_cardKey">Ключ карточки, по которому происходит поиск и идентификация карточки</param>
     /// <param name="_cardImg">Новое изображение, которое необходимо поставить вместо текущего</param>
     void UpdateCardImg(string _cardKey, Sprite _cardImg);
+}
+
+public interface IManageCards
+{
+    void Initialize(List<GameObject> _cards);
+    void AddCard(GameObject _card);
+    void RemoveCard(GameObject _card);
 }

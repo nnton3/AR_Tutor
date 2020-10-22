@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class VariantCardInitializer : CardBase
 {
-    [SerializeField] private Vector2 startPos;
     private RectTransform rect;
 
     public override void Initialize(GameName _game, string _categoryKey, string cardKey, CardData _data)
@@ -14,9 +13,8 @@ public class VariantCardInitializer : CardBase
 
         rect = GetComponent<RectTransform>();
         title.text = _data.Title;
-        image.sprite = _data.img;
+        image.sprite = _data.img1;
         selectBtn.onClick.AddListener(Active);
-        startPos = rect.localPosition;
     }
 
     private void Active()

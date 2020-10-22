@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VariantCardSelector : MonoBehaviour
+public class VariantCardSelector : MonoBehaviour, IManageCards
 {
     #region Variables
     [SerializeField] private Button startGameBtn;
