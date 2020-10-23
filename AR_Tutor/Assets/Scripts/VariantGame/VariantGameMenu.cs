@@ -7,6 +7,7 @@ public class VariantGameMenu : GameMenu
 {
     #region Variables
     private MenuTransitionController transitionController;
+    private VariantCardSelector variantSelector;
 
     [SerializeField] private GameObject categorySelector;
     [SerializeField] private Button[] gameModes = new Button[] { };
@@ -16,17 +17,14 @@ public class VariantGameMenu : GameMenu
     public override void Initialize()
     {
         gameName = GameName.Variant;
-        cardSelector = FindObjectOfType<VariantCardSelector>();
+        VariantCardSelector selector = FindObjectOfType<VariantCardSelector>();
+        cardSelector = selector;
+        variantSelector = selector;
         transitionController = FindObjectOfType<MenuTransitionController>();
         base.Initialize();
         
         BindBtns();
         HidePanels();
-
-        Signals.AddCategoryEvent.AddListener(AddNewCategory);
-        Signals.AddCardEvent.AddListener(AddNewCard);
-        Signals.DeleteCategoryFromGame.AddListener(DeleteCategory);
-        Signals.DeleteCardFromCategory.AddListener(DeleteCard);
     }
 
     #region Add content
@@ -76,7 +74,7 @@ public class VariantGameMenu : GameMenu
             btn.onClick.AddListener(() =>
             {
                 transitionController.ActivatePanel(categorySelector);
-                cardSelector.SetMaxCard(maxCardCount);
+                variantSelector.SetMaxCard(maxCardCount);
             });
         }
     }
@@ -94,7 +92,7 @@ public class VariantGameMenu : GameMenu
             transitionController.AddEventToReturnBtn(() =>
             {
                 startGameBtn.gameObject.SetActive(false);
-                cardSelector.UnselectAll();
+                variantSelector.UnselectAll();
             });
         });
     }

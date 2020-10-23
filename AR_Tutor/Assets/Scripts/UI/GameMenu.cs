@@ -30,6 +30,11 @@ public class GameMenu : MonoBehaviour
 
         ConfigurateCategories();
         cardSelector.Initialize(Cards);
+
+        Signals.AddCategoryEvent.AddListener(AddNewCategory);
+        Signals.AddCardEvent.AddListener(AddNewCard);
+        Signals.DeleteCategoryFromGame.AddListener(DeleteCategory);
+        Signals.DeleteCardFromCategory.AddListener(DeleteCard);
     }
 
     #region Configurate
