@@ -112,8 +112,10 @@ public class PatientDataManager : MonoBehaviour
 
     public bool CategoryExist(GameName gameName, string _categoryKey)
     {
-        if (GetCategoryIndex(_categoryKey) < 0)
-            return false;
+        var index = GetCategoryIndex(_categoryKey);
+
+        if (index < 0) return false;
+        if (PatientData.Games[index] != (int)gameName) return false;
 
         return true;
     }
@@ -159,10 +161,13 @@ public class PatientDataManager : MonoBehaviour
         UpdatePatientData();
     }
 
-    public bool CardExists(GameName game, string categoryIndex, string cardIndex)
+    public bool CardExists(GameName game, string _categoryKey, string _cardKey)
     {
-        if (GetCardIndex(categoryIndex, cardIndex) < 0)
-            return false;
+        var categoryIndex = GetCategoryIndex(_categoryKey);
+        var carIndex = GetCardIndex(_categoryKey, _cardKey);
+
+        if (carIndex < 0) return false;
+        if (PatientData.Games[categoryIndex] != (int)game) return false;
 
         return true;
     }

@@ -9,15 +9,18 @@ public struct CardStorageData
 {
     public string title;
     public string titleForm;
-    public string imageName;
-    public string audioName;
+    public string img1Name, img2Name, img3Name;
+    public string audio1Name, audio2Name;
 
-    public CardStorageData(string _title, string _titleForm, string _imageName, string _audioName)
+    public CardStorageData(string _title, string _titleForm, string _img1Name, string _img2Name, string _img3Name, string _audio1Name, string _audio2Name)
     {
         title = _title;
         titleForm = _titleForm;
-        imageName = _imageName;
-        audioName = _audioName;
+        img1Name = _img1Name;
+        img2Name = _img2Name;
+        img3Name = _img3Name;
+        audio1Name = _audio1Name;
+        audio2Name = _audio2Name;
     }
 }
 
@@ -43,14 +46,17 @@ public class ContentLoader : MonoBehaviour
 
         if (storageData != null)
         {
-            yield return cloudStorage.DownloadSprite(storageData.Value.imageName);
-            yield return cloudStorage.DownloadAudio(storageData.Value.audioName);
+            yield return cloudStorage.DownloadSprite(storageData.Value.img1Name, 1);
+            yield return cloudStorage.DownloadSprite(storageData.Value.img1Name, 2);
+            yield return cloudStorage.DownloadSprite(storageData.Value.img1Name, 3);
+            yield return cloudStorage.DownloadAudio(storageData.Value.audio1Name, 1);
+            yield return cloudStorage.DownloadAudio(storageData.Value.audio1Name, 2);
 
             loadedCard = new CardData(
                 storageData.Value.title,
                 storageData.Value.titleForm,
-                cloudStorage.LastLoadedSprite,
-                cloudStorage.LastLoadedClip, 
+                cloudStorage.Img1, cloudStorage.Img2, cloudStorage.Img3,
+                cloudStorage.Clip1, cloudStorage.Clip2,
                 true);
 
             var patientDataManager = FindObjectOfType<PatientDataManager>();
@@ -60,9 +66,12 @@ public class ContentLoader : MonoBehaviour
 
             var cardKey = $"{patientDataManager.GetUserLogin()}{loadedCard.Title}{saveSystem.GetCustomCardsData().keys.Count}";
             var image1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}image1";
+            var image2Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}image2";
+            var image3Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}image3";
             var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio1";
+            var audio2Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCardsData().keys.Count}audio2";
 
-            saveSystem.SaveCustomCardFromLocal(loadedCard, cardKey, image1Key, audio1Key);
+            saveSystem.SaveCustomCardFromLocal(loadedCard, cardKey, image1Key, image2Key, image3Key, audio1Key, audio2Key);
 
             storage.AddNewCardToBase(loadedCard, cardKey);
             categoryManager.AddCard(cardKey);
@@ -90,8 +99,11 @@ public class ContentLoader : MonoBehaviour
                 storageData = new CardStorageData(
                     snapshot.Child("testCard").Child("title").GetValue(false).ToString(),
                     snapshot.Child("testCard").Child("titleForm").GetValue(false).ToString(),
-                    snapshot.Child("testCard").Child("imageName").GetValue(false).ToString(),
-                    snapshot.Child("testCard").Child("audioName").GetValue(false).ToString());
+                    snapshot.Child("testCard").Child("image1").GetValue(false).ToString(),
+                    snapshot.Child("testCard").Child("image2").GetValue(false).ToString(),
+                    snapshot.Child("testCard").Child("image3").GetValue(false).ToString(),
+                    snapshot.Child("testCard").Child("clip1").GetValue(false).ToString(),
+                    snapshot.Child("testCard").Child("clip2").GetValue(false).ToString());
             }
         }
     }

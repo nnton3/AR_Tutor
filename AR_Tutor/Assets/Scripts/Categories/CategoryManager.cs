@@ -10,6 +10,7 @@ public class CategoryManager : MonoBehaviour
     #region Variables
     private MenuTransitionController transitionController;
     private VariantGameMenu variantMenu;
+    private WordBookMenuControl wordbookMenu;
     private PatientDataManager patientDataManager;
     private CardStorage cardStorage;
     private CategoryStorage categoryStorage;
@@ -35,6 +36,7 @@ public class CategoryManager : MonoBehaviour
     {
         transitionController = FindObjectOfType<MenuTransitionController>();
         variantMenu = FindObjectOfType<VariantGameMenu>();
+        wordbookMenu = FindObjectOfType<WordBookMenuControl>();
         patientDataManager = FindObjectOfType<PatientDataManager>();
         categoryStorage = FindObjectOfType<CategoryStorage>();
         cardStorage = FindObjectOfType<CardStorage>();
@@ -286,6 +288,7 @@ public class CategoryManager : MonoBehaviour
         /// Обновить картинку для карточки во всех меню
         cardLibraryControl.UpdateCardImg(_cardKey, _cardImg);
         variantMenu.UpdateCardImg(_cardKey, _cardImg);
+        wordbookMenu.UpdateCardImg(_cardKey, _cardImg);
         /// TODO: Добавить оставшиеся игры
     }
 
@@ -328,6 +331,7 @@ public class CategoryManager : MonoBehaviour
         categoryStorage.UpdateCustomCategoryImg(_categoryKey, _categoryImg);
 
         variantMenu.UpdateCategoryImage(_categoryKey, _categoryImg);
+        wordbookMenu.UpdateCategoryImage(_categoryKey, _categoryImg);
         /// TODO: Добавить обновление во всех играх, где используется
     }
 
@@ -335,7 +339,6 @@ public class CategoryManager : MonoBehaviour
     {
         categoryCreator.CreateCategory(_categoryKey, _categoryImg);
         Signals.DeleteCategoryFromGame.Invoke(_categoryKey);
-        /// TODO : Доделать замену старого раздела на кастомный с новой картинкой
     }
     #endregion
     #endregion

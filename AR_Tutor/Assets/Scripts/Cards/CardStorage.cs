@@ -43,19 +43,21 @@ public class CardStorage : MonoBehaviour
 
         for (int i = 0; i < customCardsData.keys.Count; i++)
         {
-            var img = saveSystem.LoadImage(customCardsData.imageAddres[i]);
-            Rect imgRect = new Rect(0, 0, img.width, img.height);
-            var size = (img.width < img.height) ? img.width : img.height;
+            var img1 = saveSystem.LoadImage(customCardsData.image1Addres[i]);
+            var img2 = saveSystem.LoadImage(customCardsData.image2Addres[i]);
+            var img3 = saveSystem.LoadImage(customCardsData.image3Addres[i]);
+            Rect imgRect = new Rect(0, 0, img1.width, img1.height);
+            var size = (img1.width < img1.height) ? img1.width : img1.height;
             imgRect = new Rect(0, 0, size, size);
 
             var card = new CardData(
                 customCardsData.cardTitles[i],
                 customCardsData.cardTitleForms[i],
-                Sprite.Create(
-                    img,
-                    imgRect,
-                    Vector2.zero),
-                saveSystem.LoadAudio(customCardsData.audioAddres[i]),
+                Sprite.Create(img1, imgRect, Vector2.zero),
+                Sprite.Create(img2, imgRect, Vector2.zero),
+                Sprite.Create(img3, imgRect, Vector2.zero),
+                saveSystem.LoadAudio(customCardsData.audio1Addres[i]),
+                saveSystem.LoadAudio(customCardsData.audio2Addres[i]),
                 true);
             AddCustomCard(customCardsData.keys[i], card);
         }
@@ -91,12 +93,12 @@ public class CardStorage : MonoBehaviour
     {
         // Local save
         var cardIndex = saveSystem.GetCustomCardsData().keys.IndexOf(_cardKey);
-        var addres = saveSystem.GetCustomCardsData().imageAddres[cardIndex];
+        var addres = saveSystem.GetCustomCardsData().image1Addres[cardIndex];
         saveSystem.SaveImage(_cardImg.texture, addres);
 
         // Update actual data
         var newData = cards[_cardKey];
-        newData.img = _cardImg;
+        newData.img1 = _cardImg;
         cards[_cardKey] = newData;
         Debug.Log("Update storage and save");
     }

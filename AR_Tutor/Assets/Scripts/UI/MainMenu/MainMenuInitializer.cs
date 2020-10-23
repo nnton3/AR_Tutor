@@ -4,6 +4,7 @@ public class MainMenuInitializer : MonoBehaviour
 {
     #region Variables
     private VariantGameMenu variantGameUI;
+    private WordBookMenuControl wordbookGameUI;
     private CardStorage cardStorage;
     private CategoryStorage categoryStorage;
     private MainMenuUIControl mainMenuUI;
@@ -16,6 +17,7 @@ public class MainMenuInitializer : MonoBehaviour
     private void Awake()
     {
         variantGameUI = FindObjectOfType<VariantGameMenu>();
+        wordbookGameUI = FindObjectOfType<WordBookMenuControl>();
         cardStorage = FindObjectOfType<CardStorage>();
         categoryStorage = FindObjectOfType<CategoryStorage>();
         mainMenuUI = FindObjectOfType<MainMenuUIControl>();
@@ -29,6 +31,7 @@ public class MainMenuInitializer : MonoBehaviour
         if (categoryStorage != null) categoryStorage.Initialize();
         if (cardStorage != null) cardStorage.Initialize();
         if (variantGameUI != null) variantGameUI.Initialize();
+        if (wordbookGameUI != null) wordbookGameUI.Initialize();
         if (categoryLibrary != null) categoryLibrary.Initialize();
         if (cardLibrary != null) cardLibrary.Initialize();
         if (mainMenuUI != null) mainMenuUI.Initialize();

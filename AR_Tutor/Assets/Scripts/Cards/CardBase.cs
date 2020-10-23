@@ -53,11 +53,11 @@ public class CardBase : MonoBehaviour
         else title.text = data.Title;
 
         if (image != null)
-            if (data.img != null)
-                image.sprite = data.img;
+            if (data.img1 != null)
+                image.sprite = data.img1;
 
-        if (data.audioClip != null)
-            audioClip = data.audioClip;
+        if (data.audioClip1 != null)
+            audioClip = data.audioClip1;
     }
 
     protected virtual void SwitchVisible()

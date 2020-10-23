@@ -77,16 +77,22 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Cards
-    public void SaveCustomCardFromLocal(CardData cardData, string key, string imageKey, string audioKey)
+    public void SaveCustomCardFromLocal(CardData cardData, string key, string _image1Key, string _image2Key, string _image3Key, string _audio1Key, string _audio2Key)
     {
         cardSaveData.cardTitles.Add(cardData.Title);
         cardSaveData.cardTitleForms.Add(cardData.TitleForm);
         cardSaveData.keys.Add(key);
-        cardSaveData.imageAddres.Add(imageKey);
-        cardSaveData.audioAddres.Add(audioKey);
+        cardSaveData.image1Addres.Add(_image1Key);
+        cardSaveData.image2Addres.Add(_image2Key);
+        cardSaveData.image3Addres.Add(_image3Key);
+        cardSaveData.audio1Addres.Add(_audio1Key);
+        cardSaveData.audio2Addres.Add(_audio2Key);
 
-        SaveImage(cardData.img.texture, imageKey);
-        SaveAudio(cardData.audioClip, audioKey);
+        SaveImage(cardData.img1.texture, _image1Key);
+        SaveImage(cardData.img2.texture, _image2Key);
+        SaveImage(cardData.img3.texture, _image3Key);
+        SaveAudio(cardData.audioClip1, _audio1Key);
+        SaveAudio(cardData.audioClip2, _audio2Key);
 
         UpdateCustomCardLocal();
     }
