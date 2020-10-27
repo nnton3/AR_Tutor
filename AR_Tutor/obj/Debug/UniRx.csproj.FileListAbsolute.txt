@@ -1,18 +1,13 @@
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\UniRx.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\UniRx.pdb
-D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Analytics.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.App.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Auth.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Database.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Editor.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Platform.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.TaskExtension.dll
-D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.IOSResolver_v1.2.156.dll
-D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.JarResolver_v1.2.156.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.MiniJson.dll
-D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.PackageManagerResolver_v1.2.156.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.VersionHandler.dll
-D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.VersionHandlerImpl_v1.2.156.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\mscorlib.dll
 D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\netstandard.dll
@@ -278,3 +273,8 @@ D:\Projects\AR_Tutor\AR_Tutor\obj\Debug\UniRx.csproj.CoreCompileInputs.cache
 D:\Projects\AR_Tutor\AR_Tutor\obj\Debug\UniRx.csproj.CopyComplete
 D:\Projects\AR_Tutor\AR_Tutor\obj\Debug\UniRx.dll
 D:\Projects\AR_Tutor\AR_Tutor\obj\Debug\UniRx.pdb
+D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Firebase.Storage.dll
+D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.IOSResolver_v1.2.161.dll
+D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.JarResolver_v1.2.161.dll
+D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.PackageManagerResolver_v1.2.161.dll
+D:\Projects\AR_Tutor\AR_Tutor\Temp\bin\Debug\Google.VersionHandlerImpl_v1.2.161.dll

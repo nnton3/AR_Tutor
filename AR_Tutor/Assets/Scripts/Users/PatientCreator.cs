@@ -10,6 +10,7 @@ public class PatientCreator : MonoBehaviour
     private LoginUIControl uiControl;
     private UserSaveSystem saveSystem;
     private LoginManager loginManager;
+    private MenuTransitionController transitionController;
     [SerializeField]
     private Button
         createBtn,
@@ -20,21 +21,27 @@ public class PatientCreator : MonoBehaviour
         patientAgeField,
         patientLoginField;
     [SerializeField] private Image img;
-    private Texture2D tex;
+    [SerializeField] private Texture2D imgData;
+    [SerializeField] private string patientName, patientAge, patientLogin;
+    [SerializeField] private Sprite defaultSprite;
     #endregion
 
-    private string patientName, patientAge, patientLogin;
 
     private void Awake()
     {
         uiControl = FindObjectOfType<LoginUIControl>();
         saveSystem = FindObjectOfType<UserSaveSystem>();
         loginManager = FindObjectOfType<LoginManager>();
+        transitionController = FindObjectOfType<MenuTransitionController>();
 
         BinFields();
 
-        createBtn.onClick.AddListener(CreatePatient);
-        addImgBtn.onClick.AddListener(() => PickImage(img, tex));
+        createBtn.onClick.AddListener(() =>
+        {
+            CreatePatient();
+            transitionController.ReturnToBack();
+        });
+        addImgBtn.onClick.AddListener(() => PickImage(img));
     }
 
     private void BinFields()
@@ -46,11 +53,15 @@ public class PatientCreator : MonoBehaviour
 
     private void CreatePatient()
     {
-        string imageKey = $"{patientLogin}image";
+        var imageKey = $"{patientLogin}image";
 
         Sprite sprite = null;
-        if (tex != null)
-            sprite = img.sprite;
+        if (imgData != null)
+        {
+            var size = (imgData.width > imgData.height) ? imgData.height : imgData.width;
+            var rect = new Rect(0, 0, size, size);
+            sprite = Sprite.Create(imgData, rect, Vector2.zero);
+        }
 
         var patientData = new PatientData(
             patientName,
@@ -60,11 +71,12 @@ public class PatientCreator : MonoBehaviour
         uiControl.AddPatientCardInSelector(patientData, patientLogin);
         saveSystem.SavePatientsFromLocal(patientLogin, patientData, imageKey);
         loginManager.AddPatientToUser(patientLogin);
+        Reset();
     }
 
-    public NativeGallery.Permission PickImage(Image _targetImg, Texture2D _texture)
+    public void PickImage(Image _targetImg)
     {
-        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+        NativeGallery.GetImageFromGallery((path) =>
         {
             if (path != null)
             {
@@ -75,9 +87,16 @@ public class PatientCreator : MonoBehaviour
                 var size = (texture.width < texture.height) ? texture.width : texture.height;
                 _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
 
-                _texture = texture;
+                imgData = texture;
             }
         });
-        return permission;
+    }
+
+    private void Reset()
+    {
+        patientNameField.text = "";
+        patientAgeField.text = "";
+        patientLoginField.text = "";
+        img.sprite = defaultSprite;
     }
 }

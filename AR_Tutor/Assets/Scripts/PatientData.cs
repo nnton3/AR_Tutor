@@ -17,6 +17,7 @@ public struct PatientData
     }
 }
 
+[Serializable]
 public struct PatientSaveData
 {
     public string PatientName;

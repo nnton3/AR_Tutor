@@ -14,7 +14,7 @@ public class CategoryCreator : MonoBehaviour
     [SerializeField] private AudioClip clip, clipTmp;
     [SerializeField] private Image image, recClipIcon;
     [SerializeField] private Texture2D imageData;
-    [SerializeField] private Sprite recImg, stopRecImg;
+    [SerializeField] private Sprite recImg, stopRecImg, defaultImg;
     [SerializeField] private string title;
     private AudioSource source;
     private CategoryData categoryData;
@@ -41,16 +41,15 @@ public class CategoryCreator : MonoBehaviour
     private void BindUI()
     {
         titleInputField.onValueChanged.AddListener((value) => title = value);
-
         recAudio1Btn.onClick.AddListener(() => RecordBtnOnClick());
         recAudio2Btn.onClick.AddListener(() => RecordBtnOnClick());
         playAudioBtn.onClick.AddListener(() => PlayAudio(clip));
-        setUpImgBtn.onClick.AddListener(() => PickImage(image, imageData));
+        setUpImgBtn.onClick.AddListener(() => PickImage(image));
         applyBtn.onClick.AddListener(() =>
         {
             if (DataIsValid())
             {
-                CreateCategory(title, image.sprite, clip);
+                CreateCategory(title, imageData, clip);
                 transitionController.ReturnToBack(2);
             }
         });
@@ -59,32 +58,33 @@ public class CategoryCreator : MonoBehaviour
     public void CreateCategory(string _categoryKey, Sprite _categoryImg)
     {
         var data = storage.Categories[_categoryKey];
-        CreateCategory(data.title, _categoryImg, data.clip, data.cardKeys, data.cardsVisible);
+        CreateCategory(data.title, _categoryImg.texture, data.clip, data.cardKeys, data.cardsVisible);
     }
 
-    private void CreateCategory(string _title, Sprite _img, AudioClip _clip, List<string> _cardKeys = null, List<bool> _cardVisibles = null)
+    private void CreateCategory(string _title, Texture2D _img, AudioClip _clip, List<string> _cardKeys = null, List<bool> _cardVisibles = null)
     {
         var categoryKey = $"{patientDataManager.GetUserLogin()}{_title}{saveSystem.GetCustomCategoryData().keys.Count}";
         var image1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}image1";
         var audio1Key = $"{patientDataManager.GetUserLogin()}{saveSystem.GetCustomCategoryData().keys.Count}audio1";
 
-        Debug.Log(image == null);
+        var size = (_img.height > _img.width) ? _img.width : _img.height;
+        var rect = new Rect(0, 0, size, size);
+
         categoryData = new CategoryData(
             (int)categoryManager.gameName,
             _title,
-            _img,
+            Sprite.Create(_img, rect, Vector2.zero),
             _clip,
             true,
             (_cardKeys == null) ? new List<string>() : _cardKeys,
             (_cardVisibles == null) ? new List<bool>() : _cardVisibles,
             true);
 
-        saveSystem.SaveImage(_img.texture, image1Key);
-        saveSystem.SaveAudio(clip, audio1Key);
+        saveSystem.SaveCustomCategoryFromLocal(categoryData, categoryKey, image1Key, audio1Key);
 
         storage.AddCategoryToBase(categoryData, categoryKey, image1Key, audio1Key);
         categoryManager.AddCategory(categoryKey);
-        ResetFields();
+        Reset();
     }
 
     #region Audio
@@ -125,9 +125,9 @@ public class CategoryCreator : MonoBehaviour
     }
     #endregion
 
-    public NativeGallery.Permission PickImage(Image _targetImg, Texture2D _texture)
+    public void PickImage(Image _targetImg)
     {
-        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+        NativeGallery.GetImageFromGallery((path) =>
         {
             if (path != null)
             {
@@ -138,22 +138,22 @@ public class CategoryCreator : MonoBehaviour
                 var size = (texture.width < texture.height) ? texture.width : texture.height;
                 _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
 
-                _texture = texture;
+                imageData = texture;
             }
         });
-        return permission;
     }
 
-    public void ResetFields()
+    public void Reset()
     {
         titleInputField.text = "";
         clip = null;
-        image = null;
+        image.sprite = defaultImg;
+        imageData = null;
     }
 
     private bool DataIsValid()
     {
-        if (titleInputField.text == "") return false;
+        if (string.IsNullOrEmpty(title)) return false;
         if (imageData == null) return false;
         if (clip == null) return false;
 

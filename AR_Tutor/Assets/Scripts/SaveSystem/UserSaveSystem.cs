@@ -9,10 +9,12 @@ public class UserSaveSystem : MonoBehaviour
 {
     private DataBaseControl database; 
     public PatientData LoadedPatient { get; private set; }
+    [SerializeField] private UnityEngine.UI.Button testDelete;
 
     private void Awake()
     {
         database = FindObjectOfType<DataBaseControl>();
+        testDelete.onClick.AddListener(DeleteData);
     }
 
     #region Database
@@ -75,11 +77,11 @@ public class UserSaveSystem : MonoBehaviour
             _data.PatientName,
             _data.PatientAge,
             _imageKey);
-
+        
         if (_data.img != null)
             SaveImage(_data.img.texture, _imageKey);
 
-        var json = JsonUtility.ToJson(_data);
+        var json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(_login, json);
     }
 
@@ -94,10 +96,12 @@ public class UserSaveSystem : MonoBehaviour
         var texture = LoadImage(savedData.imgAddress);
 
         if (texture != null)
+        {
             targetSprite = Sprite.Create(
                 texture,
                 new Rect(0, 0, texture.width, texture.width),
                 Vector2.zero);
+        }
 
         return new PatientData(savedData.PatientName, savedData.PatientAge, targetSprite);
     }
@@ -112,6 +116,7 @@ public class UserSaveSystem : MonoBehaviour
 
     public Texture2D LoadImage(string key)
     {
+        Debug.Log(key);
         if (ES3.FileExists($"{key}.png"))
             return ES3.LoadImage($"{key}.png");
         else
@@ -141,5 +146,12 @@ public class UserSaveSystem : MonoBehaviour
             hasConnection = false;
         else
             hasConnection = true;
+    }
+
+    private void DeleteData()
+    {
+        Debug.Log("clear data");
+        ES3.DeleteFile();
+        PlayerPrefs.DeleteAll();
     }
 }

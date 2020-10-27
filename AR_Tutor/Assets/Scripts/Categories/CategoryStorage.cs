@@ -190,8 +190,6 @@ public class CategoryStorage : MonoBehaviour
         if (Categories.ContainsKey(_categoryKey)) return;
 
         AddCategory(_categoryKey, _data);
-
-        saveSystem.SaveCustomCategoryFromLocal(_data, _categoryKey, _imageAddress, _clipAddress);
     }
 
     public bool HasCategory(GameName _game, string _categoryKey)

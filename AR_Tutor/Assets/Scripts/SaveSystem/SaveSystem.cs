@@ -52,6 +52,9 @@ public class SaveSystem : MonoBehaviour
         categorySaveData.keys.Add(_categoryKey);
         categorySaveData.isCustom.Add(true);
 
+        SaveImage(_categoryData.img.texture, _imageKey);
+        SaveAudio(_categoryData.clip, _audioKey);
+
         UpdateCustomCategoryLocal();
     }
 
