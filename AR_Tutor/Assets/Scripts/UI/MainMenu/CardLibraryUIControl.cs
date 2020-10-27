@@ -42,7 +42,7 @@ public class CardLibraryUIControl : MonoBehaviour
         var initializer = instance.GetComponent<LibraryCardInitializer>();
         initializer.Initialize(key, data);
         libraryCards.Add(initializer);
-        UIInstruments.CalculateContentSize(grid, libraryCards.Count);
+        UIInstruments.GetSizeForGrid(grid, libraryCards.Count);
     }
 
     public void BindCardsForSelect()

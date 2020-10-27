@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/LoginScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: b212efff03a2b6e46bf2cc82293bb512
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WordBookGame.unity
     guid: 021b3e41d2ac5e942aef7649d6f4989c
   m_configObjects: {}

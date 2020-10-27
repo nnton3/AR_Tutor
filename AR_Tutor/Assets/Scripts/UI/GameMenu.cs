@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class GameMenu : MonoBehaviour
 {
@@ -107,6 +108,8 @@ public class GameMenu : MonoBehaviour
 
         InitializeEditableElement(cardObj);
         cardSelector.AddCard(cardObj);
+
+        UIInstruments.GetSizeForGrid(CategoriesPanels[index].transform.Find("Mask/Content").GetComponent<GridLayoutGroup>(), Cards.Count);
     }
 
     protected virtual GameObject AddCardInMenu(GameObject _categoryPanel, string _categoryKey, string _cardKey)
@@ -119,7 +122,7 @@ public class GameMenu : MonoBehaviour
 
         Cards.Add(cardObj);
         var initializer = cardObj.GetComponent<CardBase>();
-        initializer.Initialize(GameName.Variant, _categoryKey, _cardKey, cardData);
+        initializer.Initialize(gameName, _categoryKey, _cardKey, cardData);
         return cardObj;
     }
     #endregion
@@ -142,14 +145,15 @@ public class GameMenu : MonoBehaviour
     {
         if (!IsCategoryForThisGame(_categoryKey)) return;
 
-        foreach (var card in Cards)
-            if (card.GetComponent<CardBase>().Key == _key)
-            {
-                mainMenu.DeleteEditableElement(card.GetComponent<EditableElement>());
-                Cards.Remove(card);
-                //cardSelector.RemoveCard(card);
-                Destroy(card);
-            }
+        var targetCards = Cards.FindAll((card) => card.GetComponent<CardBase>().Key == _key);
+
+        foreach (var card in targetCards)
+        {
+            mainMenu.DeleteEditableElement(card.GetComponent<EditableElement>());
+            Cards.Remove(card);
+            cardSelector.RemoveCard(card);
+            Destroy(card);
+        }
     }
     #endregion
 

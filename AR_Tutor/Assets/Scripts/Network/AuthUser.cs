@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Auth;
 using UnityEngine.Events;
+using System.Threading.Tasks;
 
 public class AuthUser : MonoBehaviour
 {
     #region Variables
     private FirebaseUser newUser = null;
     public FirebaseUser NewUser => newUser;
+    public string UserID { get; private set; }
     private FirebaseAuth auth;
     [SerializeField] private UnityEngine.UI.Text status;
     public bool IsSignIn { get; private set; } = false;
@@ -20,9 +22,14 @@ public class AuthUser : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
     }
 
-    public void CreateUser(string email, string password)
+    public void SetUserID(string _id)
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        UserID = _id;
+    }
+
+    public Task CreateUser(string email, string password)
+    {
+        return auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -37,6 +44,7 @@ public class AuthUser : MonoBehaviour
 
             // Firebase user has been created.
             newUser = task.Result;
+            UserID = newUser?.UserId;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
         });

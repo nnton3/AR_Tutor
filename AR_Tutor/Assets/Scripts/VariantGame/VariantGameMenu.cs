@@ -27,36 +27,11 @@ public class VariantGameMenu : GameMenu
         HidePanels();
     }
 
-    #region Add content
-    public override void AddNewCard(string _categoryKey, string _key)
+    protected override void AddNewCategory(string _categoryKey)
     {
-        if (!IsCategoryForThisGame(_categoryKey)) return;
-
-        var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey);
-        var index = CategoryCards.IndexOf(targetCard);
-        GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
-
-        InitializeEditableElement(cardObj);
-        cardSelector.AddCard(cardObj);
+        base.AddNewCategory(_categoryKey);
+        UIInstruments.GetSizeForGrid(categoryParent.GetComponent<GridLayoutGroup>(), CategoryCards.Count);
     }
-    #endregion
-
-    #region Delete content
-    protected override void DeleteCard(string _categoryKey, string _key)
-    {
-        if (!IsCategoryForThisGame(_categoryKey)) return;
-
-        var targetCards = Cards.FindAll((card) => card.GetComponent<CardBase>().Key == _key);
-
-        foreach (var card in targetCards)
-        {
-            mainMenu.DeleteEditableElement(card.GetComponent<EditableElement>());
-            Cards.Remove(card);
-            cardSelector.RemoveCard(card);
-            Destroy(card);
-        }
-    }
-    #endregion
 
     protected override void HidePanels()
     {
@@ -87,7 +62,8 @@ public class VariantGameMenu : GameMenu
         btn.onClick.AddListener(() =>
         {
             transitionController.ActivatePanel(panel);
-            startGameBtn.gameObject.SetActive(true);
+            if (mainMenu.Mode == MenuMode.GameSelection)
+                startGameBtn.gameObject.SetActive(true);
 
             transitionController.AddEventToReturnBtn(() =>
             {

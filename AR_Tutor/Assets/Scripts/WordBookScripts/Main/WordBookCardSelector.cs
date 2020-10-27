@@ -8,7 +8,7 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
     #region Variables
     [SerializeField] private GameObject contentPanel;
     [SerializeField] private Button closeContentBtn;
-    private List<WordBookCardInitializer> cards = new List<WordBookCardInitializer>();
+    private List<CardBase> cards = new List<CardBase>();
     private CategoryData currentCategory;
     private GameObject lastCardsPanel;
     private string currentCard;
@@ -19,10 +19,6 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
 
     private void Awake()
     {
-        categoryStorage = FindObjectOfType<CategoryStorage>();
-        cardStorage = FindObjectOfType<CardStorage>();
-        content = FindObjectOfType<WordBookContent>();
-
         closeContentBtn.onClick.AddListener(() =>
         {
             contentPanel.SetActive(false);
@@ -34,8 +30,12 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
 
     public void Initialize(List<GameObject> _cards)
     {
+        categoryStorage = FindObjectOfType<CategoryStorage>();
+        cardStorage = FindObjectOfType<CardStorage>();
+        content = FindObjectOfType<WordBookContent>();
+
         foreach (var card in _cards)
-            cards.Add(card.GetComponent<WordBookCardInitializer>());
+            cards.Add(card.GetComponent<CardBase>());
 
         Signals.DownSwipeEvent.AddListener(() => ScrollCards(-1));
         Signals.UpSwipeEvent.AddListener(() => ScrollCards(1));
@@ -83,11 +83,11 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
 
     public void AddCard(GameObject _card)
     {
-        cards.Add(_card.GetComponent<WordBookCardInitializer>());
+        cards.Add(_card.GetComponent<CardBase>());
     }
 
     public void RemoveCard(GameObject _card)
     {
-        cards.Remove(_card.GetComponent<WordBookCardInitializer>());
+        cards.Remove(_card.GetComponent<CardBase>());
     }
 }

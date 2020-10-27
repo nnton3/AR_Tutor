@@ -9,6 +9,7 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
     [SerializeField] private GameObject variantGamePanel;
     [SerializeField] private List<string> selectedCardsKeys = new List<string>();
     [SerializeField] private int maxCardCount;
+    private MainMenuUIControl mainMenuControl;
     private MenuTransitionController transitionController;
     private VariantGameLogic gameLogic;
     private List<VariantCardSelectable> selectedCards = new List<VariantCardSelectable>();
@@ -18,6 +19,7 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
 
     public void Initialize(List<GameObject> cards)
     {
+        mainMenuControl = FindObjectOfType<MainMenuUIControl>();
         transitionController = FindObjectOfType<MenuTransitionController>();
         gameLogic = FindObjectOfType<VariantGameLogic>();
 

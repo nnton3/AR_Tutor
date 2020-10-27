@@ -32,6 +32,12 @@ public class LoginManager : MonoBehaviour
         uiControl = FindObjectOfType<LoginUIControl>();
         auth = FindObjectOfType<AuthUser>();
         saveSystem = FindObjectOfType<UserSaveSystem>();
+
+        if (HasEnter())
+        {
+            auth.SetUserID(PlayerPrefs.GetString("lastUser"));
+            ConfigurateUserData(auth.UserID);
+        }
     }
 
     public bool HasEnter()
@@ -50,18 +56,17 @@ public class LoginManager : MonoBehaviour
 
             if (auth.NewUser != null)
             {
-                PlayerPrefs.SetString("lastUser", auth.NewUser.UserId);
-                ConfigurateUserData(auth.NewUser.UserId);
+                PlayerPrefs.SetString("lastUser", auth.UserID);
+                ConfigurateUserData(auth.UserID);
             }
 
             uiControl.PatientSelectorActiveSelf = true;
-            Debug.Log("open patients");
         }
     }
 
     public void ConfigurateUserData(string _userID)
     {
-        if (_userID == null) 
+        if (_userID == null) return;
         if (saveSystem.HasUserData(_userID))
         {
             userData = saveSystem.LoadUserData(_userID);
@@ -69,16 +74,25 @@ public class LoginManager : MonoBehaviour
                 foreach (var patient in userData.patients)
                 {
                     var data = saveSystem.LoadPatientsFromLocal(patient);
-
+        
                     if (!string.IsNullOrWhiteSpace(data.PatientName))
                         uiControl.AddPatientCardInSelector(data, patient);
                 }
         }
     }
 
-    public void TryToRegistry()
+    public IEnumerator RegistryRoutine()
     {
+        var task = auth.CreateUser(email, password);
+        yield return new WaitUntil(() => task.IsCompleted);
 
+        if (auth.NewUser != null)
+        {
+            PlayerPrefs.SetString("lastUser", auth.UserID);
+            ConfigurateUserData(auth.UserID);
+        }
+
+        uiControl.PatientSelectorActiveSelf = true;
     }
 
     #region User
@@ -87,7 +101,7 @@ public class LoginManager : MonoBehaviour
         if (!userData.patients.Contains(patient))
             userData.patients.Add(patient);
 
-        saveSystem.SaveUserData(auth.NewUser.UserId, userData);
+        saveSystem.SaveUserData(auth.UserID, userData);
     }
     #endregion
 

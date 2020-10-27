@@ -27,7 +27,9 @@ public class CategoryManager : MonoBehaviour
     private Coroutine routine;
 
     [SerializeField] private GameObject categoryMethodSelectorPanel, cardMethodSelectorPanel, createCardPanel, createCategoryPanel, cardLibrary, categoryLibrary;
-    [SerializeField] private Button selectCardFromLibraryBtn, createNewCardBtn, downloadCardFromCloudBtn;
+    [SerializeField] private Button 
+        selectCardFromLibraryBtn, createNewCardBtn, downloadCardFromCloudBtn,
+        selectCategoryFromLibraryBtn, createNewCategoryBtn;
     private GameObject createPanel, libraryPanel;
     private AddedObj currentAddedObj;
     #endregion
@@ -77,6 +79,18 @@ public class CategoryManager : MonoBehaviour
         downloadCardFromCloudBtn.onClick.AddListener(() =>
         {
             method = SelectionMethod.FromCloud;
+            methodSelected = true;
+        });
+
+        selectCategoryFromLibraryBtn.onClick.AddListener(() =>
+        {
+            method = SelectionMethod.FromLibrary;
+            methodSelected = true;
+        });
+
+        createNewCategoryBtn.onClick.AddListener(() =>
+        {
+            method = SelectionMethod.AddNew;
             methodSelected = true;
         });
     }
@@ -156,7 +170,7 @@ public class CategoryManager : MonoBehaviour
         transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
-            categoryCreator.ResetFields();
+            categoryCreator.Reset();
             StartSelectMethodRoutine();
         });
     }
@@ -218,7 +232,7 @@ public class CategoryManager : MonoBehaviour
         transitionController.ActivatePanel(createPanel);
         transitionController.AddEventToReturnBtn(() =>
         {
-            cardCreator.ResetFields();
+            cardCreator.Reset();
             StartSelectMethodRoutine();
         });
     }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginUIControl : MonoBehaviour
@@ -8,6 +10,7 @@ public class LoginUIControl : MonoBehaviour
 
     private AuthType authType;
     private MenuTransitionController transitionController;
+    [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField]
     private Button
         skipHelloScreenBtn,
@@ -36,6 +39,7 @@ public class LoginUIControl : MonoBehaviour
     private LoginManager loginMenuControl;
     private AuthUser authentication;
     private UserData config;
+    private Queue<GameObject> patientsInstances = new Queue<GameObject>();
 
     public bool HelloPanelSkiped { get; private set; } = false;
 
@@ -89,10 +93,7 @@ public class LoginUIControl : MonoBehaviour
             if (!loginMenuControl.HasEnter())
                 transitionController.ActivatePanel(authTypePanel);
             else
-            {
-                loginMenuControl.ConfigurateUserData(PlayerPrefs.GetString("lastUser"));
                 transitionController.ActivatePanel(patientSelector);
-            }
         });
         if (selectSignInBtn != null) selectSignInBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignIn));
         if (selectSignUpBtn != null) selectSignUpBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignUp));
@@ -114,11 +115,18 @@ public class LoginUIControl : MonoBehaviour
         if (patientCardPref == null) return;
 
         var card = Instantiate(patientCardPref, patientSelectorContent.transform);
-        card.GetComponent<UserCardUI>().Initialize(data.PatientName, data.PatientAge);
+        card.GetComponent<UserCardUI>().Initialize(data, patient);
         card.GetComponent<Button>().onClick.AddListener(() =>
         {
             loginMenuControl.SelectPatient(patient);
         });
+        patientsInstances.Enqueue(card);
+
+        UIInstruments.GetSizeForHorizontalGroup(
+            layoutGroup,
+            patientsInstances.Count,
+            card.GetComponent<RectTransform>().sizeDelta.x * card.GetComponent<RectTransform>().localScale.x,
+            addPatientBtn.GetComponent<RectTransform>().sizeDelta.x * addPatientBtn.GetComponent<RectTransform>().localScale.x);
     }
 
     private void OpenAuthPanel(AuthType _authType)
@@ -132,7 +140,7 @@ public class LoginUIControl : MonoBehaviour
                 btnText.text = "войти";
                 break;
             case AuthType.SignUp:
-                signBtn.onClick.AddListener(() => authentication.CreateUser(loginMenuControl.Email, loginMenuControl.Password));
+                signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.RegistryRoutine()));
                 btnText.text = "регистрация";
                 break;
             default:
