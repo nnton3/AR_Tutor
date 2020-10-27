@@ -23,10 +23,12 @@ public class ButtonsSubstrateController : MonoBehaviour
     public float transitSpeed = 10f;
     public bool Left;
     public bool Right;
+    private ButtonsSceneController _ButtonsSceneController;
 
 
     void Start()
     {
+        _ButtonsSceneController = FindObjectOfType<ButtonsSceneController>();
         AllCards = new List<GameObject>();
         for (int i = 0; i < Cards.Length; i++)
         {
@@ -40,9 +42,10 @@ public class ButtonsSubstrateController : MonoBehaviour
     {
         if(ChangedCardsNumber == 2)
         {
+            FindObjectOfType<ButtonsSceneController>().ActivateScene();
+
             gameObject.SetActive(false);
         }
-        
     }
     public void AddCards()
     {
@@ -51,12 +54,42 @@ public class ButtonsSubstrateController : MonoBehaviour
             if (AllCards[i].GetComponent<ButtonsCardController>().IsChanged)
             {
                 ChangedCards.Add(AllCards[i]);
+                if (ChangedCards.Count > 0)
+                {
+                    _ButtonsSceneController.ButtonSetColor(_ButtonsSceneController.ButtonRightUp, ChangedCards[0].GetComponent<ButtonsCardController>().ButtonMaterial);
+                    _ButtonsSceneController.NeededEffectRight = ChangedCards[0].GetComponent<ButtonsCardController>().Effect;
+                    _ButtonsSceneController.NeededSoundRight = ChangedCards[0].GetComponent<ButtonsCardController>().Clip;
+                }
+                if (ChangedCards.Count > 1)
+                {
+                    _ButtonsSceneController.ButtonSetColor(_ButtonsSceneController.ButtonLeftUp, ChangedCards[1].GetComponent<ButtonsCardController>().ButtonMaterial);
+                    _ButtonsSceneController.NeededEffectLeft = ChangedCards[1].GetComponent<ButtonsCardController>().Effect;
+                    _ButtonsSceneController.NeededSoundLeft = ChangedCards[1].GetComponent<ButtonsCardController>().Clip;
+                }
                 AllCards.Remove(AllCards[i]);
                 break;
             }
         }
         ChangedCardsNumber++;
     }
+
+    public void ResetCards()
+    {
+        for (int i = 0; i < Cards.Length; i++)
+        {
+            Cards[i].GetComponent<ButtonsCardController>().IsChanged = true;
+            Cards[i].GetComponent<ButtonsCardController>().CardChanged();
+        }
+        
+        AllCards = new List<GameObject>();
+        for (int i = 0; i < Cards.Length; i++)
+        {
+            AllCards.Add(Cards[i]);
+        }
+        ChangedCards = new List<GameObject>();
+        ChangedCardsNumber = 0;
+    }
+
 
     public void RemoveCards()
     {
