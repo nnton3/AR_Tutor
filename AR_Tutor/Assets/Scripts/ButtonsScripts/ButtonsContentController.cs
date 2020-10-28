@@ -22,7 +22,7 @@ public class ButtonsContentController : MonoBehaviour
     }
     public void GotoLeft()
     {
-        TempPosContent.position = new Vector2(transform.position.x + 900f, transform.position.y);
+        TempPosContent.localPosition = new Vector2(transform.localPosition.x + 900f, transform.localPosition.y);
         Right = false;
         Left = true;
         LeftBtn.GetComponent<Button>().enabled = false;
@@ -30,7 +30,7 @@ public class ButtonsContentController : MonoBehaviour
     }
     public void GotoRight()
     {
-        TempPosContent.position = new Vector2(transform.position.x - 900f, transform.position.y);
+        TempPosContent.localPosition = new Vector2(transform.localPosition.x - 900f, transform.localPosition.y);
         Left = false;
         Right = true;
         LeftBtn.GetComponent<Button>().enabled = true;
@@ -41,15 +41,15 @@ public class ButtonsContentController : MonoBehaviour
     {
         if (Left)
         {
-            transform.position = new Vector2(Mathf.Lerp(transform.position.x, TempPosContent.position.x, Time.deltaTime * transitSpeed), transform.position.y);
-            Debug.Log(transform.position);
+            transform.localPosition = new Vector2(Mathf.Lerp(transform.localPosition.x, TempPosContent.localPosition.x, Time.deltaTime * transitSpeed), transform.localPosition.y);
+            Debug.Log(transform.localPosition);
             LeftBtn.GetComponent<Button>().enabled = false;
             StartCoroutine(Falsing());
         }
         if (Right)
         {
-            transform.position = new Vector2((Mathf.Lerp(transform.position.x, TempPosContent.position.x, Time.deltaTime * transitSpeed)), transform.position.y);
-            Debug.Log(transform.position);
+            transform.localPosition = new Vector2((Mathf.Lerp(transform.localPosition.x, TempPosContent.localPosition.x, Time.deltaTime * transitSpeed)), transform.localPosition.y);
+            Debug.Log(transform.localPosition);
             RightBtn.GetComponent<Button>().enabled = false;
             StartCoroutine(Falsing());
         }
