@@ -8,6 +8,10 @@ using UnityEngine.EventSystems;
 public class ButtonsCardController : MonoBehaviour
 {
     public bool IsChanged;
+    public Color ButtonColor;
+    public Material ButtonMaterial;
+    public GameObject Effect;
+    public AudioClip Clip;
     public void Start()
     {
         
