@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -39,7 +38,7 @@ public class GameMenu : MonoBehaviour
     }
 
     #region Configurate
-    protected void ConfigurateCategories()
+    protected virtual void ConfigurateCategories()
     {
         foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
             AddNewCategory(categoryKey);
@@ -118,6 +117,7 @@ public class GameMenu : MonoBehaviour
         GameObject cardObj;
 
         var parent = _categoryPanel.transform.Find("Mask/Content");
+        if (parent == null) parent = _categoryPanel.transform;
         cardObj = (!cardData.IsCustom) ? Instantiate(cardPref, parent) : Instantiate(customCardPref, parent);
 
         Cards.Add(cardObj);

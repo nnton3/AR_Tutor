@@ -39,10 +39,16 @@ public class MainMenuUIControl : MonoBehaviour
             {
                 settingsBtn.gameObject.SetActive(false);
 
+
                 if (Mode == MenuMode.GameSelection)
                     transitionController.ActivatePanel(panel);
                 else
                     transitionController.ActivatePanel(panel_settings);
+            });
+            if (i == 2) btn.onClick.AddListener(() =>
+            {
+                Signals.WordComposingActivate.Invoke();
+                transitionController.AddEventToReturnBtn(() => Signals.WordComposingDisable.Invoke());
             });
         }
 

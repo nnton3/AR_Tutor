@@ -79,3 +79,14 @@ MonoBehaviour:
     - startPack_card_1
     - startPack_card_2
     cardsVisible: 010101
+  - game: 4
+    title: WordComposingRanks
+    img: {fileID: 0}
+    clip: {fileID: 0}
+    visible: 1
+    IsCustom: 0
+    cardKeys:
+    - startPack_card_6
+    - startPack_card_7
+    - startPack_card_8
+    cardsVisible: 010101
