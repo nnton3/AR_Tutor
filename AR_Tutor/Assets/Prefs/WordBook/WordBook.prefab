@@ -111,6 +111,7 @@ MonoBehaviour:
   img3: {fileID: 6297362928244274589}
   clickBtn: {fileID: 2045578228}
   title: {fileID: 8333623721614561754}
+  contentRect: {fileID: 0}
 --- !u!1 &2045578227
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,9 +912,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8574769495622719438}
   - component: {fileID: 8574769495622719436}
-  - component: {fileID: 8574769495622719439}
-  - component: {fileID: 8574769495622719437}
   - component: {fileID: 8574769495622719434}
+  - component: {fileID: 3112269010492320641}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -938,7 +938,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 140, y: 500}
+  m_SizeDelta: {x: 140, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8574769495622719436
 CanvasRenderer:
@@ -948,47 +948,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8574769495622719441}
   m_CullTransparentMesh: 0
---- !u!114 &8574769495622719439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8574769495622719441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 5
-    m_Bottom: 5
-  m_ChildAlignment: 1
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 110, y: 135}
-  m_Spacing: {x: 0, y: 5}
-  m_Constraint: 1
-  m_ConstraintCount: 1
---- !u!114 &8574769495622719437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8574769495622719441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4529ac24acbcf674a884582ecf2d4d9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sections:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!225 &8574769495622719434
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1001,6 +960,31 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &3112269010492320641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8574769495622719441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 5
+    m_Bottom: 5
+  m_ChildAlignment: 1
+  m_Spacing: 5
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
 --- !u!1 &8574769495783501493
 GameObject:
   m_ObjectHideFlags: 0

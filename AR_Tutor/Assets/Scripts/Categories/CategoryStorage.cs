@@ -12,6 +12,7 @@ public class CategoryStorage : MonoBehaviour
     public Dictionary<string, CategoryData> ButtonsCategories = new Dictionary<string, CategoryData>();
     public Dictionary<string, CategoryData> WordBookCategories = new Dictionary<string, CategoryData>();
     public Dictionary<string, CategoryData> WordComposingCategories = new Dictionary<string, CategoryData>();
+    public Dictionary<string, CategoryData> WordComposingRanks = new Dictionary<string, CategoryData>();
     #endregion
 
     #region Initialize
@@ -47,6 +48,9 @@ public class CategoryStorage : MonoBehaviour
                     break;
                 case GameName.WordComposing:
                     key = $"default_3_category{i}";
+                    break;
+                case GameName.WordComposingRanks:
+                    key = $"default_4_category{i}";
                     break;
                 default:
                     break;
@@ -144,6 +148,9 @@ public class CategoryStorage : MonoBehaviour
                 break;
             case GameName.WordComposing:
                 WordComposingCategories.Add(_categoryKey, _data);
+                break;
+            case GameName.WordComposingRanks:
+                WordComposingRanks.Add(_categoryKey, _data);
                 break;
             default:
                 break;
