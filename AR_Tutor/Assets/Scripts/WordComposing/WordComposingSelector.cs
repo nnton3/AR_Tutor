@@ -13,24 +13,31 @@ public class WordComposingSelector : MonoBehaviour, IManageCards
 
         Signals.AddWordToClause.AddListener(AddCardInClause);
         Signals.RemoveWordFromClause.AddListener(RemoveCardFromClause);
+        Signals.ResetWordComposingMenu.AddListener(ClearClausePanel);
     }
 
-    public void AddCardInClause(string key)
+    private void AddCardInClause(string key)
     {
         var obj = Instantiate(clauseCardPref, clausePanel.transform);
         var data = cardStorage.cards[key];
         var initializer = obj.GetComponent<CardBase>();
         initializer.Initialize(GameName.WordComposing, null, null, data);
-        obj.GetComponent<EditableElement>().ConfigurateElement(MenuMode.GameSelection);
-        // TODO : initialize clause card
+        obj.GetComponent<EditableElement>().ConfigurateElement(MenuMode.Play);
         cardsInClause.Push(initializer);
     }
 
-    public void RemoveCardFromClause()
+    private void RemoveCardFromClause()
     {
         if (cardsInClause.Count == 0) return;
         var lastWord = cardsInClause.Pop();
         Destroy(lastWord.gameObject);
+    }
+
+    private  void ClearClausePanel()
+    {
+        int count = cardsInClause.Count;
+        for (int i = 0; i < count; i++)
+            RemoveCardFromClause();
     }
 
     public void AddCard(GameObject _card) { }

@@ -34,3 +34,8 @@ public interface IManageCards
     void AddCard(GameObject _card);
     void RemoveCard(GameObject _card);
 }
+
+public interface IEditableElement
+{
+    void ConfigurateElement(MenuMode _mode);
+}

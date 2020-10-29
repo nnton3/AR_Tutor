@@ -32,8 +32,8 @@ public class MainMenuInitializer : MonoBehaviour
         if (saveSystem != null) saveSystem.Initialize();
         if (categoryStorage != null) categoryStorage.Initialize();
         if (cardStorage != null) cardStorage.Initialize();
-        //if (variantGameUI != null) variantGameUI.Initialize();
-        //if (wordbookGameUI != null) wordbookGameUI.Initialize();
+        if (variantGameUI != null) variantGameUI.Initialize();
+        if (wordbookGameUI != null) wordbookGameUI.Initialize();
         if (wordCompositngUI != null) wordCompositngUI.Initialize();
         if (categoryLibrary != null) categoryLibrary.Initialize();
         if (cardLibrary != null) cardLibrary.Initialize();

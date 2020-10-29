@@ -24,10 +24,9 @@ public static class Signals
     public static BoolEvent CardLoadEnd = new BoolEvent();
     public static StringEvent ShowNotification = new StringEvent();
 
-    public static UnityEvent WordComposingActivate = new UnityEvent();
-    public static UnityEvent WordComposingDisable = new UnityEvent();
     public static StringEvent AddWordToClause = new StringEvent();
     public static UnityEvent RemoveWordFromClause = new UnityEvent();
+    public static UnityEvent ResetWordComposingMenu = new UnityEvent();
 
     public static StringEvent WordBookCardSelect = new StringEvent();
     public static UnityEvent LeftSwipeEvent = new UnityEvent();
