@@ -17,7 +17,7 @@ public class GameMenu : MonoBehaviour
     [SerializeField] protected Transform categoryParent, panelParent;
     [SerializeField] protected GameObject categoryCardPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
     protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
-    protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
+    [SerializeField] protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
     #endregion
 
     public virtual void Initialize()
@@ -208,7 +208,7 @@ public class GameMenu : MonoBehaviour
     {
         var editableElem = _obj.GetComponent<EditableElement>();
         editableElem.Visible = visible;
-        editableElem.ConfigurateElement(mainMenu.Mode);
+        editableElem.ConfigurateElement(MainMenuUIControl.Mode);
         mainMenu.AddEditableElement(editableElem);
     }
 

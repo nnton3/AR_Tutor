@@ -24,7 +24,7 @@ public class VariantCardSelectable : MonoBehaviour
 
     private void OnClickEventHandler()
     {
-        if (mainUIControl.Mode == MenuMode.CustomizeMenu) return;
+        if (MainMenuUIControl.Mode == MenuMode.CustomizeMenu) return;
 
         if (Selected) Unselect();
         else Select();
