@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-public class EditableElement : MonoBehaviour
+public class EditableElement : MonoBehaviour, IEditableElement
 {
     [SerializeField] private GameObject deleteBtn, selectImageBtn;
     public bool Visible { get; set; } = true;

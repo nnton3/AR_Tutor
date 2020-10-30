@@ -10,10 +10,10 @@ public class MainMenuUIControl : MonoBehaviour
     [SerializeField] private Button[] gamesBtns = new Button[] { };
     [SerializeField] private GameObject[] defaultGamePanels = new GameObject[] { };
     [SerializeField] private GameObject[] settingsGamePanels = new GameObject[] { };
-    [SerializeField] private List<EditableElement> editableElements = new List<EditableElement>();
+    [SerializeField] private List<IEditableElement> editableElements = new List<IEditableElement>();
 
     private MenuTransitionController transitionController;
-    public MenuMode Mode { get; private set; } = MenuMode.GameSelection;    
+    public static MenuMode Mode { get; private set; } = MenuMode.Play;    
     #endregion
 
     public void Initialize()
@@ -39,7 +39,8 @@ public class MainMenuUIControl : MonoBehaviour
             {
                 settingsBtn.gameObject.SetActive(false);
 
-                if (Mode == MenuMode.GameSelection)
+
+                if (Mode == MenuMode.Play)
                     transitionController.ActivatePanel(panel);
                 else
                     transitionController.ActivatePanel(panel_settings);
@@ -51,7 +52,7 @@ public class MainMenuUIControl : MonoBehaviour
 
     private void SwitchMode()
     {
-        if (Mode == MenuMode.CustomizeMenu) Mode = MenuMode.GameSelection;
+        if (Mode == MenuMode.CustomizeMenu) Mode = MenuMode.Play;
         else Mode = MenuMode.CustomizeMenu;
 
         SwitchEditableElemets();
@@ -70,15 +71,15 @@ public class MainMenuUIControl : MonoBehaviour
         }
     }
 
-    public void AddEditableElement(EditableElement element)
+    public void AddEditableElement(IEditableElement element)
     {
         editableElements.Add(element);
     }
 
-    public void DeleteEditableElement(EditableElement element)
+    public void DeleteEditableElement(IEditableElement element)
     {
         editableElements.Remove(element);
     }
 }
 
-public enum MenuMode { GameSelection, CustomizeMenu }
+public enum MenuMode { Play, CustomizeMenu }

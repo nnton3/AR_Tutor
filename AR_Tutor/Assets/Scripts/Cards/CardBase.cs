@@ -8,7 +8,7 @@ public class CardBase : MonoBehaviour
     [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] protected Image image;
     [SerializeField] private Sprite deleteSprite, addSprite;
-    private EditableElement editableElement;
+    protected EditableElement editableElement;
     private Texture2D texture;
     private AudioClip audioClip;
     private AudioSource source;

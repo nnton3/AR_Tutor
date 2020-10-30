@@ -62,7 +62,7 @@ public class VariantGameMenu : GameMenu
         btn.onClick.AddListener(() =>
         {
             transitionController.ActivatePanel(panel);
-            if (mainMenu.Mode == MenuMode.GameSelection)
+            if (MainMenuUIControl.Mode == MenuMode.Play)
                 startGameBtn.gameObject.SetActive(true);
 
             transitionController.AddEventToReturnBtn(() =>

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -18,7 +17,7 @@ public class GameMenu : MonoBehaviour
     [SerializeField] protected Transform categoryParent, panelParent;
     [SerializeField] protected GameObject categoryCardPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
     protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
-    protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
+    [SerializeField] protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
     #endregion
 
     public virtual void Initialize()
@@ -39,7 +38,7 @@ public class GameMenu : MonoBehaviour
     }
 
     #region Configurate
-    protected void ConfigurateCategories()
+    protected virtual void ConfigurateCategories()
     {
         foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
             AddNewCategory(categoryKey);
@@ -118,6 +117,7 @@ public class GameMenu : MonoBehaviour
         GameObject cardObj;
 
         var parent = _categoryPanel.transform.Find("Mask/Content");
+        if (parent == null) parent = _categoryPanel.transform;
         cardObj = (!cardData.IsCustom) ? Instantiate(cardPref, parent) : Instantiate(customCardPref, parent);
 
         Cards.Add(cardObj);
@@ -208,7 +208,7 @@ public class GameMenu : MonoBehaviour
     {
         var editableElem = _obj.GetComponent<EditableElement>();
         editableElem.Visible = visible;
-        editableElem.ConfigurateElement(mainMenu.Mode);
+        editableElem.ConfigurateElement(MainMenuUIControl.Mode);
         mainMenu.AddEditableElement(editableElem);
     }
 
