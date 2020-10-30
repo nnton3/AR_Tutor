@@ -2,7 +2,7 @@
 
 public class EditableElement : MonoBehaviour, IEditableElement
 {
-    [SerializeField] private GameObject deleteBtn, selectImageBtn;
+    [SerializeField] protected GameObject deleteBtn, selectImageBtn;
     public bool Visible { get; set; } = true;
 
     public virtual void ConfigurateElement(MenuMode mode)
@@ -11,7 +11,7 @@ public class EditableElement : MonoBehaviour, IEditableElement
         {
             gameObject.SetActive(true);
             deleteBtn.SetActive(true);
-            selectImageBtn.SetActive(true);
+            if (selectImageBtn != null) selectImageBtn.SetActive(true);
         }
         else
         {
@@ -19,7 +19,9 @@ public class EditableElement : MonoBehaviour, IEditableElement
             else gameObject.SetActive(true);
 
             deleteBtn.SetActive(false);
-            selectImageBtn.SetActive(false);
+            if (selectImageBtn != null) selectImageBtn.SetActive(false);
         }
+
+        GetComponent<ISwitchedDeleteBtnImg>()?.SwitchImgForDeleteBtn();
     }
 }

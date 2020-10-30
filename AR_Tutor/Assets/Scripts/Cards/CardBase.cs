@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class CardBase : MonoBehaviour
+public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
 {
     #region Variables
     [SerializeField] protected Text title;
     [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] protected Image image;
-    [SerializeField] private Sprite deleteSprite, addSprite;
+    [SerializeField] protected Sprite deleteSprite, addSprite;
     protected EditableElement editableElement;
     private Texture2D texture;
     private AudioClip audioClip;
@@ -31,10 +31,11 @@ public class CardBase : MonoBehaviour
 
     protected void BindBtns(CardData data)
     {
-        selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key);
-        });
+        if (selectImageBtn != null)
+            selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key);
+            });
 
         if (source != null)
             selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
@@ -63,8 +64,13 @@ public class CardBase : MonoBehaviour
     protected virtual void SwitchVisible()
     {
         editableElement.Visible = !editableElement.Visible;
-        switchVisibleBtn.GetComponent<Image>().sprite = (editableElement.Visible) ? deleteSprite : addSprite;
+        SwitchImgForDeleteBtn();
         Signals.SwitchCardVisibleEvent.Invoke(categoryKey, Key, editableElement.Visible);
+    }
+
+    public void SwitchImgForDeleteBtn()
+    {
+        switchVisibleBtn.GetComponent<Image>().sprite = (editableElement.Visible) ? deleteSprite : addSprite;
     }
 
     public Button GetSelectBtn() { return selectBtn; }

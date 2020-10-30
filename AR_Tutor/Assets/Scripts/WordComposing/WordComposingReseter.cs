@@ -6,14 +6,17 @@ using UnityEngine.Events;
 
 public class WordComposingReseter : MonoBehaviour
 {
-    [SerializeField] private GameObject firstRankPanel, secondRankPanel, categorySelector;
+    [SerializeField] private GameObject firstRankPanel, secondRankPanel, categorySelector, secondRankCloseBtn, categorySelectorCloseBtn;
     [SerializeField] private List<GameObject> cardPanels = new List<GameObject>();
     private UnityAction resetAction;
 
     public void Initialize(ClauseType _gameMode)
     {
         SetMode(_gameMode);
-        Signals.ResetWordComposingMenu.AddListener(resetAction);
+        Signals.ResetWordComposingMenu.AddListener(() =>
+        {
+            if (MainMenuUIControl.Mode == MenuMode.Play) resetAction();
+        });
     }
 
     public void SetMode(ClauseType _gameMode)
@@ -41,6 +44,8 @@ public class WordComposingReseter : MonoBehaviour
         firstRankPanel.SetActive(true);
         secondRankPanel.SetActive(false);
         categorySelector.SetActive(false);
+        secondRankCloseBtn.SetActive(true);
+        categorySelectorCloseBtn.SetActive(true);
 
         foreach (var panel in cardPanels)
             panel.SetActive(false);
@@ -51,6 +56,8 @@ public class WordComposingReseter : MonoBehaviour
         firstRankPanel.SetActive(false);
         secondRankPanel.SetActive(true);
         categorySelector.SetActive(false);
+        secondRankCloseBtn.SetActive(false);
+        categorySelectorCloseBtn.SetActive(true);
 
         foreach (var panel in cardPanels)
             panel.SetActive(false);
@@ -61,6 +68,8 @@ public class WordComposingReseter : MonoBehaviour
         firstRankPanel.SetActive(false);
         secondRankPanel.SetActive(false);
         categorySelector.SetActive(true);
+        secondRankCloseBtn.SetActive(false);
+        categorySelectorCloseBtn.SetActive(false);
 
         foreach (var panel in cardPanels)
             panel.SetActive(false);

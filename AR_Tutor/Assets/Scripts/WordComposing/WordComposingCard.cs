@@ -14,7 +14,15 @@ public class WordComposingCard : CardBase
         selectBtn.onClick.AddListener(() =>
         {
             if (MainMenuUIControl.Mode == MenuMode.Play)
-                Signals.AddWordToClause.Invoke(GetComponent<CardBase>().Key);
+            {
+                if (!WordComposingMenuControl.ClauseComplete)
+                {
+                    if (!FirstRankCard && !SecondRankCard)
+                        Signals.LastWordSelected.Invoke();  
+
+                    Signals.AddWordToClause.Invoke(GetComponent<CardBase>().Key);
+                }
+            }
         });
     }
 
@@ -35,5 +43,21 @@ public class WordComposingCard : CardBase
     protected override void SwitchVisible()
     {
         base.SwitchVisible();
+
+        if (FirstRankCard)
+        {
+            if (editableElement.Visible)
+                Signals.ReturnAllWordInClause.Invoke();
+            else
+                Signals.RemoveFirstWord.Invoke();
+        }
+        
+        if (SecondRankCard)
+        {
+            if (editableElement.Visible)
+                Signals.ReturnSecondRankCard.Invoke();
+            else
+                Signals.RemoveSecondRankWord.Invoke();
+        }
     }
 }

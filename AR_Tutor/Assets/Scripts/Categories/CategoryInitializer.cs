@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CategoryInitializer : MonoBehaviour
+public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 {
     #region Variables
     [SerializeField] private Image img;
@@ -11,6 +11,7 @@ public class CategoryInitializer : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private Sprite deleteSprite, addSprite;
     private PatientDataManager patientManager;
+    protected EditableElement editableElement;
     public string categoryKey { get; private set; }
     public GameName game { get; private set; }
     #endregion
@@ -18,6 +19,7 @@ public class CategoryInitializer : MonoBehaviour
     public void Initialize(GameName _game, string _categoryKey, CategoryData _categoryData)
     {
         patientManager = FindObjectOfType<PatientDataManager>();
+        editableElement = GetComponent<EditableElement>();
 
         if (title != null) title.text = _categoryData.title;
         if (img != null) img.sprite = _categoryData.img;
@@ -53,6 +55,11 @@ public class CategoryInitializer : MonoBehaviour
             element.Visible = true;
         }
         switchVisibleBtn.GetComponent<Image>().sprite = (element.Visible) ? deleteSprite : addSprite;
+    }
+
+    public void SwitchImgForDeleteBtn()
+    {
+        switchVisibleBtn.GetComponent<Image>().sprite = (editableElement.Visible) ? deleteSprite : addSprite;
     }
 
     public Button GetSelectBtn() { return selectBtn; }
