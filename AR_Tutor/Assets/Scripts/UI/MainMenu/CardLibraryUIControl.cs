@@ -23,7 +23,8 @@ public class CardLibraryUIControl : MonoBehaviour
     private void FillLibrary()
     {
         foreach (var card in storage.cards)
-            CreateCardInstance(card.Key, card.Value);
+            if (card.Value.IsCustom)
+                CreateCardInstance(card.Key, card.Value);
     }
 
     public void AddCard(string _category, string _cardKey)

@@ -39,3 +39,8 @@ public interface IEditableElement
 {
     void ConfigurateElement(MenuMode _mode);
 }
+
+public interface ISwitchedDeleteBtnImg
+{
+    void SwitchImgForDeleteBtn();
+}

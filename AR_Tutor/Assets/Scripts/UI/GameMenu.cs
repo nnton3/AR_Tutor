@@ -89,7 +89,7 @@ public class GameMenu : MonoBehaviour
         var initializer = obj.GetComponent<CategoryInitializer>();
         initializer.Initialize(gameName, _categoryKey, data);
         CategoryCards.Add(initializer);
-        
+
         InitializeEditableElement(obj, data.visible);
 
         BindCategoryBtn(CategoryCards.Count - 1);

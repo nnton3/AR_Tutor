@@ -27,6 +27,11 @@ public static class Signals
     public static StringEvent AddWordToClause = new StringEvent();
     public static UnityEvent RemoveWordFromClause = new UnityEvent();
     public static UnityEvent ResetWordComposingMenu = new UnityEvent();
+    public static UnityEvent LastWordSelected = new UnityEvent();
+    public static UnityEvent RemoveFirstWord = new UnityEvent();
+    public static UnityEvent ReturnAllWordInClause = new UnityEvent();
+    public static UnityEvent ReturnSecondRankCard = new UnityEvent();
+    public static UnityEvent RemoveSecondRankWord = new UnityEvent();
 
     public static StringEvent WordBookCardSelect = new StringEvent();
     public static UnityEvent LeftSwipeEvent = new UnityEvent();
