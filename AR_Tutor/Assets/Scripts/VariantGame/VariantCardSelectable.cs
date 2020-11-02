@@ -48,6 +48,4 @@ public class VariantCardSelectable : MonoBehaviour
         if (selector != null)
             selector.UnselectEvent.Invoke(GetComponent<CardBase>().Key);
     }
-
-    public Button GetBtn() { return btn; }
 }
