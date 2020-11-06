@@ -12,8 +12,12 @@ public class WordBookMenuControl : GameMenu
         cardSelector = selector;
         wordbookSelector = selector;
         base.Initialize();
-        CategoriesPanels[0].SetActive(true);
-        wordbookSelector.SetCurrentCategory(CategoryCards[0].categoryKey, CategoriesPanels[0]);
+
+        if (CategoriesPanels.Count > 0)
+        {
+            CategoriesPanels[0].SetActive(true);
+            wordbookSelector.SetCurrentCategory(CategoryCards[0].categoryKey, CategoriesPanels[0]);
+        }
     }
 
     protected override void AddNewCategory(string _categoryKey)

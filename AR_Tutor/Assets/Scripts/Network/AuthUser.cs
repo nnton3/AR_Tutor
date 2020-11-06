@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Auth;
 using UnityEngine.Events;
@@ -13,7 +12,6 @@ public class AuthUser : MonoBehaviour
     public string UserID { get; private set; }
     private FirebaseAuth auth;
     [SerializeField] private UnityEngine.UI.Text status;
-    public bool IsSignIn { get; private set; } = false;
     public UnityEvent UserSignUp;
     #endregion
 
@@ -54,7 +52,7 @@ public class AuthUser : MonoBehaviour
     {
         if (email == "" || password == "")
         {
-            Debug.Log("Email or password are not correct");
+            Signals.ShowNotification.Invoke("Ошибка! Не удалось войти в учетную запись, проверьте правильность ввода эл.почты и пароля");
             return;
         }
 
@@ -65,28 +63,31 @@ public class AuthUser : MonoBehaviour
     {
         var authTask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
-            if (task.IsCanceled)
+            if (task.IsCanceled || task.IsFaulted)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                 newUser = null;
                 return;
             }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
-                newUser = null;
-                return;
-            }
+
             Debug.Log("save user in variable");
             newUser = task.Result;
         });
 
         yield return new WaitUntil(() => authTask.IsCompleted);
-        Debug.Log("move next");
-        if (newUser != null)
-        {
-            IsSignIn = true;
-            Debug.Log("User signed in successfully");
-        }
+
+        if (newUser == null)
+            Signals.ShowNotification.Invoke("Ошибка! Не удалось войти в учетную запись, проверьте правильность ввода эл.почты и пароля");
+    }
+
+    public void ResetPassword(string _email)
+    {
+        auth.SendPasswordResetEmailAsync(_email)
+            .ContinueWith(task =>
+            {
+                if (task.IsCanceled || task.IsFaulted)
+                    Signals.ShowNotification.Invoke("Ошибка! Письмо для сброса пароля не было отправлено на электронную почту.");
+                else
+                    Signals.ShowNotification.Invoke("Письмо для сброса пароля было отправлено на электронную почту.");
+            });
     }
 }

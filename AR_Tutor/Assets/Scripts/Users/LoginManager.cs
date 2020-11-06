@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using System.Text.RegularExpressions;
+using System;
+using System.Globalization;
 
 public class LoginManager : MonoBehaviour
 {
@@ -24,6 +27,8 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private List<string> patientsIdentifiers = new List<string>();
 
     [SerializeField] private string selectedPatient;
+
+    private int failedSigning;
     #endregion
 
     private void Awake()
@@ -48,8 +53,8 @@ public class LoginManager : MonoBehaviour
     #region Login
     public IEnumerator EnterRoutine()
     {
-        if (Email == "" || Password == "")
-            Signals.ShowNotification.Invoke("Некорректный адрес эектронной почты или пароль");
+        if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+            Signals.ShowNotification.Invoke("Ошибка! Не удалось войти в учетную запись, проверьте правильность ввода эл.почты и пароля");
         else
         {
             yield return StartCoroutine(auth.SignInRoutine(Email, Password));
@@ -58,9 +63,17 @@ public class LoginManager : MonoBehaviour
             {
                 PlayerPrefs.SetString("lastUser", auth.UserID);
                 ConfigurateUserData(auth.UserID);
+                uiControl.PatientSelectorActiveSelf = true;
             }
-
-            uiControl.PatientSelectorActiveSelf = true;
+            else
+            {
+                failedSigning++;
+                if (failedSigning > 2)
+                {
+                    Signals.ResetPasswordEvent.Invoke();
+                    failedSigning = 0;
+                }
+            }
         }
     }
 
@@ -83,16 +96,76 @@ public class LoginManager : MonoBehaviour
 
     public IEnumerator RegistryRoutine()
     {
-        var task = auth.CreateUser(email, password);
-        yield return new WaitUntil(() => task.IsCompleted);
-
-        if (auth.NewUser != null)
+        if (!EmailIsValid())
+            Signals.ShowNotification.Invoke("Ошибка! Электронная почта указана неверно");
+        else if (PasswordIsValid())
+            Signals.ShowNotification.Invoke("Ошибка! Пароль должен содержать не менее 6 символов и включать в себя английские буквы и цифры.");
+        else
         {
-            PlayerPrefs.SetString("lastUser", auth.UserID);
-            ConfigurateUserData(auth.UserID);
+            var task = auth.CreateUser(email, password);
+            yield return new WaitUntil(() => task.IsCompleted);
+
+            if (auth.NewUser != null)
+            {
+                PlayerPrefs.SetString("lastUser", auth.UserID);
+                ConfigurateUserData(auth.UserID);
+            }
+
+            uiControl.PatientSelectorActiveSelf = true;
+        }
+    }
+
+    private bool EmailIsValid()
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        try
+        {
+            email = Regex.Replace(
+                email, @"(@)(.+)$",
+                DomainMapper,
+                RegexOptions.None, 
+                TimeSpan.FromMilliseconds(200));
+
+            string DomainMapper(Match match)
+            {
+                var idn = new IdnMapping();
+                string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                return match.Groups[1].Value + domainName;
+            }
+        }
+        catch (RegexMatchTimeoutException e)
+        {
+            return false;
+        }
+        catch (ArgumentException e)
+        {
+            return false;
         }
 
-        uiControl.PatientSelectorActiveSelf = true;
+        try
+        {
+            return Regex.IsMatch(
+                email,
+                @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                RegexOptions.IgnoreCase, 
+                TimeSpan.FromMilliseconds(250));
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+
+    private bool PasswordIsValid()
+    {
+        if (string.IsNullOrEmpty(password)) return false;
+        if (password.Length < 6) return false;
+        if (!Regex.IsMatch(password, @"[0-9a-zA-Z]{8}")) return false;
+
+        return true;
     }
 
     #region User
@@ -110,9 +183,12 @@ public class LoginManager : MonoBehaviour
     {
         uiControl.AddUserPanelActiveSelf = false;
         yield return StartCoroutine(saveSystem.LoadPatientFromCloudRoutine(_patientLogin));
-
-        uiControl.AddPatientCardInSelector(saveSystem.LoadedPatient, _patientLogin);
-        AddPatientToUser(_patientLogin);
+        if (PatientDataIsValid(saveSystem.LoadedPatient))
+        {
+            uiControl.AddPatientCardInSelector(saveSystem.LoadedPatient, _patientLogin);
+            AddPatientToUser(_patientLogin);
+        }
+        else Signals.ShowNotification.Invoke("Ошибка! Пациент не был загружен");
     }
 
     public void SelectPatient(string _patinetLogin)
@@ -126,6 +202,14 @@ public class LoginManager : MonoBehaviour
         selectPatientData.SetUserLogin(email);
         selectPatientData.SetSelectedPatientLogin(_patinetLogin);
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+
+    private bool PatientDataIsValid(PatientData _data)
+    {
+        if (string.IsNullOrEmpty(_data.PatientName)) return false;
+        if (string.IsNullOrEmpty(_data.PatientAge)) return false;
+
+        return true;
     }
     #endregion
     #endregion

@@ -1,4 +1,5 @@
-﻿using UnityEngine.Events;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class CardUnityEvent : UnityEvent<GameName, string, string> { }
 public class CategoryEvent : UnityEvent<GameName, string> { }
@@ -7,9 +8,15 @@ public class StringStringEvent : UnityEvent<string, string> { }
 public class StringStringBoolEvent : UnityEvent<string, string, bool> { }
 public class StringEvent : UnityEvent<string> { }
 public class BoolEvent : UnityEvent<bool> { }
+public class AudioEvent : UnityEvent<AudioClip> { }
 
 public static class Signals
 {
+    public static StringEvent ShowNotification = new StringEvent();
+    public static AudioEvent PlayAcudioClipEvent = new AudioEvent();
+    public static UnityEvent StopPlayAudioEvent = new UnityEvent();
+    public static UnityEvent ResetPasswordEvent = new UnityEvent();
+
     public static StringStringEvent AddCardEvent = new StringStringEvent();
     public static StringEvent AddCategoryEvent = new StringEvent();
     public static StringEvent DeleteCategoryFromGame = new StringEvent();
@@ -22,7 +29,6 @@ public static class Signals
     public static StringEvent SelectCategoryFromLibrary = new StringEvent();
     public static StringEvent VariantGameCardSelect = new StringEvent();
     public static BoolEvent CardLoadEnd = new BoolEvent();
-    public static StringEvent ShowNotification = new StringEvent();
 
     public static StringEvent AddWordToClause = new StringEvent();
     public static UnityEvent RemoveWordFromClause = new UnityEvent();

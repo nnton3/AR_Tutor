@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +24,6 @@ public class PatientCreator : MonoBehaviour
     [SerializeField] private Sprite defaultSprite;
     #endregion
 
-
     private void Awake()
     {
         uiControl = FindObjectOfType<LoginUIControl>();
@@ -38,10 +35,49 @@ public class PatientCreator : MonoBehaviour
 
         createBtn.onClick.AddListener(() =>
         {
-            CreatePatient();
-            transitionController.ReturnToBack();
+            if (PatientDataIsValid())
+            {
+                CreatePatient();
+                transitionController.ReturnToBack();
+            }
         });
         addImgBtn.onClick.AddListener(() => PickImage(img));
+    }
+
+    private bool PatientDataIsValid()
+    {
+        if (string.IsNullOrEmpty(patientName))
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод имени");
+            return false;
+        }
+        if (string.IsNullOrEmpty(patientAge))
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
+            return false;
+        }
+        if (!int.TryParse(patientAge, out int num))
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
+            return false;
+        }
+        if (patientAge.Length > 4)
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
+            return false;
+        }
+        if (string.IsNullOrEmpty(patientLogin) || patientLogin.Length < 6)
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод идентификатора. Идентификатор должен содержать не менее 6 символов.");
+            return false;
+        }
+        if (!Regex.IsMatch(patientLogin, @"[0-9a-zA-Z]{8}"))
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод идентификатора. Идентификатор должен содержать только английские буквы и цифры");
+            return false;
+        }
+
+        return true;
     }
 
     private void BinFields()

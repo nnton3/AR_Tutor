@@ -200,6 +200,7 @@ public class GameMenu : MonoBehaviour
     #region Helpful
     protected bool IsCategoryForThisGame(string _categoryKey)
     {
+        if (!categoryStorage.HasCategory(gameName, _categoryKey)) return false;
         var game = categoryStorage.Categories[_categoryKey].game;
         return (GameName)game == gameName;
     }

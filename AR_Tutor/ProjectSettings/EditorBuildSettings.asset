@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/WordBookGame.unity
     guid: 021b3e41d2ac5e942aef7649d6f4989c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ButtonsGame.unity
     guid: e82c3cfe1836ecf44bffe9d9c24150c3
   m_configObjects: {}

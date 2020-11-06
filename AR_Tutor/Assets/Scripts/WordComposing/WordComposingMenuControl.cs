@@ -59,16 +59,12 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
     protected override void ConfigurateCategories()
     {
         ConfigurateRankCategories();
-        foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
-            AddNewCategory(categoryKey);
-
-        CreateAddCategoryBtn();
-        // base.ConfigurateCategories();
+        base.ConfigurateCategories();
     }
 
     private void ConfigurateRankCategories()
     {
-        CategoryData data = categoryStorage.WordComposingRanks["default_4_category6"];
+        CategoryData data = categoryStorage.WordComposingRanks["default_4_category28"];
         ConfigurateRankCards(data);
     }
 
@@ -80,7 +76,7 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
             for (int i = 0; i < _categoryData.cardKeys.Count; i++)
             {
                 var key = _categoryData.cardKeys[i];
-                GameObject cardObj = AddRankCardInMenu((i == 0) ? firstRankPanel : secondRankCardParent, "default_4_category6", key);
+                GameObject cardObj = AddRankCardInMenu((i == 0) ? firstRankPanel : secondRankCardParent, "default_4_category28", key);
                 BindRankCardBtn(cardObj, (i == 0) ? 1 : 2);
                 cardObj.GetComponent<WordComposingCard>().MarkCardAsRank((i == 0) ? 1 : 2);
 
@@ -213,7 +209,6 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
         var btn = _card.GetComponent<CardBase>().GetSelectBtn();
 
         if (_rank == 1)
-        {
             btn.onClick.AddListener(() =>
             {
                 if (MainMenuUIControl.Mode == MenuMode.Play)
@@ -222,7 +217,6 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                     secondRankPanel.SetActive(true);
                 }
             });
-        }
         else if (_rank == 2)
             btn.onClick.AddListener(() =>
             {
