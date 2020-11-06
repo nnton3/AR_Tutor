@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,9 +17,11 @@ public class LoginUIControl : MonoBehaviour
         selectSignInBtn,
         selectSignUpBtn,
         signBtn,
-        addPatientBtn,
-        addPatientFromCloudBtn;
-    [SerializeField] private Text loadStatus;
+        openCreatePatientPanelBtn,
+        openLoadPatientPanelBtn,
+        loadPatientBtn,
+        resetYesBtn,
+        resetNoBtn;
     [SerializeField]
     private InputField
         emailField,
@@ -29,18 +32,18 @@ public class LoginUIControl : MonoBehaviour
         helloPanel,
         authTypePanel,
         loginPanel,
-        addPatientPanel,
+        createPatientPanel,
+        loadPatientPanel,
         patientSelector,
         patientSelectorContent,
         patientCardPref,
-        backBtn;
+        resetPasswordPanel;
 
     private LoginManager loginMenuControl;
     private AuthUser authentication;
     private UserData config;
+    private AudioHintControl hintControl;
     private Queue<GameObject> patientsInstances = new Queue<GameObject>();
-
-    public bool HelloPanelSkiped { get; private set; } = false;
 
     public bool AuthTypePanelActiveSelf
     {
@@ -49,8 +52,8 @@ public class LoginUIControl : MonoBehaviour
     }
     public bool AddUserPanelActiveSelf
     {
-        get => addPatientPanel.activeSelf;
-        set => addPatientPanel.SetActive(value);
+        get => createPatientPanel.activeSelf;
+        set => createPatientPanel.SetActive(value);
     }
     public bool PatientSelectorActiveSelf
     {
@@ -74,7 +77,10 @@ public class LoginUIControl : MonoBehaviour
 
         BindBtns();
         BindFields();
+    }
 
+    private void Start()
+    {
         transitionController.ActivatePanel(helloPanel);
     }
 
@@ -83,23 +89,47 @@ public class LoginUIControl : MonoBehaviour
         loginMenuControl = FindObjectOfType<LoginManager>();
         authentication = FindObjectOfType<AuthUser>();
         transitionController = FindObjectOfType<MenuTransitionController>();
+        hintControl = FindObjectOfType<AudioHintControl>();
+
+        Signals.ResetPasswordEvent.AddListener(() => resetPasswordPanel.SetActive(true));
     }
 
     private void BindBtns()
     {
         if (skipHelloScreenBtn != null) skipHelloScreenBtn.onClick.AddListener(() =>
         {
+            hintControl.StopAudio();
+
             if (!loginMenuControl.HasEnter())
+            {
+                hintControl.PlayAuthHint();
                 transitionController.ActivatePanel(authTypePanel);
+                transitionController.AddEventToReturnBtn(() => hintControl.StopAudio());
+            }
             else
+            {
                 transitionController.ActivatePanel(patientSelector);
+                transitionController.AddEventToReturnBtn(() => hintControl.StopAudio());
+            }
         });
         if (selectSignInBtn != null) selectSignInBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignIn));
         if (selectSignUpBtn != null) selectSignUpBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignUp));
-        if (addPatientBtn != null) addPatientBtn.onClick.AddListener(() => transitionController.ActivatePanel(addPatientPanel));
-        if (addPatientFromCloudBtn != null) addPatientFromCloudBtn.onClick.AddListener(
-            () => StartCoroutine(loginMenuControl.AddPatient(patientLoginFieldForAdd.text))
-            );
+        if (openCreatePatientPanelBtn != null) openCreatePatientPanelBtn.onClick.AddListener(() =>
+        {
+            transitionController.SwitchBackBtnRender(true);
+            transitionController.ActivatePanel(createPatientPanel);
+            transitionController.AddEventToReturnBtn(() => transitionController.SwitchBackBtnRender(false));
+        });
+        if (openLoadPatientPanelBtn != null) openLoadPatientPanelBtn.onClick.AddListener(() =>
+        {
+            transitionController.SwitchBackBtnRender(true);
+            transitionController.ActivatePanel(loadPatientPanel);
+            transitionController.AddEventToReturnBtn(() => transitionController.SwitchBackBtnRender(false));
+        });
+        if (loadPatientBtn != null) loadPatientBtn.onClick.AddListener(
+            () => StartCoroutine(loginMenuControl.AddPatient(patientLoginFieldForAdd.text)));
+        if (resetYesBtn != null) resetYesBtn.onClick.AddListener(() => authentication.ResetPassword(loginMenuControl.Email));
+        if (resetNoBtn != null) resetNoBtn.onClick.AddListener(() => resetPasswordPanel.SetActive(false));
     }
 
     private void BindFields()
@@ -120,35 +150,41 @@ public class LoginUIControl : MonoBehaviour
             loginMenuControl.SelectPatient(patient);
         });
         patientsInstances.Enqueue(card);
+        card.transform.SetAsFirstSibling();
 
         UIInstruments.GetSizeForHorizontalGroup(
             layoutGroup,
             patientsInstances.Count,
             card.GetComponent<RectTransform>().sizeDelta.x * card.GetComponent<RectTransform>().localScale.x,
-            addPatientBtn.GetComponent<RectTransform>().sizeDelta.x * addPatientBtn.GetComponent<RectTransform>().localScale.x);
+            openCreatePatientPanelBtn.GetComponent<RectTransform>().sizeDelta.x * openCreatePatientPanelBtn.GetComponent<RectTransform>().localScale.x * 2);
     }
 
     private void OpenAuthPanel(AuthType _authType)
     {
         signBtn.onClick.RemoveAllListeners();
         var btnText = signBtn.GetComponentInChildren<Text>();
+        UnityEngine.Events.UnityAction hintAction = null;
         switch (_authType)
         {
             case AuthType.SignIn:
                 signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.EnterRoutine()));
                 btnText.text = "войти";
+                hintAction = () => hintControl.PlaySignInHint();
                 break;
             case AuthType.SignUp:
                 signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.RegistryRoutine()));
                 btnText.text = "регистрация";
+                hintAction = () => hintControl.PlaySingUpHint();
                 break;
             default:
                 break;
         }
         transitionController.ActivatePanel(loginPanel);
         transitionController.SwitchBackBtnRender(true);
+        hintAction();
         transitionController.AddEventToReturnBtn(() =>
         {
+            hintControl.StopAudio();
             transitionController.SwitchBackBtnRender(false);
         });
     }
