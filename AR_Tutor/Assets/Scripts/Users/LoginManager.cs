@@ -31,12 +31,14 @@ public class LoginManager : MonoBehaviour
     private int failedSigning;
     #endregion
 
-    private void Awake()
+    public void Initialize()
     {
         database = FindObjectOfType<DataBaseControl>();
         uiControl = FindObjectOfType<LoginUIControl>();
         auth = FindObjectOfType<AuthUser>();
         saveSystem = FindObjectOfType<UserSaveSystem>();
+
+        Signals.AddPatientEvent.AddListener((data, identifier) => AddPatientToUser(identifier));
 
         if (HasEnter())
         {
@@ -89,7 +91,7 @@ public class LoginManager : MonoBehaviour
                     var data = saveSystem.LoadPatientsFromLocal(patient);
         
                     if (!string.IsNullOrWhiteSpace(data.PatientName))
-                        uiControl.AddPatientCardInSelector(data, patient);
+                        Signals.AddPatientEvent.Invoke(data, patient);
                 }
         }
     }
@@ -185,7 +187,7 @@ public class LoginManager : MonoBehaviour
         yield return StartCoroutine(saveSystem.LoadPatientFromCloudRoutine(_patientLogin));
         if (PatientDataIsValid(saveSystem.LoadedPatient))
         {
-            uiControl.AddPatientCardInSelector(saveSystem.LoadedPatient, _patientLogin);
+            Signals.AddPatientEvent.Invoke(saveSystem.LoadedPatient, _patientLogin);
             AddPatientToUser(_patientLogin);
         }
         else Signals.ShowNotification.Invoke("Ошибка! Пациент не был загружен");
@@ -193,6 +195,8 @@ public class LoginManager : MonoBehaviour
 
     public void SelectPatient(string _patinetLogin)
     {
+        Debug.Log(_patinetLogin);
+        Debug.Log("in load method");
         var selectPatientData = FindObjectOfType<SelectedPatient>();
         if (selectPatientData == null)
         {

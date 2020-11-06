@@ -5,9 +5,7 @@ using UnityEngine.UI;
 public class PatientCreator : MonoBehaviour
 {
     #region Variables
-    private LoginUIControl uiControl;
     private UserSaveSystem saveSystem;
-    private LoginManager loginManager;
     private MenuTransitionController transitionController;
     [SerializeField]
     private Button
@@ -26,9 +24,7 @@ public class PatientCreator : MonoBehaviour
 
     private void Awake()
     {
-        uiControl = FindObjectOfType<LoginUIControl>();
         saveSystem = FindObjectOfType<UserSaveSystem>();
-        loginManager = FindObjectOfType<LoginManager>();
         transitionController = FindObjectOfType<MenuTransitionController>();
 
         BinFields();
@@ -66,12 +62,7 @@ public class PatientCreator : MonoBehaviour
             Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
             return false;
         }
-        if (string.IsNullOrEmpty(patientLogin) || patientLogin.Length < 6)
-        {
-            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод идентификатора. Идентификатор должен содержать не менее 6 символов.");
-            return false;
-        }
-        if (!Regex.IsMatch(patientLogin, @"[0-9a-zA-Z]{8}"))
+        if (!Regex.IsMatch(patientLogin, @"[0-9a-zA-Z]{6}"))
         {
             Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод идентификатора. Идентификатор должен содержать только английские буквы и цифры");
             return false;
@@ -104,9 +95,8 @@ public class PatientCreator : MonoBehaviour
             patientAge, 
             sprite);
 
-        uiControl.AddPatientCardInSelector(patientData, patientLogin);
+        Signals.AddPatientEvent.Invoke(patientData, patientLogin);
         saveSystem.SavePatientsFromLocal(patientLogin, patientData, imageKey);
-        loginManager.AddPatientToUser(patientLogin);
         Reset();
     }
 

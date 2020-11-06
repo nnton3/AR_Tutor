@@ -27,10 +27,10 @@ public class WordBookContent : MonoBehaviour
 
     public void ShowNextImg()
     {
-        if (contentRect.anchoredPosition.x <= -400f) return;
+        if (contentRect.anchoredPosition.x <= -520f) return;
 
         var pos = contentRect.anchoredPosition;
-        pos.x -= 230;
+        pos.x -= 290;
         contentRect.anchoredPosition = pos;
     }
 
@@ -39,7 +39,7 @@ public class WordBookContent : MonoBehaviour
         if (contentRect.anchoredPosition.x >= -60) return;
 
         var pos = contentRect.anchoredPosition;
-        pos.x += 230;
+        pos.x += 290;
         contentRect.anchoredPosition = pos;
     }
 }

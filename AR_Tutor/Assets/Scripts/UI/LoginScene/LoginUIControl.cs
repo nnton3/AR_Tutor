@@ -10,7 +10,6 @@ public class LoginUIControl : MonoBehaviour
 
     private AuthType authType;
     private MenuTransitionController transitionController;
-    [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField]
     private Button
         skipHelloScreenBtn,
@@ -21,7 +20,8 @@ public class LoginUIControl : MonoBehaviour
         openLoadPatientPanelBtn,
         loadPatientBtn,
         resetYesBtn,
-        resetNoBtn;
+        resetNoBtn,
+        openPatientDatasPanelBtn;
     [SerializeField]
     private InputField
         emailField,
@@ -35,15 +35,13 @@ public class LoginUIControl : MonoBehaviour
         createPatientPanel,
         loadPatientPanel,
         patientSelector,
-        patientSelectorContent,
-        patientCardPref,
+        patientsDataPanel,
         resetPasswordPanel;
 
     private LoginManager loginMenuControl;
     private AuthUser authentication;
     private UserData config;
     private AudioHintControl hintControl;
-    private Queue<GameObject> patientsInstances = new Queue<GameObject>();
 
     public bool AuthTypePanelActiveSelf
     {
@@ -130,33 +128,13 @@ public class LoginUIControl : MonoBehaviour
             () => StartCoroutine(loginMenuControl.AddPatient(patientLoginFieldForAdd.text)));
         if (resetYesBtn != null) resetYesBtn.onClick.AddListener(() => authentication.ResetPassword(loginMenuControl.Email));
         if (resetNoBtn != null) resetNoBtn.onClick.AddListener(() => resetPasswordPanel.SetActive(false));
+        if (openPatientDatasPanelBtn != null) openPatientDatasPanelBtn.onClick.AddListener(() => patientsDataPanel.SetActive(true));
     }
 
     private void BindFields()
     {
         if (emailField != null) emailField.onValueChanged.AddListener((value) => loginMenuControl.Email = value);
         if (passwordField != null) passwordField.onValueChanged.AddListener((value) => loginMenuControl.Password = value);
-    }
-
-    public void AddPatientCardInSelector(PatientData data, string patient)
-    {
-        if (patientSelectorContent == null) return;
-        if (patientCardPref == null) return;
-
-        var card = Instantiate(patientCardPref, patientSelectorContent.transform);
-        card.GetComponent<UserCardUI>().Initialize(data, patient);
-        card.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            loginMenuControl.SelectPatient(patient);
-        });
-        patientsInstances.Enqueue(card);
-        card.transform.SetAsFirstSibling();
-
-        UIInstruments.GetSizeForHorizontalGroup(
-            layoutGroup,
-            patientsInstances.Count,
-            card.GetComponent<RectTransform>().sizeDelta.x * card.GetComponent<RectTransform>().localScale.x,
-            openCreatePatientPanelBtn.GetComponent<RectTransform>().sizeDelta.x * openCreatePatientPanelBtn.GetComponent<RectTransform>().localScale.x * 2);
     }
 
     private void OpenAuthPanel(AuthType _authType)

@@ -9,6 +9,7 @@ public class StringStringBoolEvent : UnityEvent<string, string, bool> { }
 public class StringEvent : UnityEvent<string> { }
 public class BoolEvent : UnityEvent<bool> { }
 public class AudioEvent : UnityEvent<AudioClip> { }
+public class PatientEvent : UnityEvent<PatientData, string> { }
 
 public static class Signals
 {
@@ -16,6 +17,7 @@ public static class Signals
     public static AudioEvent PlayAcudioClipEvent = new AudioEvent();
     public static UnityEvent StopPlayAudioEvent = new UnityEvent();
     public static UnityEvent ResetPasswordEvent = new UnityEvent();
+    public static PatientEvent AddPatientEvent = new PatientEvent();
 
     public static StringStringEvent AddCardEvent = new StringStringEvent();
     public static StringEvent AddCategoryEvent = new StringEvent();
