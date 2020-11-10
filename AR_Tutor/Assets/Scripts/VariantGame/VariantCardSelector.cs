@@ -6,9 +6,10 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
 {
     #region Variables
     [SerializeField] private Button startGameBtn;
-    [SerializeField] private GameObject variantGamePanel;
+    [SerializeField] private GameObject gamePanel;
     [SerializeField] private List<string> selectedCardsKeys = new List<string>();
     [SerializeField] private int maxCardCount;
+    private Text indicator;
     private MainMenuUIControl mainMenuControl;
     private MenuTransitionController transitionController;
     private VariantGameLogic gameLogic;
@@ -37,8 +38,16 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
                 StartGame();
             }
         });
-        SelectEvent.AddListener((key) => selectedCardsKeys.Add(key));
-        UnselectEvent.AddListener((key) => selectedCardsKeys.Remove(key));
+        SelectEvent.AddListener((key) =>
+        {
+            selectedCardsKeys.Add(key);
+            UpdateIndicator();
+        });
+        UnselectEvent.AddListener((key) =>
+        {
+            selectedCardsKeys.Remove(key);
+            UpdateIndicator();
+        });
         transitionController.AddEventToReturnBtn(() => selectedCardsKeys.Clear());
     }
 
@@ -46,7 +55,7 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
     {
         gameLogic.FillPanel(selectedCardsKeys.ToArray());
         UnselectAll();
-        transitionController.ActivatePanel(variantGamePanel);
+        transitionController.ActivatePanel(gamePanel);
         transitionController.AddEventToReturnBtn(() =>
         {
             startGameBtn.gameObject.SetActive(true);
@@ -62,6 +71,11 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
     {
         if (selectedCardsKeys.Count == maxCardCount) return true;
         return false;
+    }
+
+    private void UpdateIndicator()
+    {
+        indicator.text = $"{selectedCardsKeys.Count}/{maxCardCount}";
     }
 
     public void UnselectAll()
@@ -91,6 +105,12 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
     {
         if (value <= 0) return;
         maxCardCount = value;
+    }
+
+    public void SetTargetPanel(GameObject _panel)
+    {
+        indicator = _panel.transform.Find("Indicator/Text").GetComponent<Text>();
+        UpdateIndicator();
     }
 
     public bool CanSelect()

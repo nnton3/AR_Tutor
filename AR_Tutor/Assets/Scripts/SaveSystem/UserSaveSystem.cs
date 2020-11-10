@@ -115,7 +115,6 @@ public class UserSaveSystem : MonoBehaviour
 
     public Texture2D LoadImage(string key)
     {
-        Debug.Log(key);
         if (ES3.FileExists($"{key}.png"))
             return ES3.LoadImage($"{key}.png");
         else

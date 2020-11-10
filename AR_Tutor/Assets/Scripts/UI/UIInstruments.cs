@@ -18,6 +18,20 @@ public static class UIInstruments
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
     }
 
+    public static void GetSizeForHorizontalGrid(GridLayoutGroup _grid, int _elementsCount)
+    {
+        var rect = _grid.GetComponent<RectTransform>();
+        float size = 0;
+        var width = rect.sizeDelta.x * rect.localScale.x;
+        int elementsInRow = _grid.constraintCount;
+        if (elementsInRow == 0) return;
+        int rows = _elementsCount / elementsInRow;
+        if (_elementsCount % elementsInRow != 0) rows++;
+        size = rows * _grid.cellSize.x + (rows - 1) * _grid.spacing.x + _grid.padding.left + _grid.padding.right;
+        if (size < width) return;
+        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size);
+    }
+
     public static void GetSizeForHorizontalGroup(HorizontalLayoutGroup _group, int _elementsCount, float _elementWidth, float _deltaWidth = 0f)
     {
         var rect = _group.GetComponent<RectTransform>();

@@ -14,7 +14,10 @@ public class NotificationWindow : MonoBehaviour
         if (notificationPanel != null)
         {
             notification = notificationPanel.GetComponentInChildren<Text>();
-            Signals.ShowNotification.AddListener(ShowNotification);
+            Signals.ShowNotification.AddListener((arg) =>
+            {
+                ShowNotification(arg);
+            });
             closeBtn.onClick.AddListener(() => HideNotification());
         }
     }

@@ -100,20 +100,21 @@ public class LoginManager : MonoBehaviour
     {
         if (!EmailIsValid())
             Signals.ShowNotification.Invoke("Ошибка! Электронная почта указана неверно");
-        else if (PasswordIsValid())
+        else if (!PasswordIsValid())
             Signals.ShowNotification.Invoke("Ошибка! Пароль должен содержать не менее 6 символов и включать в себя английские буквы и цифры.");
         else
         {
             var task = auth.CreateUser(email, password);
             yield return new WaitUntil(() => task.IsCompleted);
 
-            if (auth.NewUser != null)
+            if (task.Result == SignUpResult.Success)
             {
                 PlayerPrefs.SetString("lastUser", auth.UserID);
                 ConfigurateUserData(auth.UserID);
+                uiControl.PatientSelectorActiveSelf = true;
             }
-
-            uiControl.PatientSelectorActiveSelf = true;
+            else if (task.Result == SignUpResult.EmailAlreadyUse)
+                Signals.ShowNotification.Invoke("Ошибка! Данный адрес эл. почты уже используется.");
         }
     }
 
@@ -159,13 +160,13 @@ public class LoginManager : MonoBehaviour
         {
             return false;
         }
+
+
     }
 
     private bool PasswordIsValid()
     {
-        if (string.IsNullOrEmpty(password)) return false;
-        if (password.Length < 6) return false;
-        if (!Regex.IsMatch(password, @"[0-9a-zA-Z]{8}")) return false;
+        if (!Regex.IsMatch(password, @"[0-9a-zA-Z]{6}")) return false;
 
         return true;
     }

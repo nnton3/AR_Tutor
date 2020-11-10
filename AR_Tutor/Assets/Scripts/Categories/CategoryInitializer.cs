@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
@@ -8,8 +7,8 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
     [SerializeField] private Image img;
     [SerializeField] private Text title;
     [SerializeField] private Button selectBtn, selectImageBtn, switchVisibleBtn;
-    [SerializeField] private Image image;
     [SerializeField] private Sprite deleteSprite, addSprite;
+    private AudioClip clip;
     private PatientDataManager patientManager;
     protected EditableElement editableElement;
     public string categoryKey { get; private set; }
@@ -23,6 +22,7 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 
         if (title != null) title.text = _categoryData.title;
         if (img != null) img.sprite = _categoryData.img;
+        if (_categoryData.clip != null) clip = _categoryData.clip;
 
         BindBtn();
 
@@ -32,6 +32,12 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 
     private void BindBtn()
     {
+        selectBtn.onClick.AddListener(() =>
+        {
+            if (clip != null)
+                Signals.PlayAcudioClipEvent.Invoke(clip);
+        });
+
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
             Signals.SetImgForCategoryEvent.Invoke(game, categoryKey);

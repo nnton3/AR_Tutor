@@ -14,6 +14,7 @@ public class GameMenu : MonoBehaviour
     protected CategoryManager categoryManager;
     protected IManageCards cardSelector;
 
+    [SerializeField] private GridLayoutGroup grid;
     [SerializeField] protected Transform categoryParent, panelParent;
     [SerializeField] protected GameObject categoryCardPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
     protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
@@ -49,6 +50,7 @@ public class GameMenu : MonoBehaviour
     protected virtual void ConfigurateCards(CategoryData _categoryData, GameObject _categoryPanel, string _categoryKey)
     {
         if (_categoryData.cardKeys != null)
+        {
             for (int i = 0; i < _categoryData.cardKeys.Count; i++)
             {
                 var key = _categoryData.cardKeys[i];
@@ -68,6 +70,8 @@ public class GameMenu : MonoBehaviour
                 InitializeEditableElement(cardObj, visible);
             }
 
+            CalculateCardPanelRect(_categoryPanel);
+        }
         CreateAddCardBtn(_categoryPanel, _categoryKey);
     }
     #endregion
@@ -86,9 +90,10 @@ public class GameMenu : MonoBehaviour
         CategoriesPanels.Add(categoryPanel);
         categoryPanel.SetActive(false);
 
-        var initializer = obj.GetComponent<CategoryInitializer>();
-        initializer.Initialize(gameName, _categoryKey, data);
-        CategoryCards.Add(initializer);
+        var categoryInit = obj.GetComponent<CategoryInitializer>();
+        categoryInit.Initialize(gameName, _categoryKey, data);
+        CategoryCards.Add(categoryInit);
+        InitializeCategoryPanel(categoryPanel);
 
         InitializeEditableElement(obj, data.visible);
 
@@ -96,6 +101,8 @@ public class GameMenu : MonoBehaviour
 
         ConfigurateCards(data, categoryPanel, _categoryKey);
     }
+
+    protected virtual void InitializeCategoryPanel(GameObject categoryPanel) { }
 
     public virtual void AddNewCard(string _categoryKey, string _key)
     {
@@ -105,11 +112,12 @@ public class GameMenu : MonoBehaviour
         var index = CategoryCards.IndexOf(targetCard);
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
 
+        CalculateCardPanelRect(CategoriesPanels[index]);
         InitializeEditableElement(cardObj);
         cardSelector.AddCard(cardObj);
-
-        UIInstruments.GetSizeForGrid(CategoriesPanels[index].transform.Find("Mask/Content").GetComponent<GridLayoutGroup>(), Cards.Count);
     }
+
+    protected virtual void CalculateCardPanelRect(GameObject _panel) { }
 
     protected virtual GameObject AddCardInMenu(GameObject _categoryPanel, string _categoryKey, string _cardKey)
     {
