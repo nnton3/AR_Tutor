@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 {
     #region Variables
-    [SerializeField] private Image img;
-    [SerializeField] private Text title;
-    [SerializeField] private Button selectBtn, selectImageBtn, switchVisibleBtn;
-    [SerializeField] private Image image;
+    [SerializeField] protected Image img;
+    [SerializeField] protected Text title;
+    [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] private Sprite deleteSprite, addSprite;
+    public AudioClip Clip { get; private set; }
     private PatientDataManager patientManager;
     protected EditableElement editableElement;
-    public string categoryKey { get; private set; }
+    public string CategoryKey { get; private set; }
     public GameName game { get; private set; }
     #endregion
 
@@ -23,18 +22,35 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 
         if (title != null) title.text = _categoryData.title;
         if (img != null) img.sprite = _categoryData.img;
+        if (_categoryData.clip != null) Clip = _categoryData.clip;
 
         BindBtn();
 
-        categoryKey = _categoryKey;
+        CategoryKey = _categoryKey;
         game = _game;
+    }
+
+    public Sprite GetSprite()
+    {
+        return img.sprite;
+    }
+
+    public string GetTitle()
+    {
+        return title.text;
     }
 
     private void BindBtn()
     {
+        selectBtn.onClick.AddListener(() =>
+        {
+            if (Clip != null)
+                Signals.PlayAcudioClipEvent.Invoke(Clip);
+        });
+
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
         {
-            Signals.SetImgForCategoryEvent.Invoke(game, categoryKey);
+            Signals.SetImgForCategoryEvent.Invoke(game, CategoryKey);
         });
 
         switchVisibleBtn.onClick.AddListener(HideCategory);
@@ -46,12 +62,12 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 
         if (element.Visible)
         {
-            patientManager.SwitchCategoryVisible(categoryKey, false);
+            patientManager.SwitchCategoryVisible(CategoryKey, false);
             element.Visible = false;
         }
         else
         {
-            patientManager.SwitchCategoryVisible(categoryKey, true);
+            patientManager.SwitchCategoryVisible(CategoryKey, true);
             element.Visible = true;
         }
         switchVisibleBtn.GetComponent<Image>().sprite = (element.Visible) ? deleteSprite : addSprite;

@@ -10,8 +10,8 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
     [SerializeField] protected Sprite deleteSprite, addSprite;
     protected EditableElement editableElement;
     private Texture2D texture;
-    private AudioClip audioClip;
-    private AudioSource source;
+    public AudioClip Clip { get; private set; }
+    public AudioClip Clip2 { get; private set; }
     protected GameName game;
     protected string categoryKey;
     public string Key { get; protected set; }
@@ -19,12 +19,12 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
 
     public virtual void Initialize(GameName _game, string _categoryKey, string cardKey, CardData data)
     {
-        source = FindObjectOfType<AudioSource>();
         editableElement = GetComponent<EditableElement>();
 
         ConfigurateUI(data);
         categoryKey = _categoryKey;
         Key = cardKey;
+        if (data.audioClip1 != null) Clip = data.audioClip1;
         
         BindBtns(data);
     }
@@ -36,9 +36,6 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
             {
                 Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key);
             });
-
-        if (source != null)
-            selectBtn.onClick.AddListener(() => source.PlayOneShot(audioClip));
 
         switchVisibleBtn.onClick.AddListener(SwitchVisible);
     }
@@ -58,7 +55,10 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
                 image.sprite = data.img1;
 
         if (data.audioClip1 != null)
-            audioClip = data.audioClip1;
+            Clip = data.audioClip1;
+
+        if (data.audioClip2 != null)
+            Clip2 = data.audioClip2;
     }
 
     protected virtual void SwitchVisible()

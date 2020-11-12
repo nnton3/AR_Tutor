@@ -4,6 +4,8 @@ using Firebase.Auth;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 
+public enum SignUpResult { Success, EmailAlreadyUse, Canceled, Faulted}
+
 public class AuthUser : MonoBehaviour
 {
     #region Variables
@@ -18,6 +20,32 @@ public class AuthUser : MonoBehaviour
     private void Start()
     {
         auth = FirebaseAuth.DefaultInstance;
+
+        //Test();
+    }
+
+    private void Test()
+    {
+        var task = auth.FetchProvidersForEmailAsync("").ContinueWith((authTask) =>
+        {
+            if (authTask.IsCanceled)
+            {
+                Debug.Log("Provider fetch canceled.");
+            }
+            else if (authTask.IsFaulted)
+            {
+                Debug.Log("Provider fetch encountered an error.");
+                Debug.Log(authTask.Exception.ToString());
+            }
+            else if (authTask.IsCompleted)
+            {
+                Debug.Log("Email Providers:");
+                foreach (string provider in authTask.Result)
+                {
+                    Debug.Log(provider);
+                }
+            }
+        });
     }
 
     public void SetUserID(string _id)
@@ -25,19 +53,18 @@ public class AuthUser : MonoBehaviour
         UserID = _id;
     }
 
-    public Task CreateUser(string email, string password)
+    public Task<SignUpResult> CreateUser(string email, string password)
     {
         return auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
             if (task.IsCanceled)
-            {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
-                return;
-            }
+                return SignUpResult.Canceled;
+
             if (task.IsFaulted)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
-                return;
+                if (task.Exception.ToString().Contains("The email address is already in use"))
+                    return SignUpResult.EmailAlreadyUse;
+                return SignUpResult.Faulted;
             }
 
             // Firebase user has been created.
@@ -45,6 +72,8 @@ public class AuthUser : MonoBehaviour
             UserID = newUser?.UserId;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
+
+            return SignUpResult.Success;
         });
     }
 

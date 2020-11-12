@@ -52,7 +52,7 @@ public class CategoryLibraryUIControl : MonoBehaviour
         var initializer = instance.GetComponent<LibraryCategoryInitializer>();
         initializer.Initialize(_categoryKey, _data);
         cards.Add(initializer);
-        UIInstruments.GetSizeForGrid(grid, cards.Count);
+        UIInstruments.GetSizeForVerticalGrid(grid, cards.Count);
     }
 
     private void CreateCard(string _categoryKey)

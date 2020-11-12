@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 
 public class ContentMover : MonoBehaviour
 {
+    #region Variables
     [SerializeField] private Button leftBtn, rightBtn;
     [SerializeField] private RectTransform contentPanel;
     [SerializeField] private iTween.EaseType easyType;
     [SerializeField] private float visibleAreaWidth;
-    [SerializeField] private float time = 1.5f;
+    [SerializeField] private float time = 1f;
     [SerializeField] private float minPos = -275f;
     [SerializeField] private float maxPos = -10f;
     [SerializeField] private float moveStep = 285f;
     [SerializeField] private float startPos = 0f;
     private float currentPos = 0f;
     private bool canMove = true;
+    #endregion
 
     private void Awake()
     {

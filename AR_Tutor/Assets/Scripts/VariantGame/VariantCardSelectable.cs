@@ -6,6 +6,7 @@ public class VariantCardSelectable : MonoBehaviour
     #region Variables
     private VariantCardSelector selector;
     private MainMenuUIControl mainUIControl;
+    private AudioClip clip;
 
     [SerializeField] private Image img;
     [SerializeField] private Button btn;
@@ -22,6 +23,11 @@ public class VariantCardSelectable : MonoBehaviour
         btn.onClick.AddListener(OnClickEventHandler);
     }
 
+    private void Start()
+    {
+        clip = GetComponent<CardBase>().Clip;
+    }
+
     private void OnClickEventHandler()
     {
         if (MainMenuUIControl.Mode == MenuMode.CustomizeMenu) return;
@@ -33,6 +39,8 @@ public class VariantCardSelectable : MonoBehaviour
     private void Select()
     {
         if (!selector.CanSelect()) return;
+        if (clip != null) Signals.PlayAcudioClipEvent.Invoke(clip);
+
         Selected = true;
         img.color = selectedClr;
         selector.SelectEvent.Invoke(GetComponent<CardBase>().Key);

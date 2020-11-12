@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class VariantGameMenu : GameMenu
 {
     #region Variables
-    private MenuTransitionController transitionController;
     private VariantCardSelector variantSelector;
+    private ContentMover contentMover;
 
-    [SerializeField] private GameObject categorySelector;
+    [SerializeField] private GameObject categorySelector, modeSelector;
     [SerializeField] private Button[] gameModes = new Button[] { };
     [SerializeField] private Button startGameBtn;
     #endregion
@@ -17,10 +15,10 @@ public class VariantGameMenu : GameMenu
     public override void Initialize()
     {
         gameName = GameName.Variant;
-        VariantCardSelector selector = FindObjectOfType<VariantCardSelector>();
+        var selector = FindObjectOfType<VariantCardSelector>();
+        contentMover = GetComponent<ContentMover>();
         cardSelector = selector;
         variantSelector = selector;
-        transitionController = FindObjectOfType<MenuTransitionController>();
         base.Initialize();
         
         BindBtns();
@@ -30,13 +28,29 @@ public class VariantGameMenu : GameMenu
     protected override void AddNewCategory(string _categoryKey)
     {
         base.AddNewCategory(_categoryKey);
-        UIInstruments.GetSizeForGrid(categoryParent.GetComponent<GridLayoutGroup>(), CategoryCards.Count);
+        UIInstruments.GetSizeForHorizontalGrid(categoryParent.GetComponent<GridLayoutGroup>(), CategoryCards.Count);
+        contentMover.CalculateMinPos();
     }
 
     protected override void HidePanels()
     {
         base.HidePanels();
         categorySelector.gameObject.SetActive(false);
+    }
+
+    protected override GameObject AddCardInMenu(GameObject _categoryPanel, string _categoryKey, string _cardKey)
+    {
+        return base.AddCardInMenu(_categoryPanel, _categoryKey, _cardKey);
+    }
+
+    protected override void CalculateCardPanelRect(GameObject _panel)
+    {
+        
+        UIInstruments.GetSizeForHorizontalGrid(
+            _panel.transform.Find("Mask/Content").GetComponent<GridLayoutGroup>(),
+            _panel.transform.Find("Mask/Content").childCount);
+
+        _panel.GetComponent<ContentMover>().CalculateMinPos();
     }
 
     private void BindBtns()
@@ -48,10 +62,13 @@ public class VariantGameMenu : GameMenu
 
             btn.onClick.AddListener(() =>
             {
-                transitionController.ActivatePanel(categorySelector);
+                modeSelector.SetActive(false);
+                categorySelector.SetActive(true);
                 variantSelector.SetMaxCard(maxCardCount);
             });
         }
+
+        returnToMenuBtn.onClick.AddListener(ResetGame);
     }
 
     protected override void BindCategoryBtn(int index)
@@ -61,15 +78,39 @@ public class VariantGameMenu : GameMenu
 
         btn.onClick.AddListener(() =>
         {
-            transitionController.ActivatePanel(panel);
+            panel.SetActive(true);
             if (MainMenuUIControl.Mode == MenuMode.Play)
-                startGameBtn.gameObject.SetActive(true);
-
-            transitionController.AddEventToReturnBtn(() =>
             {
-                startGameBtn.gameObject.SetActive(false);
-                variantSelector.UnselectAll();
-            });
+                variantSelector.SetTargetPanel(panel);
+                categorySelector.SetActive(false);
+                startGameBtn.gameObject.SetActive(true);
+            }
         });
+    }
+
+    protected override void InitializeCategoryPanel(GameObject categoryPanel)
+    {
+        var panelInit = categoryPanel.GetComponent<VariantCategoryPanelControl>();
+        if (panelInit == null) return;
+
+        panelInit.Initialize(() =>
+        {
+            startGameBtn.gameObject.SetActive(false);
+            categoryPanel.SetActive(false);
+            categorySelector.SetActive(true);
+            variantSelector.UnselectAll();
+        });
+    }
+
+    protected override void ResetGame()
+    {
+        modeSelector.SetActive(false);
+        categorySelector.SetActive(false);
+        startGameBtn.gameObject.SetActive(false);
+        variantSelector.Reset();
+        returnToMenuBtn.gameObject.SetActive(false);
+
+        foreach (var panel in CategoriesPanels)
+            panel.SetActive(false);
     }
 }

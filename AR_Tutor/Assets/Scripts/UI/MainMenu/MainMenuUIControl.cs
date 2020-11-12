@@ -10,6 +10,7 @@ public class MainMenuUIControl : MonoBehaviour
     [SerializeField] private Button[] gamesBtns = new Button[] { };
     [SerializeField] private GameObject[] defaultGamePanels = new GameObject[] { };
     [SerializeField] private GameObject[] settingsGamePanels = new GameObject[] { };
+    [SerializeField] private GameObject[] returnBtns = new GameObject[] { };
     [SerializeField] private List<IEditableElement> editableElements = new List<IEditableElement>();
 
     private MenuTransitionController transitionController;
@@ -34,16 +35,24 @@ public class MainMenuUIControl : MonoBehaviour
             var btn = gamesBtns[i];
             var panel = defaultGamePanels[i];
             var panel_settings = settingsGamePanels[i];
+            var returnBtn = returnBtns[i];
+
 
             btn.onClick.AddListener(() =>
             {
                 settingsBtn.gameObject.SetActive(false);
 
-
                 if (Mode == MenuMode.Play)
-                    transitionController.ActivatePanel(panel);
+                    panel.SetActive(true);
                 else
-                    transitionController.ActivatePanel(panel_settings);
+                    panel_settings.SetActive(true);
+
+                if (returnBtn != null)
+                {
+                    returnBtn.SetActive(true);
+                    returnBtn.GetComponent<Button>().onClick.AddListener(() => gameSelector.SetActive(true));
+                }
+                gameSelector.SetActive(false);
             });
         }
 
