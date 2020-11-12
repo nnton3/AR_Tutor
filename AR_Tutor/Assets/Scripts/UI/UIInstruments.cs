@@ -3,17 +3,17 @@ using UnityEngine.UI;
 
 public static class UIInstruments
 {
-    public static void GetSizeForGrid(GridLayoutGroup _grid, int _elementsCount)
+    public static void GetSizeForVerticalGrid(GridLayoutGroup _grid, int _elementsCount)
     {
         var rect = _grid.GetComponent<RectTransform>();
         float size = 0;
-        var width = rect.sizeDelta.x * rect.localScale.x;
         var height = rect.sizeDelta.y * rect.localScale.y;
         size = height;
-        int elementsInLine = (int)(width / _grid.cellSize.x);
+        int elementsInLine = _grid.constraintCount;
         if (elementsInLine == 0) return;
         int lines = _elementsCount / elementsInLine;
-        size = lines * _grid.cellSize.y * (_grid.spacing.y - 1) + _grid.padding.top + _grid.padding.bottom;
+        if (_elementsCount % elementsInLine != 0) lines++;
+        size = lines * _grid.cellSize.y + (lines - 1) * _grid.spacing.y + _grid.padding.top + _grid.padding.bottom;
         if (size < height) return;
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
     }

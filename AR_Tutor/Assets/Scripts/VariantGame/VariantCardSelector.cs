@@ -9,9 +9,8 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private List<string> selectedCardsKeys = new List<string>();
     [SerializeField] private int maxCardCount;
+    [SerializeField] private GameObject cardPanel;
     private Text indicator;
-    private MainMenuUIControl mainMenuControl;
-    private MenuTransitionController transitionController;
     private VariantGameLogic gameLogic;
     private List<VariantCardSelectable> selectedCards = new List<VariantCardSelectable>();
     public StringEvent SelectEvent = new StringEvent();
@@ -20,8 +19,6 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
 
     public void Initialize(List<GameObject> cards)
     {
-        mainMenuControl = FindObjectOfType<MainMenuUIControl>();
-        transitionController = FindObjectOfType<MenuTransitionController>();
         gameLogic = FindObjectOfType<VariantGameLogic>();
 
         foreach (var card in cards)
@@ -48,23 +45,14 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
             selectedCardsKeys.Remove(key);
             UpdateIndicator();
         });
-        transitionController.AddEventToReturnBtn(() => selectedCardsKeys.Clear());
     }
 
     private void StartGame()
     {
         gameLogic.FillPanel(selectedCardsKeys.ToArray());
         UnselectAll();
-        transitionController.ActivatePanel(gamePanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            startGameBtn.gameObject.SetActive(true);
-            gameLogic.ClearOldData();
-            transitionController.AddEventToReturnBtn(() =>
-            {
-                startGameBtn.gameObject.SetActive(false);
-            });
-        });
+        cardPanel.SetActive(false);
+        gamePanel.SetActive(true);
     }
 
     private bool DataIsValid()
@@ -95,9 +83,12 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
         selectedCards.Remove(selectedCards.Find((card) => card.gameObject == _cardObj));
     }
 
-    private void Reset()
+    public void Reset()
     {
+        gamePanel.SetActive(false);
         selectedCardsKeys.Clear();
+        gameLogic.ClearOldData();
+        UnselectAll();
     }
     #endregion
 
@@ -109,6 +100,7 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
 
     public void SetTargetPanel(GameObject _panel)
     {
+        cardPanel = _panel;
         indicator = _panel.transform.Find("Indicator/Text").GetComponent<Text>();
         UpdateIndicator();
     }

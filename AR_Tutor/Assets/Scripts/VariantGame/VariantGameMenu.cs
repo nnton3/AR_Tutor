@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class VariantGameMenu : GameMenu
 {
     #region Variables
-    private MenuTransitionController transitionController;
     private VariantCardSelector variantSelector;
     private ContentMover contentMover;
 
@@ -16,8 +15,7 @@ public class VariantGameMenu : GameMenu
     public override void Initialize()
     {
         gameName = GameName.Variant;
-        transitionController = FindObjectOfType<MenuTransitionController>();
-        VariantCardSelector selector = FindObjectOfType<VariantCardSelector>();
+        var selector = FindObjectOfType<VariantCardSelector>();
         contentMover = GetComponent<ContentMover>();
         cardSelector = selector;
         variantSelector = selector;
@@ -69,6 +67,8 @@ public class VariantGameMenu : GameMenu
                 variantSelector.SetMaxCard(maxCardCount);
             });
         }
+
+        returnToMenuBtn.onClick.AddListener(ResetGame);
     }
 
     protected override void BindCategoryBtn(int index)
@@ -82,6 +82,7 @@ public class VariantGameMenu : GameMenu
             if (MainMenuUIControl.Mode == MenuMode.Play)
             {
                 variantSelector.SetTargetPanel(panel);
+                categorySelector.SetActive(false);
                 startGameBtn.gameObject.SetActive(true);
             }
         });
@@ -99,5 +100,17 @@ public class VariantGameMenu : GameMenu
             categorySelector.SetActive(true);
             variantSelector.UnselectAll();
         });
+    }
+
+    protected override void ResetGame()
+    {
+        modeSelector.SetActive(false);
+        categorySelector.SetActive(false);
+        startGameBtn.gameObject.SetActive(false);
+        variantSelector.Reset();
+        returnToMenuBtn.gameObject.SetActive(false);
+
+        foreach (var panel in CategoriesPanels)
+            panel.SetActive(false);
     }
 }

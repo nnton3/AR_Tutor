@@ -13,12 +13,12 @@ public class GameMenu : MonoBehaviour
     protected MainMenuUIControl mainMenu;
     protected CategoryManager categoryManager;
     protected IManageCards cardSelector;
+    protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
 
-    [SerializeField] private GridLayoutGroup grid;
     [SerializeField] protected Transform categoryParent, panelParent;
     [SerializeField] protected GameObject categoryCardPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
-    protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
     [SerializeField] protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
+    [SerializeField] protected Button returnToMenuBtn;
     #endregion
 
     public virtual void Initialize()
@@ -108,7 +108,7 @@ public class GameMenu : MonoBehaviour
     {
         if (!IsCategoryForThisGame(_categoryKey)) return;
 
-        var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().categoryKey == _categoryKey);
+        var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().CategoryKey == _categoryKey);
         var index = CategoryCards.IndexOf(targetCard);
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
 
@@ -140,7 +140,7 @@ public class GameMenu : MonoBehaviour
     {
         if (!IsCategoryForThisGame(_categoryKey)) return;
 
-        var target = CategoryCards.Find((category) => category.categoryKey == _categoryKey);
+        var target = CategoryCards.Find((category) => category.CategoryKey == _categoryKey);
         if (target != null)
         {
             mainMenu.DeleteEditableElement(target.GetComponent<EditableElement>());
@@ -168,7 +168,7 @@ public class GameMenu : MonoBehaviour
     #region Update Image
     public void UpdateCategoryImage(string _categoryKey, Sprite _categoryImg)
     {
-        var targetInstance = CategoryCards.Find((card) => card.categoryKey == _categoryKey);
+        var targetInstance = CategoryCards.Find((card) => card.CategoryKey == _categoryKey);
         targetInstance.UpdateImg(_categoryImg);
     }
 
@@ -226,5 +226,7 @@ public class GameMenu : MonoBehaviour
         foreach (var panel in CategoriesPanels)
             panel.SetActive(false);
     }
+
+    protected virtual void ResetGame() { }
     #endregion
 }

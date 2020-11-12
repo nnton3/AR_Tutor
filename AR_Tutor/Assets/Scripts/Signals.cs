@@ -10,6 +10,7 @@ public class StringEvent : UnityEvent<string> { }
 public class BoolEvent : UnityEvent<bool> { }
 public class AudioEvent : UnityEvent<AudioClip> { }
 public class PatientEvent : UnityEvent<PatientData, string> { }
+public class AddWordEvent : UnityEvent<string, Sprite, AudioClip> { }
 
 public static class Signals
 {
@@ -29,10 +30,15 @@ public static class Signals
     public static StringBoolEvent SwitchCategoryVisibleEvent = new StringBoolEvent();
     public static StringEvent SelectCardFromLibrary = new StringEvent();
     public static StringEvent SelectCategoryFromLibrary = new StringEvent();
-    public static StringEvent VariantGameCardSelect = new StringEvent();
     public static BoolEvent CardLoadEnd = new BoolEvent();
 
+    #region Variant
+    public static StringEvent VariantGameCardSelect = new StringEvent();
+    #endregion
+
+    #region WordComposing
     public static StringEvent AddWordToClause = new StringEvent();
+    public static AddWordEvent AddCategoryWord = new AddWordEvent();
     public static UnityEvent RemoveWordFromClause = new UnityEvent();
     public static UnityEvent ResetWordComposingMenu = new UnityEvent();
     public static UnityEvent LastWordSelected = new UnityEvent();
@@ -40,12 +46,15 @@ public static class Signals
     public static UnityEvent ReturnAllWordInClause = new UnityEvent();
     public static UnityEvent ReturnSecondRankCard = new UnityEvent();
     public static UnityEvent RemoveSecondRankWord = new UnityEvent();
+    #endregion
 
+    #region Wordbook
     public static StringEvent WordBookCardSelect = new StringEvent();
     public static UnityEvent LeftSwipeEvent = new UnityEvent();
     public static UnityEvent RightSwipeEvent = new UnityEvent();
     public static UnityEvent UpSwipeEvent = new UnityEvent();
     public static UnityEvent DownSwipeEvent = new UnityEvent();
+    #endregion
 
     public static void Reset()
     {

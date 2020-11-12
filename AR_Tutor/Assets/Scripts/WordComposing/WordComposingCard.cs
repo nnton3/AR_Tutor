@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+﻿
+using UnityEngine;
 
 public class WordComposingCard : CardBase
 {
@@ -15,6 +14,7 @@ public class WordComposingCard : CardBase
         {
             if (MainMenuUIControl.Mode == MenuMode.Play)
             {
+                Debug.Log(WordComposingMenuControl.ClauseComplete);
                 if (!WordComposingMenuControl.ClauseComplete)
                 {
                     if (!FirstRankCard && !SecondRankCard)
@@ -22,6 +22,7 @@ public class WordComposingCard : CardBase
 
                     Signals.AddWordToClause.Invoke(GetComponent<CardBase>().Key);
                 }
+                Signals.PlayAcudioClipEvent.Invoke(Clip);
             }
         });
     }

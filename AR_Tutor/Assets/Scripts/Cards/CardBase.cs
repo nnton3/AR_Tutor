@@ -11,6 +11,7 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
     protected EditableElement editableElement;
     private Texture2D texture;
     public AudioClip Clip { get; private set; }
+    public AudioClip Clip2 { get; private set; }
     protected GameName game;
     protected string categoryKey;
     public string Key { get; protected set; }
@@ -55,6 +56,9 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
 
         if (data.audioClip1 != null)
             Clip = data.audioClip1;
+
+        if (data.audioClip2 != null)
+            Clip2 = data.audioClip2;
     }
 
     protected virtual void SwitchVisible()

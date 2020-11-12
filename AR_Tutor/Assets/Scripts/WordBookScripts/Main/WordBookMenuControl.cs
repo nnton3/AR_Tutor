@@ -16,7 +16,7 @@ public class WordBookMenuControl : GameMenu
         if (CategoriesPanels.Count > 0)
         {
             CategoriesPanels[0].SetActive(true);
-            wordbookSelector.SetCurrentCategory(CategoryCards[0].categoryKey, CategoriesPanels[0]);
+            wordbookSelector.SetCurrentCategory(CategoryCards[0].CategoryKey, CategoriesPanels[0]);
         }
     }
 
@@ -33,7 +33,7 @@ public class WordBookMenuControl : GameMenu
     {
         var btn = CategoryCards[_categoryIndex].GetSelectBtn();
         var panel = CategoriesPanels[_categoryIndex];
-        var categoryKey = CategoryCards[_categoryIndex].categoryKey;
+        var categoryKey = CategoryCards[_categoryIndex].CategoryKey;
 
         btn.onClick.AddListener(() =>
         {
