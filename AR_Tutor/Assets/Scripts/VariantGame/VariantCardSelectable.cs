@@ -39,7 +39,7 @@ public class VariantCardSelectable : MonoBehaviour
     private void Select()
     {
         if (!selector.CanSelect()) return;
-        if (clip != null) Signals.PlayAcudioClipEvent.Invoke(clip);
+        if (clip != null) Signals.PlayAudioClipEvent.Invoke(clip);
 
         Selected = true;
         img.color = selectedClr;

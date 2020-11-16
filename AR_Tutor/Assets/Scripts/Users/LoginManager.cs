@@ -29,6 +29,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private string selectedPatient;
 
     private int failedSigning;
+    public static bool HasEnter = false;
     #endregion
 
     public void Initialize()
@@ -40,16 +41,12 @@ public class LoginManager : MonoBehaviour
 
         Signals.AddPatientEvent.AddListener((data, identifier) => AddPatientToUser(identifier));
 
-        if (HasEnter())
+        if (PlayerPrefs.HasKey("lastUser"))
         {
             auth.SetUserID(PlayerPrefs.GetString("lastUser"));
             ConfigurateUserData(auth.UserID);
+            HasEnter = true;
         }
-    }
-
-    public bool HasEnter()
-    {
-        return PlayerPrefs.HasKey("lastUser");
     }
 
     #region Login

@@ -45,7 +45,7 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
         selectBtn.onClick.AddListener(() =>
         {
             if (Clip != null)
-                Signals.PlayAcudioClipEvent.Invoke(Clip);
+                Signals.PlayAudioClipEvent.Invoke(Clip);
         });
 
         selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>

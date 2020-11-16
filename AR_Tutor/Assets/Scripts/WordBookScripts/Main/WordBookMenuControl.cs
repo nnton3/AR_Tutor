@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class WordBookMenuControl : GameMenu
 {
-    [SerializeField] private GameObject audioBtn, cardContent;
+    [SerializeField] private GameObject audioBtn, cardContent, mainPanel, animalsBtn;
     private VerticalContentMover categoryContentMover;
     private WordBookCardSelector wordbookSelector;
 
@@ -21,6 +21,8 @@ public class WordBookMenuControl : GameMenu
             CategoriesPanels[0].SetActive(true);
             wordbookSelector.SetCurrentCategory(CategoryCards[0].CategoryKey, CategoriesPanels[0]);
         }
+
+        BindBtn();
     }
 
     protected override void CalculateCategoryPanelRect()
@@ -41,6 +43,17 @@ public class WordBookMenuControl : GameMenu
             if (card.gameObject.activeSelf) visibleCategoryCount++;
 
         UIInstruments.GetSizeForVerticalGrid(contentPanel.GetComponent<GridLayoutGroup>(), visibleCategoryCount);
+    }
+
+    private void BindBtn()
+    {
+        returnToMenuBtn.onClick.AddListener(() =>
+        {
+            wordbookSelector.CloseContent();
+            mainPanel.SetActive(false);
+            animalsBtn.SetActive(false);
+            returnToMenuBtn.gameObject.SetActive(false);
+        });
     }
 
     protected override void BindCategoryBtn(int _categoryIndex)

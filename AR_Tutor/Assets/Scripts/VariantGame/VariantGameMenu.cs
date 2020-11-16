@@ -69,6 +69,7 @@ public class VariantGameMenu : GameMenu
                 modeSelector.SetActive(false);
                 categorySelector.SetActive(true);
                 variantSelector.SetMaxCard(maxCardCount);
+                Signals.VariantCategoriesSelectEvent.Invoke();
             });
         }
 
@@ -89,6 +90,7 @@ public class VariantGameMenu : GameMenu
                 categorySelector.SetActive(false);
                 startGameBtn.gameObject.SetActive(true);
             }
+            Signals.VariantCardsSelectEvent.Invoke();
         });
     }
 

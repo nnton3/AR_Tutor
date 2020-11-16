@@ -111,7 +111,7 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
         initializer.Initialize(gameName, _categoryKey, _cardKey, cardData);
         return cardObj;
     }
-
+    
     public void ConfigurateElement(MenuMode _mode)
     {
         if (_mode == MenuMode.Play)
@@ -197,14 +197,15 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
         var panel = CategoriesPanels[_categoryIndex];
 
         CategoryCards[_categoryIndex].GetSelectBtn().GetComponent<SelectBtnControl>().SetBtnEvents(() =>
+        {
+            if (!ClauseComplete)
             {
-                if (!ClauseComplete)
-                {
-                    HidePanels();
-                    categorySelectorPanel.SetActive(false);
-                    panel.SetActive(true);
-                }
-            });
+                HidePanels();
+                categorySelectorPanel.SetActive(false);
+                panel.SetActive(true);
+                Signals.WordComposingCardSelectEvent.Invoke();
+            }
+        });
     }
 
     private void BindRankCardBtn(GameObject _card, int _rank)
@@ -227,6 +228,7 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                 {
                     secondRankPanel.SetActive(false);
                     categorySelectorPanel.SetActive(true);
+                    Signals.WordComposingCategoriesSelectEvent.Invoke();
                 }
            });
     }

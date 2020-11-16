@@ -28,6 +28,11 @@ public class MainMenuUIControl : MonoBehaviour
         transitionController.ReturnToMainMenuEvent.AddListener(() => settingsBtn.gameObject.SetActive(true));
     }
 
+    private void Start()
+    {
+        Signals.StartMainSceneEvent.Invoke();
+    }
+
     private void BindBtns()
     {
         for (int i = 0; i < gamesBtns.Length; i++)
@@ -36,6 +41,7 @@ public class MainMenuUIControl : MonoBehaviour
             var panel = defaultGamePanels[i];
             var panel_settings = settingsGamePanels[i];
             var returnBtn = returnBtns[i];
+            var index = i;
 
             btn.onClick.AddListener(() =>
             {
@@ -45,6 +51,28 @@ public class MainMenuUIControl : MonoBehaviour
                     panel.SetActive(true);
                 else
                     panel_settings.SetActive(true);
+
+                switch (index)
+                {
+                    case 0:
+                        if (Mode == MenuMode.Play)
+                            Signals.StartVariantEvent.Invoke();
+                        break;
+                    case 1:
+                        if (Mode == MenuMode.Play)
+                            Signals.StartButtonsEvent.Invoke();
+                        break;
+                    case 2:
+                        if (Mode == MenuMode.Play)
+                            Signals.StartWordComposingEvent.Invoke();
+                        break;
+                    case 3:
+                        if (Mode == MenuMode.Play)
+                            Signals.StartWordbookEvent.Invoke();
+                        break;
+                    default:
+                        break;
+                }
 
                 if (returnBtn != null)
                 {
