@@ -876,7 +876,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: f1ad8e746e293894d898bbd89d761725, type: 3}
     img3: {fileID: 21300000, guid: 98ac08a992749d847ba8994f70b62ab8, type: 3}
     audioClip1: {fileID: 8300000, guid: f416cf6d19b9c284e89b5ff92db19b5f, type: 3}
-    audioClip2: {fileID: 8300000, guid: f416cf6d19b9c284e89b5ff92db19b5f, type: 3}
+    audioClip2: {fileID: 8300000, guid: 65ee26a52d52e6e4f9d51f3b5883284e, type: 3}
   - Title: "\u0416\u0438\u0440\u0430\u0444"
     TitleForm: "\u0416\u0438\u0440\u0430\u0444"
     IsCustom: 0
@@ -884,7 +884,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 0d7010cc91c9781429ba05a9b70f93bd, type: 3}
     img3: {fileID: 21300000, guid: 5df0f9d6b3733814b9b4161c0a8c8e7c, type: 3}
     audioClip1: {fileID: 8300000, guid: 9307c960bb0b5dc4da7dd39b699f88cf, type: 3}
-    audioClip2: {fileID: 8300000, guid: 9307c960bb0b5dc4da7dd39b699f88cf, type: 3}
+    audioClip2: {fileID: 8300000, guid: 1770fed30eb5cbc4f8eea340d85af79d, type: 3}
   - Title: "\u041B\u0435\u0432"
     TitleForm: "\u041B\u0435\u0432"
     IsCustom: 0
@@ -892,7 +892,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 8f412b28e3a82634986efea7dfa89bea, type: 3}
     img3: {fileID: 21300000, guid: ad7a173a0ec9ae04c9a90ea753fe0de1, type: 3}
     audioClip1: {fileID: 8300000, guid: 9cdd420394c0da24b8737bb4d079736c, type: 3}
-    audioClip2: {fileID: 8300000, guid: 9cdd420394c0da24b8737bb4d079736c, type: 3}
+    audioClip2: {fileID: 8300000, guid: b75cc8dffb0a5254fb592e5c9709e4fe, type: 3}
   - Title: "\u0422\u0438\u0433\u0440"
     TitleForm: "\u0422\u0438\u0433\u0440"
     IsCustom: 0
@@ -900,7 +900,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 3235837965eeb7941b8054e6a685e568, type: 3}
     img3: {fileID: 21300000, guid: 0942172c042c2b74182fed1bdc0c2bab, type: 3}
     audioClip1: {fileID: 8300000, guid: ed6a60b253f76ef4fa07fefd334d05cb, type: 3}
-    audioClip2: {fileID: 8300000, guid: ed6a60b253f76ef4fa07fefd334d05cb, type: 3}
+    audioClip2: {fileID: 8300000, guid: 88de0f6b1e3cb594f994e405eebff79a, type: 3}
   - Title: "\u041C\u0435\u0434\u0432\u0435\u0434\u044C"
     TitleForm: "\u041C\u0435\u0434\u0432\u0435\u0434\u044C"
     IsCustom: 0
@@ -908,7 +908,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: f0b09a3e845d2d14182e392e59bfe561, type: 3}
     img3: {fileID: 21300000, guid: 87f26e44a0f590b439cc067273f5ca24, type: 3}
     audioClip1: {fileID: 8300000, guid: 7afb7d376365afb458226e71cfeec9b5, type: 3}
-    audioClip2: {fileID: 8300000, guid: 7afb7d376365afb458226e71cfeec9b5, type: 3}
+    audioClip2: {fileID: 8300000, guid: d4b1f778c9aeb564986aa5134b5bed1f, type: 3}
   - Title: "\u0411\u0435\u043B\u043A\u0430"
     TitleForm: "\u0411\u0435\u043B\u043A\u0430"
     IsCustom: 0
@@ -916,7 +916,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: b7bf37b6758b4c94092d961af1a51f08, type: 3}
     img3: {fileID: 21300000, guid: 2a02c00c7c6dd264f9e449e5861b3c7c, type: 3}
     audioClip1: {fileID: 8300000, guid: 8929f70e5be917c40bb50390ab9f8e93, type: 3}
-    audioClip2: {fileID: 8300000, guid: 8929f70e5be917c40bb50390ab9f8e93, type: 3}
+    audioClip2: {fileID: 8300000, guid: 1ffa60e9d1bac914dbf80c00dde8be43, type: 3}
   - Title: "\u041B\u0438\u0441\u0430"
     TitleForm: "\u041B\u0438\u0441\u0430"
     IsCustom: 0
@@ -924,7 +924,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: bd0d4d37905a9ab468ccc02e533a1419, type: 3}
     img3: {fileID: 21300000, guid: 04ef4b05a22fc4449a2d90a333229656, type: 3}
     audioClip1: {fileID: 8300000, guid: c5c049db928bbda47963ca2ec2215a4c, type: 3}
-    audioClip2: {fileID: 8300000, guid: c5c049db928bbda47963ca2ec2215a4c, type: 3}
+    audioClip2: {fileID: 8300000, guid: f871ffc9f6a8340468a8ee783c1fb2d2, type: 3}
   - Title: "\u0412\u043E\u043B\u043A"
     TitleForm: "\u0412\u043E\u043B\u043A"
     IsCustom: 0
@@ -932,7 +932,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 9623a06cc2c485a46b1199073f8d9c04, type: 3}
     img3: {fileID: 21300000, guid: 038d470a0d6a70d4bafae39495aeb3f4, type: 3}
     audioClip1: {fileID: 8300000, guid: de5c26b9fae67b342990981e3a0a6e47, type: 3}
-    audioClip2: {fileID: 8300000, guid: de5c26b9fae67b342990981e3a0a6e47, type: 3}
+    audioClip2: {fileID: 8300000, guid: a701c82c097cd434580baa8b8da04bb2, type: 3}
   - Title: "\u041F\u0438\u043D\u0433\u0432\u0438\u043D"
     TitleForm: "\u041F\u0438\u043D\u0433\u0432\u0438\u043D"
     IsCustom: 0
@@ -940,7 +940,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 521d7eacc211ac448b65f9c60e6deeef, type: 3}
     img3: {fileID: 21300000, guid: ef09cd5dc30de2f468b444a114635127, type: 3}
     audioClip1: {fileID: 8300000, guid: f60034bfa22f0604088dc5d4e4826144, type: 3}
-    audioClip2: {fileID: 8300000, guid: f60034bfa22f0604088dc5d4e4826144, type: 3}
+    audioClip2: {fileID: 8300000, guid: 6f0c6bef6ad4627499ea44cf00cb7a04, type: 3}
   - Title: "\u041F\u0430\u043D\u0434\u0430"
     TitleForm: "\u041F\u0430\u043D\u0434\u0430"
     IsCustom: 0
@@ -948,7 +948,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 73f00673a4fe47a419e0ca3db7a47096, type: 3}
     img3: {fileID: 21300000, guid: ae3a78bcd83d940439438306b13a4928, type: 3}
     audioClip1: {fileID: 8300000, guid: 03d9fdded1a36b6449b0ce6f7cd2be74, type: 3}
-    audioClip2: {fileID: 8300000, guid: 03d9fdded1a36b6449b0ce6f7cd2be74, type: 3}
+    audioClip2: {fileID: 8300000, guid: e91fcc4bf914677468067d5fba3c6fcd, type: 3}
   - Title: "\u0421\u043B\u043E\u043D"
     TitleForm: "\u0421\u043B\u043E\u043D"
     IsCustom: 0
@@ -956,7 +956,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 2ccdb812688e99343b6fb945bbd1edd9, type: 3}
     img3: {fileID: 21300000, guid: 39468c2265125df4fb574f0b7441fcc2, type: 3}
     audioClip1: {fileID: 8300000, guid: 0a7ca2737911a9043a863a4922bd4770, type: 3}
-    audioClip2: {fileID: 8300000, guid: 0a7ca2737911a9043a863a4922bd4770, type: 3}
+    audioClip2: {fileID: 8300000, guid: 558239084ce5d404c9863d5de706a6d3, type: 3}
   - Title: "\u041E\u0431\u0435\u0437\u044C\u044F\u043D\u0430"
     TitleForm: "\u041E\u0431\u0435\u0437\u044C\u044F\u043D\u0430"
     IsCustom: 0
@@ -964,7 +964,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 211dffb5964be194686ade0303eaec5b, type: 3}
     img3: {fileID: 21300000, guid: c0e5b9b88dbbc344085707f1c5c1d1c1, type: 3}
     audioClip1: {fileID: 8300000, guid: 69b5492d5351d49489b800426a00985a, type: 3}
-    audioClip2: {fileID: 8300000, guid: 69b5492d5351d49489b800426a00985a, type: 3}
+    audioClip2: {fileID: 8300000, guid: 6138e27d912e4fe47872d4ac8dcf7393, type: 3}
   - Title: "\u041C\u043E\u0440\u0436"
     TitleForm: "\u041C\u043E\u0440\u0436"
     IsCustom: 0
@@ -972,7 +972,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 383b46a7e1e681142a491fa151f409bb, type: 3}
     img3: {fileID: 21300000, guid: aa84ecaa19acf504c855b070e2a39954, type: 3}
     audioClip1: {fileID: 8300000, guid: 609d969566a186646a04d3152cded953, type: 3}
-    audioClip2: {fileID: 8300000, guid: 609d969566a186646a04d3152cded953, type: 3}
+    audioClip2: {fileID: 8300000, guid: 886a184336f81644da60d5a8073d3c6b, type: 3}
   - Title: "\u0420\u044B\u0441\u044C"
     TitleForm: "\u0420\u044B\u0441\u044C"
     IsCustom: 0
@@ -980,7 +980,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: d272d8a65b530e54b88ebc6c9cb58dc0, type: 3}
     img3: {fileID: 21300000, guid: ae929bc30fe74ce41826b28ce4b908f8, type: 3}
     audioClip1: {fileID: 8300000, guid: df7be8aa7298c3d4b841dde94184c54c, type: 3}
-    audioClip2: {fileID: 8300000, guid: df7be8aa7298c3d4b841dde94184c54c, type: 3}
+    audioClip2: {fileID: 8300000, guid: ad6b7b53dc8ea97419807bbf3f82aaec, type: 3}
   - Title: "\u041F\u0430\u043D\u0442\u0435\u0440\u0430"
     TitleForm: "\u041F\u0430\u043D\u0442\u0435\u0440\u0430"
     IsCustom: 0
@@ -988,7 +988,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: a4a8d99103428934ebf3d1af340dccc0, type: 3}
     img3: {fileID: 21300000, guid: ec06b032ad0eaf446bedf21ebafa3bc9, type: 3}
     audioClip1: {fileID: 8300000, guid: 87efd40784cab28408717792b6e880ee, type: 3}
-    audioClip2: {fileID: 8300000, guid: 87efd40784cab28408717792b6e880ee, type: 3}
+    audioClip2: {fileID: 8300000, guid: 8758cd591452955489b3a7124b879573, type: 3}
   - Title: "\u0417\u0430\u044F\u0446"
     TitleForm: "\u0417\u0430\u044F\u0446"
     IsCustom: 0
@@ -996,7 +996,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 33208b5b35cc3214aa93fcdff08e7016, type: 3}
     img3: {fileID: 21300000, guid: d7fc7795e3145124481352c598f12f7c, type: 3}
     audioClip1: {fileID: 8300000, guid: 451fbab9146baed4c82a44f2a1ccd253, type: 3}
-    audioClip2: {fileID: 8300000, guid: 451fbab9146baed4c82a44f2a1ccd253, type: 3}
+    audioClip2: {fileID: 8300000, guid: 84c9ea2dad7a29c42932922cdc325d87, type: 3}
   - Title: "\u041A\u043E\u0448\u043A\u0430"
     TitleForm: "\u041A\u043E\u0448\u043A\u0430"
     IsCustom: 0
@@ -1004,7 +1004,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: a8fcf698141d45e4a82d5007573b381b, type: 3}
     img3: {fileID: 21300000, guid: 001f40be833bae7449be9e3f2afecffb, type: 3}
     audioClip1: {fileID: 8300000, guid: 8fbf5233557c0e14a8d8503fdda1d4fb, type: 3}
-    audioClip2: {fileID: 8300000, guid: 8fbf5233557c0e14a8d8503fdda1d4fb, type: 3}
+    audioClip2: {fileID: 8300000, guid: b06cbcff5ed52ce48acc5bf56000fb8f, type: 3}
   - Title: "\u0421\u043E\u0431\u0430\u043A\u0430"
     TitleForm: "\u0421\u043E\u0431\u0430\u043A\u0430"
     IsCustom: 0
@@ -1012,7 +1012,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 43ee01baeca51c6459e0e27c947b5f02, type: 3}
     img3: {fileID: 21300000, guid: 249c42052c6d9d34e855da26d15a3e60, type: 3}
     audioClip1: {fileID: 8300000, guid: 052934c61214db34db1497446ac0908a, type: 3}
-    audioClip2: {fileID: 8300000, guid: 052934c61214db34db1497446ac0908a, type: 3}
+    audioClip2: {fileID: 8300000, guid: 647133ab7a521d84eb5f9832328bea74, type: 3}
   - Title: "\u041A\u043E\u0440\u043E\u0432\u0430"
     TitleForm: "\u041A\u043E\u0440\u043E\u0432\u0430"
     IsCustom: 0
@@ -1020,7 +1020,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: fd6c3e641266ed44cb93953cf248ad9d, type: 3}
     img3: {fileID: 21300000, guid: dd4435d0459f2a249bdf6ff2b2189b45, type: 3}
     audioClip1: {fileID: 8300000, guid: a1dfd96966d56334fbc6b3478952b61b, type: 3}
-    audioClip2: {fileID: 8300000, guid: a1dfd96966d56334fbc6b3478952b61b, type: 3}
+    audioClip2: {fileID: 8300000, guid: 2c346a55490e5f241a1f358abbcdc912, type: 3}
   - Title: "\u041A\u043E\u0437\u0430"
     TitleForm: "\u041A\u043E\u0437\u0430"
     IsCustom: 0
@@ -1028,7 +1028,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: be4a79cd1e0452e48a8e92247a6ef52e, type: 3}
     img3: {fileID: 21300000, guid: dd4435d0459f2a249bdf6ff2b2189b45, type: 3}
     audioClip1: {fileID: 8300000, guid: f6cc0bd9bcad8d844bdf3dc91308f521, type: 3}
-    audioClip2: {fileID: 8300000, guid: f6cc0bd9bcad8d844bdf3dc91308f521, type: 3}
+    audioClip2: {fileID: 8300000, guid: 20754c562dbfd024e8a060e1dfbdc124, type: 3}
   - Title: "\u041B\u043E\u0448\u0430\u0434\u044C"
     TitleForm: "\u041B\u043E\u0448\u0430\u0434\u044C"
     IsCustom: 0
@@ -1036,7 +1036,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: dd6a1b0f02cf9a745ba91dc22ca62f39, type: 3}
     img3: {fileID: 21300000, guid: 4b0a24c42b004f343ba44739a2552a9e, type: 3}
     audioClip1: {fileID: 8300000, guid: ea2078c681cf63c47b281aeed38a5c71, type: 3}
-    audioClip2: {fileID: 8300000, guid: ea2078c681cf63c47b281aeed38a5c71, type: 3}
+    audioClip2: {fileID: 8300000, guid: c61f91879fc0aae41b218b6f3f5b187d, type: 3}
   - Title: "\u041E\u0432\u0446\u0430"
     TitleForm: "\u041E\u0432\u0446\u0430"
     IsCustom: 0
@@ -1044,7 +1044,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 288c7f88c9b755f4cbee5fcc0bbf80bb, type: 3}
     img3: {fileID: 21300000, guid: eee36bcabe57e474db49bd3c7538e294, type: 3}
     audioClip1: {fileID: 8300000, guid: 8de3e205ae4d2fd43a6f313e7cc3d939, type: 3}
-    audioClip2: {fileID: 8300000, guid: 8de3e205ae4d2fd43a6f313e7cc3d939, type: 3}
+    audioClip2: {fileID: 8300000, guid: a17f35bfb3cc16941aeb35da086e1104, type: 3}
   - Title: "\u041E\u0441\u0435\u043B"
     TitleForm: "\u041E\u0441\u0435\u043B"
     IsCustom: 0
@@ -1052,7 +1052,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 86f649625b169694eb5d472b316f3340, type: 3}
     img3: {fileID: 21300000, guid: 3504f1a7e92f6594b841f01d8fc890a3, type: 3}
     audioClip1: {fileID: 8300000, guid: 5a89342dfab0dbc4ebc4f3f71be09bf2, type: 3}
-    audioClip2: {fileID: 8300000, guid: 5a89342dfab0dbc4ebc4f3f71be09bf2, type: 3}
+    audioClip2: {fileID: 8300000, guid: 1cdc45589822da34abc55c4b00fd37ce, type: 3}
   - Title: "\u0421\u0432\u0438\u043D\u044C\u044F"
     TitleForm: "\u0421\u0432\u0438\u043D\u044C\u044F"
     IsCustom: 0
@@ -1060,7 +1060,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 95a3f050b7c94d349a5dbe7a96c06034, type: 3}
     img3: {fileID: 21300000, guid: 99fbdf2feff08304fb1be0c916631067, type: 3}
     audioClip1: {fileID: 8300000, guid: 36f0d016eaa7d0e459db7cfc9af766b8, type: 3}
-    audioClip2: {fileID: 8300000, guid: 36f0d016eaa7d0e459db7cfc9af766b8, type: 3}
+    audioClip2: {fileID: 8300000, guid: 3da1cb7dbded5214abcd7eca660c493d, type: 3}
   - Title: "\u0413\u043E\u043B\u0443\u0431\u044C"
     TitleForm: "\u0413\u043E\u043B\u0443\u0431\u044C"
     IsCustom: 0
@@ -1068,7 +1068,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: c711f4c6a511bb84494a81692963b2a6, type: 3}
     img3: {fileID: 21300000, guid: c8925522a2a0bb2408eaeb47f604f0ea, type: 3}
     audioClip1: {fileID: 8300000, guid: 96a58069169c12d4fbccd95a5468376f, type: 3}
-    audioClip2: {fileID: 8300000, guid: 96a58069169c12d4fbccd95a5468376f, type: 3}
+    audioClip2: {fileID: 8300000, guid: a4cc7e9334cdad04e915ce8c83a38fe4, type: 3}
   - Title: "\u0412\u043E\u0440\u043E\u0431\u0435\u0439"
     TitleForm: "\u0412\u043E\u0440\u043E\u0431\u0435\u0439"
     IsCustom: 0
@@ -1076,7 +1076,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 2f90b7224ff24674c91899da6df52d6d, type: 3}
     img3: {fileID: 21300000, guid: 56344f1a11f6d8947a109398e12d4592, type: 3}
     audioClip1: {fileID: 8300000, guid: 9366fbd0dee2cba45a9604f2889f33f3, type: 3}
-    audioClip2: {fileID: 8300000, guid: 9366fbd0dee2cba45a9604f2889f33f3, type: 3}
+    audioClip2: {fileID: 8300000, guid: aa500b10e6c08294b82d5e27ffda3696, type: 3}
   - Title: "\u0412\u043E\u0440\u043E\u043D\u0430"
     TitleForm: "\u0412\u043E\u0440\u043E\u043D\u0430"
     IsCustom: 0
@@ -1084,7 +1084,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 76eb2740b50c47b4798612d0de32e3a9, type: 3}
     img3: {fileID: 21300000, guid: f258f42492837334c8c005cd41fb9a2b, type: 3}
     audioClip1: {fileID: 8300000, guid: d7d27b2f022b7244a86a21ff45f36072, type: 3}
-    audioClip2: {fileID: 8300000, guid: d7d27b2f022b7244a86a21ff45f36072, type: 3}
+    audioClip2: {fileID: 8300000, guid: 3456fb762716fbe4b97c7bfb28ced370, type: 3}
   - Title: "\u041E\u0440\u0435\u043B"
     TitleForm: "\u041E\u0440\u0435\u043B"
     IsCustom: 0
@@ -1092,7 +1092,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 25a4cce6bf3804745a0e50c2823695ba, type: 3}
     img3: {fileID: 21300000, guid: 1150370d219262348b1208b8db9beaf9, type: 3}
     audioClip1: {fileID: 8300000, guid: bf13dc5a91409ad4bb42a3848d8338b2, type: 3}
-    audioClip2: {fileID: 8300000, guid: bf13dc5a91409ad4bb42a3848d8338b2, type: 3}
+    audioClip2: {fileID: 8300000, guid: 17e366ebd900d674da34eecbb976573b, type: 3}
   - Title: "\u041A\u0443\u0440\u0438\u0446\u0430"
     TitleForm: "\u041A\u0443\u0440\u0438\u0446\u0430"
     IsCustom: 0
@@ -1100,7 +1100,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 8095b68afeeaf944d842f1749f50aed2, type: 3}
     img3: {fileID: 21300000, guid: add569213ec3ddf488a3480168265f26, type: 3}
     audioClip1: {fileID: 8300000, guid: f7cce19aff480a244b4abd783e2b608f, type: 3}
-    audioClip2: {fileID: 8300000, guid: f7cce19aff480a244b4abd783e2b608f, type: 3}
+    audioClip2: {fileID: 8300000, guid: 2163194581d2b2e4883c1311e34c5e4e, type: 3}
   - Title: "\u0413\u0443\u0441\u044C"
     TitleForm: "\u0413\u0443\u0441\u044C"
     IsCustom: 0
@@ -1108,7 +1108,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 961dbb4928d166c4c8a1b1ef5a530614, type: 3}
     img3: {fileID: 21300000, guid: 500c2b03e936bf44c8ec1af0afc44899, type: 3}
     audioClip1: {fileID: 8300000, guid: fd8f1bf32b498e44ab0c353b9675fe1a, type: 3}
-    audioClip2: {fileID: 8300000, guid: fd8f1bf32b498e44ab0c353b9675fe1a, type: 3}
+    audioClip2: {fileID: 8300000, guid: 256edcda6fb8bb148ae4b3007b8927a5, type: 3}
   - Title: "\u041F\u0435\u0442\u0443\u0445"
     TitleForm: "\u041F\u0435\u0442\u0443\u0445"
     IsCustom: 0
@@ -1116,7 +1116,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: e171062d67dd287408691db25eade506, type: 3}
     img3: {fileID: 21300000, guid: b1961fc6afd0c9841b938e2596e019aa, type: 3}
     audioClip1: {fileID: 8300000, guid: 7dd94a097b1235c4c855035d03d0db5c, type: 3}
-    audioClip2: {fileID: 8300000, guid: 7dd94a097b1235c4c855035d03d0db5c, type: 3}
+    audioClip2: {fileID: 8300000, guid: 68d233c09a692504ab87c2a652ba4f5a, type: 3}
   - Title: "\u041B\u0435\u0431\u0435\u0434\u044C"
     TitleForm: "\u041B\u0435\u0431\u0435\u0434\u044C"
     IsCustom: 0
@@ -1124,7 +1124,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 60ae8588ff3c36b4eb1dd0916190981e, type: 3}
     img3: {fileID: 21300000, guid: 27b85ba58a3f22e4eb8cb8caeccd0fdc, type: 3}
     audioClip1: {fileID: 8300000, guid: 157827bccf1b6ff4d8e5e144a318b21d, type: 3}
-    audioClip2: {fileID: 8300000, guid: 157827bccf1b6ff4d8e5e144a318b21d, type: 3}
+    audioClip2: {fileID: 8300000, guid: 2d065106a1f62274dbb4b70852630045, type: 3}
   - Title: "\u0421\u043E\u0432\u0430"
     TitleForm: "\u0421\u043E\u0432\u0430"
     IsCustom: 0
@@ -1132,7 +1132,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: f0b54301bccefe64cb17876c5fc82111, type: 3}
     img3: {fileID: 21300000, guid: b315094dfe9e38e4f82ffab1231a53b4, type: 3}
     audioClip1: {fileID: 8300000, guid: 73548d4c0b6f53548acef539aec51ddd, type: 3}
-    audioClip2: {fileID: 8300000, guid: 73548d4c0b6f53548acef539aec51ddd, type: 3}
+    audioClip2: {fileID: 8300000, guid: cb5f63f8ecf313143ab1257e9dc14ce3, type: 3}
   - Title: "\u0423\u0442\u043A\u0430"
     TitleForm: "\u0423\u0442\u043A\u0430"
     IsCustom: 0
@@ -1140,7 +1140,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 070d152357e8b2844b9d05ab66e1f6f4, type: 3}
     img3: {fileID: 21300000, guid: 5ba64b8ff93a7794a9f4eed94e544ac1, type: 3}
     audioClip1: {fileID: 8300000, guid: 0b0102b0f0d1e0449adb58dfd7f716ff, type: 3}
-    audioClip2: {fileID: 8300000, guid: 0b0102b0f0d1e0449adb58dfd7f716ff, type: 3}
+    audioClip2: {fileID: 8300000, guid: a9ec5707c7beac0418701b0e6c01a654, type: 3}
   - Title: "\u0410\u0438\u0441\u0442"
     TitleForm: "\u0410\u0438\u0441\u0442"
     IsCustom: 0
@@ -1148,7 +1148,7 @@ MonoBehaviour:
     img2: {fileID: 21300000, guid: 149a5588a43b2114d96ea66d00194ed7, type: 3}
     img3: {fileID: 21300000, guid: 82a68efa9e1762843ab90be374c25597, type: 3}
     audioClip1: {fileID: 8300000, guid: 894e050bf2d112846a1150be41a9b3d3, type: 3}
-    audioClip2: {fileID: 8300000, guid: 894e050bf2d112846a1150be41a9b3d3, type: 3}
+    audioClip2: {fileID: 8300000, guid: d56a30405b8cffb4fa9a40701eea3de4, type: 3}
   - Title: "\u0421\u043E\u043B\u043D\u0435\u0447\u043D\u043E"
     TitleForm: "\u0421\u043E\u043B\u043D\u0435\u0447\u043D\u043E"
     IsCustom: 0
@@ -2647,14 +2647,14 @@ MonoBehaviour:
     img3: {fileID: 21300000, guid: 732930ec2020d7e4ca47baf184ba53f5, type: 3}
     audioClip1: {fileID: 8300000, guid: 4013028f33d653a479a49babb874951f, type: 3}
     audioClip2: {fileID: 8300000, guid: 4013028f33d653a479a49babb874951f, type: 3}
-  - Title: "\u0415\u0441\u0442\u044C"
-    TitleForm: "\u0415\u0441\u0442\u044C"
+  - Title: 
+    TitleForm: 
     IsCustom: 0
-    img1: {fileID: 21300000, guid: 3292f1393ae37834a88c533475e45879, type: 3}
-    img2: {fileID: 21300000, guid: 3292f1393ae37834a88c533475e45879, type: 3}
-    img3: {fileID: 21300000, guid: 3292f1393ae37834a88c533475e45879, type: 3}
-    audioClip1: {fileID: 8300000, guid: 7d2aefa254ab40a45b124278bfe4bec8, type: 3}
-    audioClip2: {fileID: 8300000, guid: 7d2aefa254ab40a45b124278bfe4bec8, type: 3}
+    img1: {fileID: 0}
+    img2: {fileID: 0}
+    img3: {fileID: 0}
+    audioClip1: {fileID: 0}
+    audioClip2: {fileID: 0}
   - Title: "\u041A\u0430\u0448\u0430"
     TitleForm: "\u041A\u0430\u0448\u0443"
     IsCustom: 0
@@ -2791,14 +2791,14 @@ MonoBehaviour:
     img3: {fileID: 21300000, guid: 7752305b2c51b344aa6c040dc81645f0, type: 3}
     audioClip1: {fileID: 8300000, guid: 42626b490c0616b4b88ef0fd5ca3872c, type: 3}
     audioClip2: {fileID: 8300000, guid: 42626b490c0616b4b88ef0fd5ca3872c, type: 3}
-  - Title: "\u041F\u0438\u0442\u044C"
-    TitleForm: "\u041F\u0438\u0442\u044C"
+  - Title: 
+    TitleForm: 
     IsCustom: 0
-    img1: {fileID: 21300000, guid: 7d12437b16ca0984483e26496efbba0a, type: 3}
-    img2: {fileID: 21300000, guid: 7d12437b16ca0984483e26496efbba0a, type: 3}
-    img3: {fileID: 21300000, guid: 7d12437b16ca0984483e26496efbba0a, type: 3}
-    audioClip1: {fileID: 8300000, guid: e2acfd7ee70579244be86ff87ed7e7dc, type: 3}
-    audioClip2: {fileID: 8300000, guid: e2acfd7ee70579244be86ff87ed7e7dc, type: 3}
+    img1: {fileID: 0}
+    img2: {fileID: 0}
+    img3: {fileID: 0}
+    audioClip1: {fileID: 0}
+    audioClip2: {fileID: 0}
   - Title: "\u0412\u043E\u0434\u0430"
     TitleForm: "\u0412\u043E\u0434\u044B"
     IsCustom: 0

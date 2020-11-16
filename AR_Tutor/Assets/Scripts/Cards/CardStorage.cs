@@ -28,7 +28,7 @@ public class CardStorage : MonoBehaviour
 
     private void AddDefaultCards()
     {
-        for (int i = 0; i < startCardPack.cards.Length; i++)
+        for (int i = 0; i < startCardPack.cards.Count; i++)
         {
             var cardKey = $"startPack_card_{i}";
             cards.Add(cardKey, startCardPack.cards[i]);

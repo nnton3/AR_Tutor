@@ -5,7 +5,7 @@ public class VariantGameMenu : GameMenu
 {
     #region Variables
     private VariantCardSelector variantSelector;
-    private ContentMover contentMover;
+    private HorizontalContentMover contentMover;
 
     [SerializeField] private GameObject categorySelector, modeSelector;
     [SerializeField] private Button[] gameModes = new Button[] { };
@@ -16,20 +16,13 @@ public class VariantGameMenu : GameMenu
     {
         gameName = GameName.Variant;
         var selector = FindObjectOfType<VariantCardSelector>();
-        contentMover = GetComponent<ContentMover>();
+        contentMover = GetComponent<HorizontalContentMover>();
         cardSelector = selector;
         variantSelector = selector;
         base.Initialize();
         
         BindBtns();
         HidePanels();
-    }
-
-    protected override void AddNewCategory(string _categoryKey)
-    {
-        base.AddNewCategory(_categoryKey);
-        UIInstruments.GetSizeForHorizontalGrid(categoryParent.GetComponent<GridLayoutGroup>(), CategoryCards.Count);
-        contentMover.CalculateMinPos();
     }
 
     protected override void HidePanels()
@@ -43,14 +36,25 @@ public class VariantGameMenu : GameMenu
         return base.AddCardInMenu(_categoryPanel, _categoryKey, _cardKey);
     }
 
+    protected override void CalculateCategoryPanelRect()
+    {
+        UIInstruments.GetSizeForHorizontalGrid(categoryParent.GetComponent<GridLayoutGroup>(), GetVisibleCategoriesCount());
+        contentMover.CalculateMinPos();
+    }
+
     protected override void CalculateCardPanelRect(GameObject _panel)
     {
-        
-        UIInstruments.GetSizeForHorizontalGrid(
-            _panel.transform.Find("Mask/Content").GetComponent<GridLayoutGroup>(),
-            _panel.transform.Find("Mask/Content").childCount);
+        var contentPanel = _panel.transform.Find("Mask/Content");
 
-        _panel.GetComponent<ContentMover>().CalculateMinPos();
+        var visibleCategoryCount = 0;
+        foreach(Transform child in contentPanel.transform)
+            if (child.gameObject.activeSelf) visibleCategoryCount++;
+
+        UIInstruments.GetSizeForHorizontalGrid(
+            contentPanel.GetComponent<GridLayoutGroup>(),
+            visibleCategoryCount);
+
+        _panel.GetComponent<HorizontalContentMover>().CalculateMinPos();
     }
 
     private void BindBtns()

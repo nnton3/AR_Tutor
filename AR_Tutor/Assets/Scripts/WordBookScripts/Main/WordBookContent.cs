@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class WordBookContent : MonoBehaviour
 {
     [SerializeField] private Image img1, img2, img3;
-    [SerializeField] private Button clickBtn;
+    [SerializeField] private Button clickBtn, audioBtn;
     [SerializeField] private Text title;
     [SerializeField] private RectTransform contentRect;
-    private AudioClip clip;
+    private AudioClip clip, clip2;
 
     public void Initialize(CardData data)
     {
@@ -15,14 +15,23 @@ public class WordBookContent : MonoBehaviour
         img2.sprite = data.img2;
         img3.sprite = data.img3;
         clip = data.audioClip1;
+        clip2 = data.audioClip2;
         title.text = data.Title;
 
         clickBtn.onClick.AddListener(PlayAudio);
+        audioBtn.onClick.AddListener(PlayAnimalsAudio);
     }
 
     private void PlayAudio()
     {
-        FindObjectOfType<AudioSource>().PlayOneShot(clip);
+        if (clip == null) return;
+        Signals.PlayAcudioClipEvent.Invoke(clip);
+    }
+
+    private void PlayAnimalsAudio()
+    {
+        if (clip2 == null) return;
+        Signals.PlayAcudioClipEvent.Invoke(clip2);
     }
 
     public void ShowNextImg()

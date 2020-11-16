@@ -32,7 +32,7 @@ public class CategoryStorage : MonoBehaviour
 
     private void AddDefaulCategories()
     {
-        for (int i = 0; i < startCategoryPack.categoryDatas.Length; i++)
+        for (int i = 0; i < startCategoryPack.categoryDatas.Count; i++)
         {
             string key = "";
             switch ((GameName)startCategoryPack.categoryDatas[i].game)
