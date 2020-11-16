@@ -96,8 +96,8 @@ public class GameMenu : MonoBehaviour
         InitializeCategoryPanel(categoryPanel);
 
         InitializeEditableElement(obj, data.visible);
-
         BindCategoryBtn(CategoryCards.Count - 1);
+        CalculateCategoryPanelRect();
 
         ConfigurateCards(data, categoryPanel, _categoryKey);
     }
@@ -116,8 +116,6 @@ public class GameMenu : MonoBehaviour
         InitializeEditableElement(cardObj);
         cardSelector.AddCard(cardObj);
     }
-
-    protected virtual void CalculateCardPanelRect(GameObject _panel) { }
 
     protected virtual GameObject AddCardInMenu(GameObject _categoryPanel, string _categoryKey, string _cardKey)
     {
@@ -227,6 +225,19 @@ public class GameMenu : MonoBehaviour
             panel.SetActive(false);
     }
 
+    protected int GetVisibleCategoriesCount()
+    {
+        var visibleCategoryCount = 0;
+        foreach (var category in CategoryCards)
+            if (category.gameObject.activeSelf) visibleCategoryCount++;
+
+        return visibleCategoryCount;
+    }
+
     protected virtual void ResetGame() { }
+
+    protected virtual void CalculateCardPanelRect(GameObject _panel) { }
+
+    protected virtual void CalculateCategoryPanelRect() { }
     #endregion
 }

@@ -49,7 +49,7 @@ public static class UIInstruments
         float size = 0;
         var height = rect.sizeDelta.y * rect.localScale.y;
         size = height;
-        size = _elementHeight * _elementsCount + _elementsCount * _group.spacing + _group.padding.top + _group.padding.bottom;
+        size = _elementHeight * _elementsCount + (_elementsCount - 1) * _group.spacing + _group.padding.top + _group.padding.bottom;
         if (size < height) return;
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
     }

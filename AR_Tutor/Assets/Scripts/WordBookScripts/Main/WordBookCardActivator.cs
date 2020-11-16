@@ -13,6 +13,7 @@ public class WordBookCardActivator : MonoBehaviour
 
     public void Active()
     {
+        Signals.PlayAcudioClipEvent.Invoke(GetComponent<CardBase>().Clip);
         Signals.WordBookCardSelect.Invoke(GetComponent<CardBase>().Key);
     }
 }

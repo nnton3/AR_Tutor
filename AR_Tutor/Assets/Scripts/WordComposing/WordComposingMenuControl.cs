@@ -145,6 +145,7 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
 
         InitializeEditableElement(obj, data.visible);
         BindCategoryBtn(CategoryCards.Count - 1);
+        CalculateCategoryPanelRect();
         ConfigurateCards(data, categoryPanel, _categoryKey);
 
         var closeBtn = categoryPanel.transform.Find("CloseButton").GetComponent<Button>();
@@ -158,14 +159,22 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                 Signals.RemoveWordFromClause.Invoke();
             }
         });
+    }
 
-        UIInstruments.GetSizeForVerticalGrid(categoriesGrid, CategoriesPanels.Count);
+    protected override void CalculateCategoryPanelRect()
+    {
+        UIInstruments.GetSizeForVerticalGrid(categoriesGrid, GetVisibleCategoriesCount());
     }
 
     protected override void CalculateCardPanelRect(GameObject _panel)
     {
         var contentPanel = _panel.transform.Find("Mask/Content");
-        UIInstruments.GetSizeForVerticalGrid(contentPanel.GetComponent<GridLayoutGroup>(), contentPanel.childCount);
+
+        var visibleCategoryCount = 0;
+        foreach (Transform card in contentPanel.transform)
+            if (card.gameObject.activeSelf) visibleCategoryCount++;
+
+        UIInstruments.GetSizeForVerticalGrid(contentPanel.GetComponent<GridLayoutGroup>(), visibleCategoryCount);
     }
 
     private void BinBtn()

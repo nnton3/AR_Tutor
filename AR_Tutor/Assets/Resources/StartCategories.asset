@@ -145,7 +145,7 @@ MonoBehaviour:
     title: "\u0411\u043B\u044E\u0434\u0430"
     img: {fileID: 21300000, guid: db62d300ddd0a9b4589bd183b293b235, type: 3}
     clip: {fileID: 8300000, guid: 274705e0acecd1a4b9447c6c7f85d617, type: 3}
-    visible: 0
+    visible: 1
     IsCustom: 0
     cardKeys:
     - startPack_card_72
@@ -576,22 +576,12 @@ MonoBehaviour:
     - startPack_card_407
     cardsVisible: 010101
   - game: 3
-    title: "\u0425\u043E\u0442\u0435\u0442\u044C"
-    img: {fileID: 21300000, guid: 732930ec2020d7e4ca47baf184ba53f5, type: 3}
-    clip: {fileID: 8300000, guid: 4013028f33d653a479a49babb874951f, type: 3}
-    visible: 1
-    IsCustom: 0
-    cardKeys:
-    - startPack_card_328
-    cardsVisible: 01
-  - game: 3
     title: "\u0415\u0441\u0442\u044C"
     img: {fileID: 21300000, guid: 3292f1393ae37834a88c533475e45879, type: 3}
     clip: {fileID: 8300000, guid: 7d2aefa254ab40a45b124278bfe4bec8, type: 3}
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_329
     - startPack_card_330
     - startPack_card_331
     - startPack_card_332
@@ -609,7 +599,7 @@ MonoBehaviour:
     - startPack_card_344
     - startPack_card_345
     - startPack_card_346
-    cardsVisible: 010101010101010101010101010101010101
+    cardsVisible: 0101010101010101010101010101010101
   - game: 3
     title: "\u041F\u0438\u0442\u044C"
     img: {fileID: 21300000, guid: 7d12437b16ca0984483e26496efbba0a, type: 3}
@@ -617,7 +607,6 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_347
     - startPack_card_348
     - startPack_card_349
     - startPack_card_350
@@ -625,7 +614,7 @@ MonoBehaviour:
     - startPack_card_352
     - startPack_card_353
     - startPack_card_354
-    cardsVisible: 0101010101010101
+    cardsVisible: 01010101010101
   - game: 3
     title: "\u041E\u0442\u0434\u044B\u0445\u0430\u0442\u044C"
     img: {fileID: 21300000, guid: add4032c05be8d74ea82779a72a37026, type: 3}
@@ -633,7 +622,6 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_355
     - startPack_card_356
     - startPack_card_357
     - startPack_card_358
@@ -643,7 +631,7 @@ MonoBehaviour:
     - startPack_card_362
     - startPack_card_363
     - startPack_card_364
-    cardsVisible: 01010101010101010101
+    cardsVisible: 010101010101010101
   - game: 3
     title: "\u0418\u0433\u0440\u0430\u0442\u044C"
     img: {fileID: 21300000, guid: 4dd248b44d239964c9894ca167f058a8, type: 3}
@@ -651,7 +639,6 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_365
     - startPack_card_366
     - startPack_card_367
     - startPack_card_368
@@ -660,7 +647,7 @@ MonoBehaviour:
     - startPack_card_371
     - startPack_card_372
     - startPack_card_373
-    cardsVisible: 010101010101010101
+    cardsVisible: 0101010101010101
   - game: 3
     title: "\u0413\u0438\u0433\u0438\u0435\u043D\u0430"
     img: {fileID: 21300000, guid: 580075f9b90a8254d9166e373198fd2a, type: 3}
@@ -682,12 +669,11 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_380
     - startPack_card_381
     - startPack_card_382
     - startPack_card_383
     - startPack_card_384
-    cardsVisible: 0101010101
+    cardsVisible: 01010101
   - game: 3
     title: "\u0417\u0430\u043D\u0438\u043C\u0430\u0442\u044C\u0441\u044F"
     img: {fileID: 21300000, guid: a3ea92012e0192141b4f6d7ad6d556c1, type: 3}
@@ -695,7 +681,6 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_385
     - startPack_card_386
     - startPack_card_387
     - startPack_card_388
@@ -704,7 +689,7 @@ MonoBehaviour:
     - startPack_card_391
     - startPack_card_392
     - startPack_card_393
-    cardsVisible: 010101010101010101
+    cardsVisible: 0101010101010101
   - game: 3
     title: "\u041F\u043E\u0439\u0442\u0438"
     img: {fileID: 21300000, guid: ee9c590b39fd3ea4fa95979c00301ce6, type: 3}
@@ -726,11 +711,10 @@ MonoBehaviour:
     visible: 1
     IsCustom: 0
     cardKeys:
-    - startPack_card_400
     - startPack_card_401
     - startPack_card_402
     - startPack_card_403
     - startPack_card_404
     - startPack_card_405
     - startPack_card_406
-    cardsVisible: 01010101010101
+    cardsVisible: 010101010101

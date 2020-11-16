@@ -83,7 +83,7 @@ public class PatientDataManager : MonoBehaviour
             new List<List<string>>(),
             new List<List<bool>>());
 
-        for (int i = 0; i < defaultCategoryPack.categoryDatas.Length; i++)
+        for (int i = 0; i < defaultCategoryPack.categoryDatas.Count; i++)
         {
             string categoryKey = $"default_{defaultCategoryPack.categoryDatas[i].game.ToString()}_category{i}";
 

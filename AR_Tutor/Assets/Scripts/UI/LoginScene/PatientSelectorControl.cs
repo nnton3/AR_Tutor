@@ -11,7 +11,7 @@ public class PatientSelectorControl : MonoBehaviour
         patientCardPref,
         startGamePanel;
     [SerializeField] private RectTransform openCreatePatientPanelBtn;
-    [SerializeField] private ContentMover patientSelectorMover;
+    [SerializeField] private HorizontalContentMover patientSelectorMover;
 
     public void Initialize()
     {

@@ -37,7 +37,6 @@ public class MainMenuUIControl : MonoBehaviour
             var panel_settings = settingsGamePanels[i];
             var returnBtn = returnBtns[i];
 
-
             btn.onClick.AddListener(() =>
             {
                 settingsBtn.gameObject.SetActive(false);
@@ -50,7 +49,11 @@ public class MainMenuUIControl : MonoBehaviour
                 if (returnBtn != null)
                 {
                     returnBtn.SetActive(true);
-                    returnBtn.GetComponent<Button>().onClick.AddListener(() => gameSelector.SetActive(true));
+                    returnBtn.GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        gameSelector.SetActive(true);
+                        settingsBtn.gameObject.SetActive(true);
+                    });
                 }
                 gameSelector.SetActive(false);
             });
