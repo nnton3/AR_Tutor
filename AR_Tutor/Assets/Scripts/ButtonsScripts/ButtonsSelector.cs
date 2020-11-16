@@ -12,7 +12,7 @@ public class ButtonsSelector : MonoBehaviour
     [SerializeField] private List<GameObject> Cards = new List<GameObject>();
     [SerializeField] private List<ButtonsCard> selectedCards = new List<ButtonsCard>();
     [SerializeField] private Button startGameBtn;
-    [SerializeField] private GameObject buttonsGamePanel;
+    [SerializeField] private GameObject selectPanel, gamePanel;
     private ButtonsGameLogic gameLogic;
     private MenuTransitionController transitionController;
     public ButtonsEvent SelectEvent = new ButtonsEvent();
@@ -37,12 +37,9 @@ public class ButtonsSelector : MonoBehaviour
     private void StartGame()
     {
         gameLogic.FillPanel(selectedCards.ToArray());
-        //UnselectAll();
-        transitionController.ActivatePanel(buttonsGamePanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            gameLogic.ClearOldData();
-        });
+        selectPanel.SetActive(false);
+        gamePanel.SetActive(true);
+        Signals.StartButtonsGameEvent.Invoke();
     }
 
     private bool DataIsValid()
@@ -61,5 +58,11 @@ public class ButtonsSelector : MonoBehaviour
     public bool CanSelect()
     {
         return selectedCards.Count < 2;
+    }
+
+    public void Reset()
+    {
+        foreach(var card in Cards)
+            card.GetComponent<ButtonsCard>().GetEffect().gameObject.SetActive(false);
     }
 }

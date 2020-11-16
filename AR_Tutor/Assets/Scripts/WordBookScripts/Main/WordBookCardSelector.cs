@@ -19,13 +19,15 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
 
     private void Awake()
     {
-        closeContentBtn.onClick.AddListener(() =>
-        {
-            contentPanel.SetActive(false);
-            lastCardsPanel.SetActive(true);
-        });
+        closeContentBtn.onClick.AddListener(() => CloseContent());
 
         Signals.WordBookCardSelect.AddListener(ShowContent);
+    }
+
+    public void CloseContent()
+    {
+        contentPanel.SetActive(false);
+        lastCardsPanel.SetActive(true);
     }
 
     public void Initialize(List<GameObject> _cards)
@@ -55,6 +57,7 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
         content.Initialize(cardStorage.cards[_cardKey]);
         contentPanel.SetActive(true);
         lastCardsPanel.SetActive(false);
+        Signals.WordbookShowContentEvent.Invoke();
     }
 
     private void ScrollCards(int direction)

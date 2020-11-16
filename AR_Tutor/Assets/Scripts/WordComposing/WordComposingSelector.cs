@@ -56,7 +56,7 @@ public class WordComposingSelector : MonoBehaviour, IManageCards
     {
         for(int i = 0; i < cardsInClause.Count; i++)
         {
-            Signals.PlayAcudioClipEvent.Invoke(cardsInClause[i].Clip2);
+            Signals.PlayAudioClipEvent.Invoke(cardsInClause[i].Clip2);
             yield return new WaitForSeconds(cardsInClause[i].Clip2.length);
         }
     }

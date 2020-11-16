@@ -25,13 +25,13 @@ public class WordBookContent : MonoBehaviour
     private void PlayAudio()
     {
         if (clip == null) return;
-        Signals.PlayAcudioClipEvent.Invoke(clip);
+        Signals.PlayAudioClipEvent.Invoke(clip);
     }
 
     private void PlayAnimalsAudio()
     {
         if (clip2 == null) return;
-        Signals.PlayAcudioClipEvent.Invoke(clip2);
+        Signals.PlayAudioClipEvent.Invoke(clip2);
     }
 
     public void ShowNextImg()

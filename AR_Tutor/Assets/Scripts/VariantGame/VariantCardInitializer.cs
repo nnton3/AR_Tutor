@@ -20,6 +20,6 @@ public class VariantCardInitializer : CardBase
         Signals.VariantGameCardSelect.Invoke(Key);
         rect.localPosition = Vector2.zero;
         rect.localScale = Vector3.one * 2;
-        if (clip != null) Signals.PlayAcudioClipEvent.Invoke(clip);
+        if (clip != null) Signals.PlayAudioClipEvent.Invoke(clip);
     }
 }

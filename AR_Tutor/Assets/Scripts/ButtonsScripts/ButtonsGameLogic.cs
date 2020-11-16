@@ -41,6 +41,13 @@ public class ButtonsGameLogic : MonoBehaviour
         maxRepetititions = _number;
     }
 
+    public void Reset()
+    {
+        ClearOldData();
+        leftBtn.GetComponent<Animator>().SetTrigger("reset");
+        rightBtn.GetComponent<Animator>().SetTrigger("reset");
+    }
+
     public void ClearOldData()
     {
         leftBtn.onClick.RemoveAllListeners();

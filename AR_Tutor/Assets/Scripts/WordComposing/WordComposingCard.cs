@@ -18,7 +18,7 @@ public class WordComposingCard : CardBase
 
                     Signals.AddWordToClause.Invoke(GetComponent<CardBase>().Key);
                 }
-                Signals.PlayAcudioClipEvent.Invoke(Clip);
+                Signals.PlayAudioClipEvent.Invoke(Clip);
         });
     }
 

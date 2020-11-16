@@ -41,7 +41,6 @@ public class LoginUIControl : MonoBehaviour
     private LoginManager loginMenuControl;
     private AuthUser authentication;
     private UserData config;
-    private AudioHintControl hintControl;
 
     public bool AuthTypePanelActiveSelf
     {
@@ -80,6 +79,7 @@ public class LoginUIControl : MonoBehaviour
     private void Start()
     {
         transitionController.ActivatePanel(helloPanel);
+        Signals.ApplicationStartEvent.Invoke();
     }
 
     private void Initialize()
@@ -87,7 +87,6 @@ public class LoginUIControl : MonoBehaviour
         loginMenuControl = FindObjectOfType<LoginManager>();
         authentication = FindObjectOfType<AuthUser>();
         transitionController = FindObjectOfType<MenuTransitionController>();
-        hintControl = FindObjectOfType<AudioHintControl>();
 
         Signals.ResetPasswordEvent.AddListener(() => resetPasswordPanel.SetActive(true));
     }
@@ -96,18 +95,16 @@ public class LoginUIControl : MonoBehaviour
     {
         if (skipHelloScreenBtn != null) skipHelloScreenBtn.onClick.AddListener(() =>
         {
-            hintControl.StopAudio();
-
-            if (!loginMenuControl.HasEnter())
+            if (!LoginManager.HasEnter)
             {
-                hintControl.PlayAuthHint();
                 transitionController.ActivatePanel(authTypePanel);
-                transitionController.AddEventToReturnBtn(() => hintControl.StopAudio());
+                Signals.EnterToAuthWindowEvent.Invoke();
+                transitionController.AddEventToReturnBtn(() => Signals.StopPlayAudioEvent.Invoke());
             }
             else
             {
                 transitionController.ActivatePanel(patientSelector);
-                transitionController.AddEventToReturnBtn(() => hintControl.StopAudio());
+                transitionController.AddEventToReturnBtn(() => Signals.StopPlayAudioEvent.Invoke());
             }
         });
         if (selectSignInBtn != null) selectSignInBtn.onClick.AddListener(() => OpenAuthPanel(AuthType.SignIn));
@@ -116,6 +113,7 @@ public class LoginUIControl : MonoBehaviour
         {
             transitionController.SwitchBackBtnRender(true);
             transitionController.ActivatePanel(createPatientPanel);
+            Signals.OpenCreatePatientPanelEvent.Invoke();
             transitionController.AddEventToReturnBtn(() => transitionController.SwitchBackBtnRender(false));
         });
         if (openLoadPatientPanelBtn != null) openLoadPatientPanelBtn.onClick.AddListener(() =>
@@ -147,12 +145,12 @@ public class LoginUIControl : MonoBehaviour
             case AuthType.SignIn:
                 signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.EnterRoutine()));
                 btnText.text = "войти";
-                hintAction = () => hintControl.PlaySignInHint();
+                hintAction = () => Signals.SignInEvent.Invoke();
                 break;
             case AuthType.SignUp:
                 signBtn.onClick.AddListener(() => StartCoroutine(loginMenuControl.RegistryRoutine()));
                 btnText.text = "регистрация";
-                hintAction = () => hintControl.PlaySingUpHint();
+                hintAction = () => Signals.SignUpEvent.Invoke();
                 break;
             default:
                 break;
@@ -162,7 +160,7 @@ public class LoginUIControl : MonoBehaviour
         hintAction();
         transitionController.AddEventToReturnBtn(() =>
         {
-            hintControl.StopAudio();
+            Signals.StopPlayAudioEvent.Invoke();
             transitionController.SwitchBackBtnRender(false);
         });
     }

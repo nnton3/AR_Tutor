@@ -4,12 +4,15 @@ using UnityEngine.UI;
 public class ButtonsMenuControl : MonoBehaviour
 {
     [SerializeField] private Sprite defaultImg, selectedImg;
-    [SerializeField] private Button oneRepetitionBtn, twoRepetitionBtn, threeRepetitionBtn;
+    [SerializeField] private Button oneRepetitionBtn, twoRepetitionBtn, threeRepetitionBtn, returnToMainMenuBtn;
+    [SerializeField] private GameObject selectPanel, gamePanel, startGameBtn;
     private ButtonsGameLogic gameLogic;
+    private ButtonsSelector selector;
 
     private void Awake()
     {
         gameLogic = FindObjectOfType<ButtonsGameLogic>();
+        selector = FindObjectOfType<ButtonsSelector>();
         LoadCurrentMode();
 
         oneRepetitionBtn.onClick.AddListener(() =>
@@ -27,6 +30,8 @@ public class ButtonsMenuControl : MonoBehaviour
             SaveMode(3);
             ConfigurateModeSelector(3);
         });
+
+        returnToMainMenuBtn.onClick.AddListener(ResetGame);
     }
 
     private void SaveMode(int mode)
@@ -75,6 +80,15 @@ public class ButtonsMenuControl : MonoBehaviour
             twoRepetitionBtn.GetComponent<Image>().sprite = defaultImg;
             threeRepetitionBtn.GetComponent<Image>().sprite = selectedImg;
         }
+    }
+
+    private void ResetGame()
+    {
+        gameLogic.Reset();
+        selector.Reset();
+        selectPanel.SetActive(false);
+        gamePanel.SetActive(false);
+        startGameBtn.SetActive(false);
     }
 
     #region Legacy
