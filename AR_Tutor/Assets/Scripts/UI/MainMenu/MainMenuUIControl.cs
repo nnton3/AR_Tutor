@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ public class MainMenuUIControl : MonoBehaviour
 {
     #region Variables
     [SerializeField] private GameObject gameSelector;
-    [SerializeField] private Button returnBtn, settingsBtn;
+    [SerializeField] private Button exitBtn, settingsBtn, siteBtn, returnToPlayBtn;
     [SerializeField] private Button[] gamesBtns = new Button[] { };
     [SerializeField] private GameObject[] defaultGamePanels = new GameObject[] { };
     [SerializeField] private GameObject[] settingsGamePanels = new GameObject[] { };
@@ -37,63 +38,79 @@ public class MainMenuUIControl : MonoBehaviour
     {
         for (int i = 0; i < gamesBtns.Length; i++)
         {
-            var btn = gamesBtns[i];
-            var panel = defaultGamePanels[i];
-            var panel_settings = settingsGamePanels[i];
-            var returnBtn = returnBtns[i];
             var index = i;
+            var btn = gamesBtns[index];
+            var panel = defaultGamePanels[index];
+            var panel_settings = settingsGamePanels[index];
+            var returnBtn = returnBtns[index];
 
             btn.onClick.AddListener(() =>
             {
-                settingsBtn.gameObject.SetActive(false);
-
-                if (Mode == MenuMode.Play)
-                    panel.SetActive(true);
-                else
-                    panel_settings.SetActive(true);
+                if (Mode == MenuMode.Play) panel.SetActive(true);
+                else panel_settings.SetActive(true);
 
                 switch (index)
                 {
                     case 0:
-                        if (Mode == MenuMode.Play)
-                            Signals.StartVariantEvent.Invoke();
+                        if (Mode == MenuMode.Play) Signals.StartVariantEvent.Invoke();
+                        else Signals.VarianCategorySetting.Invoke();
                         break;
                     case 1:
-                        if (Mode == MenuMode.Play)
-                            Signals.StartButtonsEvent.Invoke();
+                        if (Mode == MenuMode.Play) Signals.StartButtonsEvent.Invoke();
+                        else Signals.ButtonsModeSelect.Invoke();
                         break;
                     case 2:
-                        if (Mode == MenuMode.Play)
-                            Signals.StartWordComposingEvent.Invoke();
+                        if (Mode == MenuMode.Play) Signals.StartWordComposingEvent.Invoke();
+                        else Signals.WordcomposingCategorySetting.Invoke();
                         break;
                     case 3:
-                        if (Mode == MenuMode.Play)
-                            Signals.StartWordbookEvent.Invoke();
+                        if (Mode == MenuMode.Play) Signals.StartWordbookEvent.Invoke();
+                        else Signals.WordbookSetting.Invoke();
                         break;
                     default:
                         break;
                 }
 
-                if (returnBtn != null)
-                {
-                    returnBtn.SetActive(true);
-                    returnBtn.GetComponent<Button>().onClick.AddListener(() =>
-                    {
-                        gameSelector.SetActive(true);
-                        settingsBtn.gameObject.SetActive(true);
-                    });
-                }
+                BindReturnBtn(returnBtn);
+
                 gameSelector.SetActive(false);
             });
         }
 
-        settingsBtn.onClick.AddListener(() => SwitchMode());
+        settingsBtn.onClick.AddListener(SwitchToCustomizeMode);
+        returnToPlayBtn.onClick.AddListener(SwitchToPlayMode);
+        siteBtn.onClick.AddListener(OpenSite);
+        exitBtn.onClick.AddListener(ExitToLoginScene);
     }
 
-    private void SwitchMode()
+    private void BindReturnBtn(GameObject returnBtn)
     {
-        if (Mode == MenuMode.CustomizeMenu) Mode = MenuMode.Play;
-        else Mode = MenuMode.CustomizeMenu;
+        returnBtn.SetActive(true);
+        returnBtn.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Signals.ReturnToMainMenuEvent.Invoke();
+            gameSelector.SetActive(true);
+        });
+    }
+
+    private void SwitchToPlayMode()
+    {
+        Mode = MenuMode.Play;
+        siteBtn.gameObject.SetActive(true);
+        exitBtn.gameObject.SetActive(true);
+        settingsBtn.gameObject.SetActive(true);
+        returnToPlayBtn.gameObject.SetActive(false);
+
+        SwitchEditableElemets();
+    }
+
+    private void SwitchToCustomizeMode()
+    {
+        Mode = MenuMode.CustomizeMenu;
+        siteBtn.gameObject.SetActive(false);
+        exitBtn.gameObject.SetActive(false);
+        settingsBtn.gameObject.SetActive(false);
+        returnToPlayBtn.gameObject.SetActive(true);
 
         SwitchEditableElemets();
     }
@@ -119,6 +136,24 @@ public class MainMenuUIControl : MonoBehaviour
     public void DeleteEditableElement(IEditableElement element)
     {
         editableElements.Remove(element);
+    }
+
+    private void OpenSite()
+    {
+        Application.OpenURL("https://artutor.ru/");
+    }
+
+    private void ExitToLoginScene()
+    {
+        StartCoroutine(LoadLoginSceneRoutine());
+    }
+
+    private IEnumerator LoadLoginSceneRoutine()
+    {
+        Signals.ShowLoadScreen.Invoke();
+        exitBtn.GetComponent<Animator>().SetTrigger("press");
+        yield return new WaitForSeconds(2f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }
 

@@ -53,7 +53,7 @@ public class VariantCardSelector : MonoBehaviour, IManageCards
         UnselectAll();
         cardPanel.SetActive(false);
         gamePanel.SetActive(true);
-        Signals.VariabntGameEvent.Invoke();
+        Signals.VariantGameEvent.Invoke();
     }
 
     private bool DataIsValid()

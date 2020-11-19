@@ -5,7 +5,7 @@ public class ButtonsMenuControl : MonoBehaviour
 {
     [SerializeField] private Sprite defaultImg, selectedImg;
     [SerializeField] private Button oneRepetitionBtn, twoRepetitionBtn, threeRepetitionBtn, returnToMainMenuBtn;
-    [SerializeField] private GameObject selectPanel, gamePanel, startGameBtn;
+    [SerializeField] private GameObject selectPanel, gamePanel, startGameBtn, modeSelector;
     private ButtonsGameLogic gameLogic;
     private ButtonsSelector selector;
 
@@ -19,16 +19,19 @@ public class ButtonsMenuControl : MonoBehaviour
         {
             SaveMode(1);
             ConfigurateModeSelector(1);
+            gameLogic.SetRepetitionsNumber(1);
         });
         twoRepetitionBtn.onClick.AddListener(() =>
         {
             SaveMode(2);
             ConfigurateModeSelector(2);
+            gameLogic.SetRepetitionsNumber(2);
         });
         threeRepetitionBtn.onClick.AddListener(() => 
         {
             SaveMode(3);
             ConfigurateModeSelector(3);
+            gameLogic.SetRepetitionsNumber(3);
         });
 
         returnToMainMenuBtn.onClick.AddListener(ResetGame);
@@ -89,6 +92,9 @@ public class ButtonsMenuControl : MonoBehaviour
         selectPanel.SetActive(false);
         gamePanel.SetActive(false);
         startGameBtn.SetActive(false);
+        modeSelector.SetActive(false);
+        returnToMainMenuBtn.gameObject.SetActive(false);
+        Signals.StopPlayAudioEvent.Invoke();
     }
 
     #region Legacy

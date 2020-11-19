@@ -21,9 +21,12 @@ public class SelectBtnControl : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (WordComposingMenuControl.ClauseComplete) return;
-        if (category.CategoryKey != "default_3_category34" || category.CategoryKey != "default_3_category37")
-            StartCoroutine(SingleClickRoutine());
+        if (MainMenuUIControl.Mode == MenuMode.Play)
+        {
+            if (WordComposingMenuControl.ClauseComplete) return;
+            if (category.CategoryKey != "default_3_category34" || category.CategoryKey != "default_3_category37")
+                StartCoroutine(SingleClickRoutine());
+        }
 
         if (eventData.clickCount == 2)
         {

@@ -29,7 +29,7 @@ public class PatientSelectorControl : MonoBehaviour
         card.GetComponent<PatientCard>().Initialize(data);
         card.GetComponent<Button>().onClick.AddListener(() =>
         {
-            startGamePanelControl.Initialize(_identifier, data.PatientName, data.img);
+            startGamePanelControl.Initialize(data, _identifier);
             startGamePanel.SetActive(true);
         });
         card.transform.SetAsFirstSibling();

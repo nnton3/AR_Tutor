@@ -22,7 +22,7 @@ public class WordBookContent : MonoBehaviour
         audioBtn.onClick.AddListener(PlayAnimalsAudio);
     }
 
-    private void PlayAudio()
+    public void PlayAudio()
     {
         if (clip == null) return;
         Signals.PlayAudioClipEvent.Invoke(clip);

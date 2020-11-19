@@ -89,8 +89,10 @@ public class VariantGameMenu : GameMenu
                 variantSelector.SetTargetPanel(panel);
                 categorySelector.SetActive(false);
                 startGameBtn.gameObject.SetActive(true);
+                Signals.VariantCardsSelectEvent.Invoke();
             }
-            Signals.VariantCardsSelectEvent.Invoke();
+            else
+                Signals.VarianCardSetting.Invoke();
         });
     }
 
@@ -104,7 +106,6 @@ public class VariantGameMenu : GameMenu
             startGameBtn.gameObject.SetActive(false);
             categoryPanel.SetActive(false);
             categorySelector.SetActive(true);
-            variantSelector.UnselectAll();
         });
     }
 
@@ -118,5 +119,12 @@ public class VariantGameMenu : GameMenu
 
         foreach (var panel in CategoriesPanels)
             panel.SetActive(false);
+
+        Signals.StopPlayAudioEvent.Invoke();
+    }
+
+    protected override void InitializePanel(GameObject _panel)
+    {
+        mainMenu.AddEditableElement(_panel.GetComponent<IEditableElement>());
     }
 }

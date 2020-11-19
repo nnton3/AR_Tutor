@@ -80,4 +80,9 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
         image.sprite = _img;
         Debug.Log("Update card image");
     }
+
+    public string GetTitle()
+    {
+        return title.text;
+    }
 }

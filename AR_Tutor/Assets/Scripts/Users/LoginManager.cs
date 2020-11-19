@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UniRx;
 using System.Text.RegularExpressions;
 using System;
 using System.Globalization;
@@ -193,8 +192,6 @@ public class LoginManager : MonoBehaviour
 
     public void SelectPatient(string _patinetLogin)
     {
-        Debug.Log(_patinetLogin);
-        Debug.Log("in load method");
         var selectPatientData = FindObjectOfType<SelectedPatient>();
         if (selectPatientData == null)
         {
@@ -203,13 +200,20 @@ public class LoginManager : MonoBehaviour
         }
         selectPatientData.SetUserLogin(email);
         selectPatientData.SetSelectedPatientLogin(_patinetLogin);
+        StartCoroutine(StartGameSceneRoutine());
+    }
+
+    private IEnumerator StartGameSceneRoutine()
+    {
+        yield return new WaitForSeconds(2f);
+        Signals.ShowLoadScreen.Invoke();
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
     private bool PatientDataIsValid(PatientData _data)
     {
         if (string.IsNullOrEmpty(_data.PatientName)) return false;
-        if (string.IsNullOrEmpty(_data.PatientAge)) return false;
+        if (string.IsNullOrEmpty(_data.PatientGender)) return false;
 
         return true;
     }

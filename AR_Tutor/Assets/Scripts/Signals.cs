@@ -16,6 +16,7 @@ public class AddWordEvent : UnityEvent<string, Sprite, AudioClip> { }
 public static class Signals
 {
     public static StringEvent ShowNotification = new StringEvent();
+    public static UnityEvent ShowLoadScreen = new UnityEvent();
     public static AudioEvent PlayAudioClipEvent = new AudioEvent();
     public static AudioEvent ForcePlayAudioEvent = new AudioEvent();
     public static MultipleAudioEvent PlayTwoAudioEvent = new MultipleAudioEvent();
@@ -35,17 +36,31 @@ public static class Signals
 
     #region Main scene events
     public static UnityEvent StartMainSceneEvent = new UnityEvent();
+    public static UnityEvent ReturnToMainMenuEvent = new UnityEvent();
     public static UnityEvent StartVariantEvent = new UnityEvent();
     public static UnityEvent VariantCategoriesSelectEvent = new UnityEvent();
     public static UnityEvent VariantCardsSelectEvent = new UnityEvent();
-    public static UnityEvent VariabntGameEvent = new UnityEvent();
+    public static UnityEvent VariantGameEvent = new UnityEvent();
+    public static UnityEvent VarianCategorySetting = new UnityEvent();
+    public static UnityEvent VarianCardSetting = new UnityEvent();
     public static UnityEvent StartButtonsEvent = new UnityEvent();
     public static UnityEvent StartButtonsGameEvent = new UnityEvent();
+    public static UnityEvent ButtonsModeSelect = new UnityEvent();
     public static UnityEvent StartWordComposingEvent = new UnityEvent();
     public static UnityEvent WordComposingCategoriesSelectEvent = new UnityEvent();
     public static UnityEvent WordComposingCardSelectEvent = new UnityEvent();
+    public static UnityEvent WordcomposingCategorySetting = new UnityEvent();
+    public static UnityEvent WordcomposingCardSetting = new UnityEvent();
     public static UnityEvent StartWordbookEvent = new UnityEvent();
     public static UnityEvent WordbookShowContentEvent = new UnityEvent();
+    public static UnityEvent WordbookSetting = new UnityEvent();
+
+    public static UnityEvent SelectCreateMethodCategory = new UnityEvent();
+    public static UnityEvent OpenCreateCategoryEvent = new UnityEvent();
+    public static UnityEvent OpenCategoryLibraryEvent = new UnityEvent();
+    public static UnityEvent SelectCreateMethodCard = new UnityEvent();
+    public static UnityEvent OpenCreateCardEvent = new UnityEvent();
+    public static UnityEvent OpenCardLibraryEvent = new UnityEvent();
     #endregion
 
     #region Customization

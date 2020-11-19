@@ -118,11 +118,15 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
         {
             panelSizeControl.ConfigurateForPlay(Cards[0], Cards[1], Cards[2], CategoriesPanels);
             reseter.SetMode(GameMode);
+            wordComposingSelector.ShowPlayClauseBtn();
+            resetBtn.gameObject.SetActive(true);
         }
         else
         {
             panelSizeControl.ConfigurateForCustomize(Cards[0], Cards[1], Cards[2], CategoriesPanels);
             reseter.SetMode(ClauseType.OneWord);
+            wordComposingSelector.HidePlayClauseBtn();
+            resetBtn.gameObject.SetActive(false);
         }
     }
 
@@ -184,6 +188,8 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
             Signals.ResetWordComposingMenu.Invoke();
             ClauseComplete = false;
             playPanel.SetActive(false);
+            returnToMenuBtn.gameObject.SetActive(false);
+            Signals.StopPlayAudioEvent.Invoke();
         });
         resetBtn.onClick.AddListener(() =>
         {
@@ -205,6 +211,9 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                 panel.SetActive(true);
                 Signals.WordComposingCardSelectEvent.Invoke();
             }
+
+            if (MainMenuUIControl.Mode == MenuMode.CustomizeMenu)
+                Signals.WordcomposingCardSetting.Invoke();
         });
     }
 

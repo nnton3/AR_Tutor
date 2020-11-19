@@ -98,6 +98,7 @@ public class GameMenu : MonoBehaviour
         InitializeEditableElement(obj, data.visible);
         BindCategoryBtn(CategoryCards.Count - 1);
         CalculateCategoryPanelRect();
+        InitializePanel(categoryPanel);
 
         ConfigurateCards(data, categoryPanel, _categoryKey);
     }
@@ -204,6 +205,8 @@ public class GameMenu : MonoBehaviour
     protected virtual void BindCategoryBtn(int _categoryIndex) { }
 
     #region Helpful
+    protected virtual void InitializePanel(GameObject _panel) { }
+
     protected bool IsCategoryForThisGame(string _categoryKey)
     {
         if (!categoryStorage.HasCategory(gameName, _categoryKey)) return false;

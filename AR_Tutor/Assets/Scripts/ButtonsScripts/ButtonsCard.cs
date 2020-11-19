@@ -6,6 +6,7 @@ public class ButtonsCard : MonoBehaviour
     [SerializeField] private Image img;
     [SerializeField] private Color ButtonColor;
     [SerializeField] private Animator targetEffect;
+    [SerializeField] private AudioClip clip;
     private Button selectBtn;
     private Color defaultClr = Color.white;
     private Color selectedClr = Color.grey;
@@ -28,8 +29,8 @@ public class ButtonsCard : MonoBehaviour
     }
 
     public Color GetColor() { return ButtonColor; }
-
     public Animator GetEffect() { return targetEffect; }
+    public AudioClip GetClip() { return clip; }
 
     private void Select()
     {

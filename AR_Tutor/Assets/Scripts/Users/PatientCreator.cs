@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,19 +8,15 @@ public class PatientCreator : MonoBehaviour
     #region Variables
     private UserSaveSystem saveSystem;
     private MenuTransitionController transitionController;
-    [SerializeField]
-    private Button
-        createBtn,
-        addImgBtn;
-    [SerializeField]
-    private InputField
-        patientNameField,
-        patientAgeField,
-        patientLoginField;
-    [SerializeField] private Image img;
+    private bool recording;
+    private AudioClip clip, clipTmp;
+    private string patientName, patientLogin, patientGender;
+    [SerializeField] private GameObject patientPhoto;
+    [SerializeField] private Button createBtn, addImgBtn, selectGirl, selectBoy, recordBtn, playAudioBtn;
+    [SerializeField] private InputField patientNameField, patientLoginField;
+    [SerializeField] private Image img, recImg;
     [SerializeField] private Texture2D imgData;
-    [SerializeField] private string patientName, patientAge, patientLogin;
-    [SerializeField] private Sprite defaultSprite;
+    [SerializeField] private Sprite defaultPatientBoySprite, defaultPatientGirlSprite, startRecordSprite, endRecordSprite, addImageDefaultSprite;
     #endregion
 
     private void Awake()
@@ -28,7 +25,11 @@ public class PatientCreator : MonoBehaviour
         transitionController = FindObjectOfType<MenuTransitionController>();
 
         BinFields();
+        BindBtn();
+    }
 
+    private void BindBtn()
+    {
         createBtn.onClick.AddListener(() =>
         {
             if (PatientDataIsValid())
@@ -38,6 +39,23 @@ public class PatientCreator : MonoBehaviour
             }
         });
         addImgBtn.onClick.AddListener(() => PickImage(img));
+        selectGirl.onClick.AddListener(() =>
+        {
+            SetGender("girl");
+            selectGirl.GetComponent<Image>().color = Color.grey;
+            selectBoy.GetComponent<Image>().color = Color.white;
+        });
+        selectBoy.onClick.AddListener(() =>
+        {
+            SetGender("boy");
+            selectBoy.GetComponent<Image>().color = Color.grey;
+            selectGirl.GetComponent<Image>().color = Color.white;
+        });
+        recordBtn.onClick.AddListener(RecordBtnOnClick);
+        playAudioBtn.onClick.AddListener(() =>
+        {
+            if (!recording) Signals.ForcePlayAudioEvent.Invoke(clip);
+        });
     }
 
     private bool PatientDataIsValid()
@@ -47,19 +65,9 @@ public class PatientCreator : MonoBehaviour
             Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод имени");
             return false;
         }
-        if (string.IsNullOrEmpty(patientAge))
+        if (patientGender != "girl" && patientGender != "boy")
         {
-            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
-            return false;
-        }
-        if (!int.TryParse(patientAge, out int num))
-        {
-            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
-            return false;
-        }
-        if (patientAge.Length > 4)
-        {
-            Signals.ShowNotification.Invoke("Ошибка! Некорректный ввод возраста");
+            Signals.ShowNotification.Invoke("Ошибка! Выберите пол");
             return false;
         }
         if (!Regex.IsMatch(patientLogin, @"[0-9a-zA-Z]{6}"))
@@ -74,13 +82,13 @@ public class PatientCreator : MonoBehaviour
     private void BinFields()
     {
         patientNameField.onValueChanged.AddListener((value) => patientName = value);
-        patientAgeField.onValueChanged.AddListener((value) => patientAge = value);
         patientLoginField.onValueChanged.AddListener((value) => patientLogin = value);
     }
 
     private void CreatePatient()
     {
         var imageKey = $"{patientLogin}image";
+        var clipKey = $"{patientLogin}clipName";
 
         Sprite sprite = null;
         if (imgData != null)
@@ -89,14 +97,21 @@ public class PatientCreator : MonoBehaviour
             var rect = new Rect(0, 0, size, size);
             sprite = Sprite.Create(imgData, rect, Vector2.zero);
         }
+        else
+        {
+            if (patientGender == "boy") sprite = defaultPatientBoySprite;
+            else sprite = defaultPatientGirlSprite;
+
+            imageKey = null;
+        }
 
         var patientData = new PatientData(
             patientName,
-            patientAge, 
+            patientGender, 
             sprite);
 
         Signals.AddPatientEvent.Invoke(patientData, patientLogin);
-        saveSystem.SavePatientsFromLocal(patientLogin, patientData, imageKey);
+        saveSystem.SavePatientsFromLocal(patientLogin, patientData, imageKey, clipKey);
         Reset();
     }
 
@@ -114,15 +129,54 @@ public class PatientCreator : MonoBehaviour
                 _targetImg.sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
 
                 imgData = texture;
+                patientPhoto.SetActive(true);
             }
         });
     }
 
+    public void SetGender(string _gender)
+    {
+        patientGender = _gender;
+    }
+
+    #region Audio
+    private void RecordBtnOnClick()
+    {
+        if (recording)
+        {
+            StopAllCoroutines();
+            WriteAudioClip();
+        }
+        else StartCoroutine(RecordClipRoutine());
+    }
+
+    private IEnumerator RecordClipRoutine()
+    {
+        Debug.Log("Start record");
+        recording = true;
+        recImg.sprite = endRecordSprite;
+        clipTmp = Microphone.Start(null, true, 3, 44100);
+        yield return new WaitForSeconds(3f);
+        WriteAudioClip();
+    }
+
+    private void WriteAudioClip()
+    {
+        Microphone.End(null);
+        recording = false;
+
+        clip = clipTmp;
+        recImg.sprite = startRecordSprite;
+        Debug.Log("End record");
+    }
+    #endregion
+
     private void Reset()
     {
         patientNameField.text = "";
-        patientAgeField.text = "";
         patientLoginField.text = "";
-        img.sprite = defaultSprite;
+        selectGirl.GetComponent<Image>().color = Color.white;
+        selectBoy.GetComponent<Image>().color = Color.white;
+        patientPhoto.SetActive(false);
     }
 }

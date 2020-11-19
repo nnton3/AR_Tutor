@@ -27,13 +27,15 @@ public class WordComposingSelector : MonoBehaviour, IManageCards
         var obj = Instantiate(clauseCardPref, clausePanel.transform);
         var data = cardStorage.cards[key];
         var initializer = obj.GetComponent<CardBase>();
-        initializer.Initialize(GameName.WordComposing, null, null, data);
+        initializer.Initialize(GameName.WordComposing, key, null, data);
         obj.GetComponent<EditableElement>().ConfigurateElement(MenuMode.Play);
         cardsInClause.Add(initializer);
     }
 
     private void AddCardInClause(string _title, Sprite _sprite, AudioClip _clip)
     {
+        if (cardsInClause.Find((card) => card.GetTitle() == _title)) return;
+
         var obj = Instantiate(clauseCardPref, clausePanel.transform);
 
         var data = new CardData(
@@ -74,6 +76,16 @@ public class WordComposingSelector : MonoBehaviour, IManageCards
         int count = cardsInClause.Count;
         for (int i = 0; i < count; i++)
             RemoveCardFromClause();
+    }
+
+    public void HidePlayClauseBtn()
+    {
+        playClauseBtn.gameObject.SetActive(false);
+    }
+
+    public void ShowPlayClauseBtn()
+    {
+        playClauseBtn.gameObject.SetActive(true);
     }
 
     public void AddCard(GameObject _card) { }
