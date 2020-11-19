@@ -53,6 +53,7 @@ public class WordBookMenuControl : GameMenu
             mainPanel.SetActive(false);
             animalsBtn.SetActive(false);
             returnToMenuBtn.gameObject.SetActive(false);
+            Signals.StopPlayAudioEvent.Invoke();
         });
     }
 

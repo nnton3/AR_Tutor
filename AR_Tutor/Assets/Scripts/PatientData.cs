@@ -6,14 +6,16 @@ using UnityEngine;
 public struct PatientData
 {
     public string PatientName;
-    public string PatientAge;
+    public string PatientGender;
     public Sprite img;
+    public AudioClip nameClip;
 
-    public PatientData(string _patientName, string _patientAge, Sprite _img = null)
+    public PatientData(string _patientName, string _patientGender, Sprite _img = null, AudioClip _nameClip = null)
     {
         PatientName = _patientName;
-        PatientAge = _patientAge;
+        PatientGender = _patientGender;
         img = _img;
+        nameClip = _nameClip;
     }
 }
 
@@ -21,14 +23,16 @@ public struct PatientData
 public struct PatientSaveData
 {
     public string PatientName;
-    public string PatientAge;
+    public string PatientGender;
     public string imgAddress;
+    public string clipAddress;
 
-    public PatientSaveData(string _patientName, string _patientAge, string _imgAddress)
+    public PatientSaveData(string _patientName, string _patientGender, string _imgAddress, string _clipAddress)
     {
         PatientName = _patientName;
-        PatientAge = _patientAge;
+        PatientGender = _patientGender;
         imgAddress = _imgAddress;
+        clipAddress = _clipAddress;
     }
 }
 

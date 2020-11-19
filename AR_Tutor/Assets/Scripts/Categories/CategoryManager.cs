@@ -127,17 +127,29 @@ public class CategoryManager : MonoBehaviour
     private void OpenCreatePanel()
     {
         if (currentAddedObj == AddedObj.Category)
+        {
             OpenCreateCategoryPanel();
+            Signals.OpenCreateCategoryEvent.Invoke();
+        }
         else
+        {
             OpenCreateCardPanel();
+            Signals.OpenCreateCardEvent.Invoke();
+        }
     }
 
     private void OpenLibrary()
     {
         if (currentAddedObj == AddedObj.Card)
+        {
             OpenCardLibrary();
+            Signals.OpenCardLibraryEvent.Invoke();
+        }
         else
+        {
             OpenCategoryLibrary();
+            Signals.OpenCategoryLibraryEvent.Invoke();
+        }
     }
 
     #region Add category in game
@@ -150,6 +162,7 @@ public class CategoryManager : MonoBehaviour
         categoryLibraryControl.FillLibrary(_game);
         transitionController.ActivatePanel(categoryMethodSelectorPanel);
         StartSelectMethodRoutine();
+        Signals.SelectCreateMethodCategory.Invoke();
     }
 
     private void OpenCategoryLibrary()
@@ -212,6 +225,7 @@ public class CategoryManager : MonoBehaviour
         currentAddedObj = AddedObj.Card;
         transitionController.ActivatePanel(cardMethodSelectorPanel);
         StartSelectMethodRoutine();
+        Signals.SelectCreateMethodCard.Invoke();
     }
 
     private void OpenCardLibrary()

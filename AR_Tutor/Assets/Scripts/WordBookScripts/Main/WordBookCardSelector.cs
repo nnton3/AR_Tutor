@@ -55,6 +55,7 @@ public class WordBookCardSelector : MonoBehaviour, IManageCards
     {
         currentCard = _cardKey;
         content.Initialize(cardStorage.cards[_cardKey]);
+        content.PlayAudio();
         contentPanel.SetActive(true);
         lastCardsPanel.SetActive(false);
         Signals.WordbookShowContentEvent.Invoke();

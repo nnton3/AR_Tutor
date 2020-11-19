@@ -9,38 +9,50 @@ public class WordComposingPanelSizeControl : MonoBehaviour
     [SerializeField] private RectTransform categorySelectorRect;
     [SerializeField] private GameObject firstRankParent, secondRankCardParent, categoryParent;
 
-    public void ConfigurateForPlay(GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2, List<GameObject> _categoryPanels)
+    public void ConfigurateForPlay(
+        GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2,
+        List<GameObject> _categoryPanels)
     {
         backImg.sprite = backForPlay;
-        SetAnchorsForPlay();
+        SetAnchorsForPlay(categorySelectorRect);
+
+        foreach (var category in _categoryPanels)
+            SetAnchorsForPlay(category.GetComponent<RectTransform>());
+
         SetParenForPlay(firstRankCard, secondRankCard1, secondRankCard2);
     }
 
-    public void ConfigurateForCustomize(GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2, List<GameObject> _categoryPanels)
+    public void ConfigurateForCustomize(
+        GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2, 
+        List<GameObject> _categoryPanels)
     {
         backImg.sprite = backForCustomize;
-        SetAnchorsForCustomize();
+        SetAnchorsForCustomize(categorySelectorRect);
+
+        foreach (var category in _categoryPanels)
+            SetAnchorsForCustomize(category.GetComponent<RectTransform>());
+
         SetParentForCustomize(firstRankCard, secondRankCard1, secondRankCard2);
     }
 
-    private void SetAnchorsForCustomize()
+    private void SetAnchorsForCustomize(RectTransform _transform)
     {
-        var anchorValue = categorySelectorRect.anchorMin;
+        var anchorValue = _transform.anchorMin;
         anchorValue.y = 0.02941176f;
-        categorySelectorRect.anchorMin = anchorValue;
-        anchorValue = categorySelectorRect.anchorMax;
+        _transform.anchorMin = anchorValue;
+        anchorValue = _transform.anchorMax;
         anchorValue.y = 0.9852941f;
-        categorySelectorRect.anchorMax = anchorValue;
+        _transform.anchorMax = anchorValue;
     }
 
-    private void SetAnchorsForPlay()
+    private void SetAnchorsForPlay(RectTransform _transform)
     {
-        var anchorValue = categorySelectorRect.anchorMin;
+        var anchorValue = _transform.anchorMin;
         anchorValue.y = 0.3675882f;
-        categorySelectorRect.anchorMin = anchorValue;
-        anchorValue = categorySelectorRect.anchorMax;
+        _transform.anchorMin = anchorValue;
+        anchorValue = _transform.anchorMax;
         anchorValue.y = 0.9852941f;
-        categorySelectorRect.anchorMax = anchorValue;
+        _transform.anchorMax = anchorValue;
     }
 
     private void SetParenForPlay(GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2)

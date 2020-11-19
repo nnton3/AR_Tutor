@@ -26,12 +26,14 @@ public class ButtonsGameLogic : MonoBehaviour
         {
             leftBtn.GetComponent<Animator>().SetTrigger("press");
             _cards[0].GetEffect().gameObject.SetActive(true);
+            Signals.PlayAudioClipEvent.Invoke(_cards[0].GetClip());
         });
         rightBtn.onClick.AddListener(() =>
         {
             currentRepetitions++;
             rightBtn.GetComponent<Animator>().SetTrigger("press");
             _cards[1].GetEffect().gameObject.SetActive(true);
+            Signals.PlayAudioClipEvent.Invoke(_cards[1].GetClip());
             if (currentRepetitions == maxRepetititions) leftBtn.gameObject.SetActive(true);
         });
     }
