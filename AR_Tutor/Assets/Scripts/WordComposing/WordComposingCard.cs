@@ -1,4 +1,6 @@
 ﻿
+using UnityEngine;
+
 public class WordComposingCard : CardBase
 {
     public bool FirstRankCard { get; private set; } = false;
@@ -28,6 +30,12 @@ public class WordComposingCard : CardBase
         {
             FirstRankCard = true;
             SecondRankCard = false;
+            var texture = FindObjectOfType<SaveSystem>().LoadImage($"{FindObjectOfType<PatientDataManager>().GetPatientLogin()}clipName");
+            if (texture != null)
+            {
+                var size = (texture.width > texture.height) ? texture.height : texture.width;
+                image.sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
+            }
         }
         else if (_rank == 2)
         {

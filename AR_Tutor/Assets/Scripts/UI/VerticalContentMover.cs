@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class VerticalContentMover : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private Button downBtn, upBtn;
+    [SerializeField] private Button upBtn, downBtn;
     [SerializeField] private RectTransform contentPanel;
     [SerializeField] private iTween.EaseType easyType;
-    [SerializeField] private float visibleAreaWidth;
+    [SerializeField] private float visibleAreaHeight;
     [SerializeField] private float time = 1f;
     [SerializeField] private float minPos = -275f;
     [SerializeField] private float maxPos = -10f;
@@ -24,27 +24,31 @@ public class VerticalContentMover : MonoBehaviour
         currentPos = contentPanel.anchoredPosition.y;
         CalculateMinPos();
 
-        if (upBtn != null) upBtn.onClick.AddListener(MoveUp);
         if (downBtn != null) downBtn.onClick.AddListener(MoveDown);
+        if (upBtn != null) upBtn.onClick.AddListener(MoveUp);
+    }
+
+    public void UpdateMoveStep(float _value)
+    {
+        moveStep = _value;
+        visibleAreaHeight = _value;
+        CalculateMinPos();
     }
 
     public void CalculateMinPos()
     {
         var contentSize = contentPanel.sizeDelta.y * contentPanel.localScale.y;
-        minPos = contentSize - visibleAreaWidth - 10f;
-
-        if (contentPanel.anchoredPosition.y >= minPos || contentPanel.anchoredPosition.y <= maxPos)
-            currentPos = contentPanel.anchoredPosition.y;
+        minPos = contentSize - visibleAreaHeight - 10f;
     }
 
     #region Vertical
-    private void MoveUp()
+    public void MoveUp()
     {
         if (!canMove) return;
         StartCoroutine(MoveUpRoutine());
     }
 
-    private void MoveDown()
+    public void MoveDown()
     {
         if (!canMove) return;
         StartCoroutine(MoveDownRoutine());

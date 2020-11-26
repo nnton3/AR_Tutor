@@ -43,7 +43,10 @@ public class CategoryLibraryUIControl : MonoBehaviour
         Clearlibrary();
 
         foreach (var key in _targetCategories.Keys)
+        {
+            if (!_targetCategories[key].IsCustom) continue;
             CreateCard(_targetCategories[key], key);
+        }
     }
 
     private void CreateCard(CategoryData _data, string _categoryKey)

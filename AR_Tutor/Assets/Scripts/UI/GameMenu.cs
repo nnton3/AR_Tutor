@@ -16,9 +16,8 @@ public class GameMenu : MonoBehaviour
     protected List<CategoryInitializer> CategoryCards = new List<CategoryInitializer>();
 
     [SerializeField] protected Transform categoryParent, panelParent;
-    [SerializeField] protected GameObject categoryCardPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
+    [SerializeField] protected GameObject categoryCardPref, customCategoryPref, categoryPanelPref, addCardBtnPref, cardPref, customCardPref;
     [SerializeField] protected List<GameObject> CategoriesPanels = new List<GameObject>(), Cards = new List<GameObject>();
-    [SerializeField] protected Button returnToMenuBtn;
     #endregion
 
     public virtual void Initialize()
@@ -34,6 +33,8 @@ public class GameMenu : MonoBehaviour
 
         Signals.AddCategoryEvent.AddListener(AddNewCategory);
         Signals.AddCardEvent.AddListener(AddNewCard);
+        Signals.SwitchCategoryVisibleEvent.AddListener(SwitchCategoryVisible);
+        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
         Signals.DeleteCategoryFromGame.AddListener(DeleteCategory);
         Signals.DeleteCardFromCategory.AddListener(DeleteCard);
     }
@@ -42,7 +43,11 @@ public class GameMenu : MonoBehaviour
     protected virtual void ConfigurateCategories()
     {
         foreach (var categoryKey in patientDataManager.PatientData.CategoriesKeys)
-            AddNewCategory(categoryKey);
+        {
+            var category = AddCategoryInMenu(categoryKey);
+            if (category != null)
+                AddCategoryToEnd(category);
+        }
 
         CreateAddCategoryBtn();
     }
@@ -61,6 +66,7 @@ public class GameMenu : MonoBehaviour
                 }
 
                 GameObject cardObj = AddCardInMenu(_categoryPanel, _categoryKey, key);
+                AddCardInEnd(cardObj, _categoryPanel);
                 
                 bool visible = true;
                 if (_categoryData.cardsVisible != null)
@@ -79,13 +85,23 @@ public class GameMenu : MonoBehaviour
     #region Add content
     protected virtual void AddNewCategory(string _categoryKey)
     {
-        if (!IsCategoryForThisGame(_categoryKey)) return;
+        var category = AddCategoryInMenu(_categoryKey);
+
+        if (category != null)
+            AddCategoryToBeginning(category);
+    }
+
+    protected virtual GameObject AddCategoryInMenu(string _categoryKey)
+    {
+        if (!IsCategoryForThisGame(_categoryKey)) return null;
 
         CategoryData data = new CategoryData();
-        if (!categoryStorage.HasCategory(gameName, _categoryKey)) return;
+        if (!categoryStorage.HasCategory(gameName, _categoryKey)) return null;
         data = categoryStorage.GetData(gameName, _categoryKey);
 
-        var obj = Instantiate(categoryCardPref, categoryParent.transform);
+        var obj = (data.IsCustom) ?
+            Instantiate(customCategoryPref, categoryParent.transform) : Instantiate(categoryCardPref, categoryParent.transform);
+
         var categoryPanel = Instantiate(categoryPanelPref, panelParent);
         CategoriesPanels.Add(categoryPanel);
         categoryPanel.SetActive(false);
@@ -95,12 +111,14 @@ public class GameMenu : MonoBehaviour
         CategoryCards.Add(categoryInit);
         InitializeCategoryPanel(categoryPanel);
 
-        InitializeEditableElement(obj, data.visible);
+        InitializeEditableElement(obj, true);
         BindCategoryBtn(CategoryCards.Count - 1);
         CalculateCategoryPanelRect();
-        InitializePanel(categoryPanel);
+        InitializePanel(categoryPanel, _categoryKey);
 
         ConfigurateCards(data, categoryPanel, _categoryKey);
+
+        return obj;
     }
 
     protected virtual void InitializeCategoryPanel(GameObject categoryPanel) { }
@@ -112,10 +130,12 @@ public class GameMenu : MonoBehaviour
         var targetCard = CategoryCards.Find((categoryObj) => categoryObj.GetComponent<CategoryInitializer>().CategoryKey == _categoryKey);
         var index = CategoryCards.IndexOf(targetCard);
         GameObject cardObj = AddCardInMenu(CategoriesPanels[index], _categoryKey, _key);
+        AddCardToBeginning(cardObj, CategoriesPanels[index]);
 
         CalculateCardPanelRect(CategoriesPanels[index]);
         InitializeEditableElement(cardObj);
         cardSelector.AddCard(cardObj);
+        CategoriesPanels[index].GetComponent<ElementsManagment>()?.Initialize(_categoryKey);
     }
 
     protected virtual GameObject AddCardInMenu(GameObject _categoryPanel, string _categoryKey, string _cardKey)
@@ -134,11 +154,16 @@ public class GameMenu : MonoBehaviour
     }
     #endregion
 
+    #region Switch visible
+    protected virtual void SwitchCategoryVisible(string _categoryKey, bool _isVisible) { }
+    protected virtual void SwitchCardVisible(string _categoryKey, string _cardKey, bool _isVisible) { }
+    #endregion
+
     #region Delete content
-    public void DeleteCategory(string _categoryKey)
+    public virtual void DeleteCategory(string _categoryKey)
     {
         if (!IsCategoryForThisGame(_categoryKey)) return;
-
+        
         var target = CategoryCards.Find((category) => category.CategoryKey == _categoryKey);
         if (target != null)
         {
@@ -180,17 +205,17 @@ public class GameMenu : MonoBehaviour
     #endregion
 
     #region Add btn
-    protected void CreateAddCardBtn(GameObject _categoryPanel, string _categoryKey)
+    protected virtual void CreateAddCardBtn(GameObject _categoryPanel, string _categoryKey)
     {
         CreateAddBtn(_categoryPanel.transform.Find("Mask/Content"), () => categoryManager.SelectAddMethod(GameName.Variant, _categoryKey), _categoryKey);
     }
 
-    protected void CreateAddCategoryBtn()
+    protected virtual void CreateAddCategoryBtn()
     {
         CreateAddBtn(categoryParent, () => categoryManager.SelectAddMethod(GameName.Variant));
     }
 
-    protected void CreateAddBtn(Transform _parent, UnityAction _action, string _categoryKey = null)
+    protected virtual void CreateAddBtn(Transform _parent, UnityAction _action, string _categoryKey = null)
     {
         var instance = Instantiate(addCardBtnPref, _parent);
         var editableElem = instance.GetComponent<EditableElement>();
@@ -205,7 +230,10 @@ public class GameMenu : MonoBehaviour
     protected virtual void BindCategoryBtn(int _categoryIndex) { }
 
     #region Helpful
-    protected virtual void InitializePanel(GameObject _panel) { }
+    protected virtual void InitializePanel(GameObject _panel, string _categoryKey)
+    {
+        _panel.GetComponent<ElementsManagment>()?.Initialize(_categoryKey);
+    }
 
     protected bool IsCategoryForThisGame(string _categoryKey)
     {
@@ -222,25 +250,26 @@ public class GameMenu : MonoBehaviour
         mainMenu.AddEditableElement(editableElem);
     }
 
-    protected virtual void HidePanels()
+    public virtual void HideGame() { }
+
+    public virtual void HidePanels()
     {
         foreach (var panel in CategoriesPanels)
             panel.SetActive(false);
     }
 
-    protected int GetVisibleCategoriesCount()
-    {
-        var visibleCategoryCount = 0;
-        foreach (var category in CategoryCards)
-            if (category.gameObject.activeSelf) visibleCategoryCount++;
+    public virtual void ResetGame() { }
 
-        return visibleCategoryCount;
-    }
-
-    protected virtual void ResetGame() { }
+    protected virtual void CalculateCategoryPanelRect() { }
 
     protected virtual void CalculateCardPanelRect(GameObject _panel) { }
 
-    protected virtual void CalculateCategoryPanelRect() { }
+    protected virtual void AddCategoryToBeginning(GameObject _target) { }
+
+    protected virtual void AddCategoryToEnd(GameObject _target) { }
+
+    protected virtual void AddCardToBeginning(GameObject _target, GameObject _panel) { }
+
+    protected virtual void AddCardInEnd(GameObject _target, GameObject _panel) { }
     #endregion
 }

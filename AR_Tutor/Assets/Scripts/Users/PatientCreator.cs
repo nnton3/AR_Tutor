@@ -108,7 +108,8 @@ public class PatientCreator : MonoBehaviour
         var patientData = new PatientData(
             patientName,
             patientGender, 
-            sprite);
+            sprite,
+            clip);
 
         Signals.AddPatientEvent.Invoke(patientData, patientLogin);
         saveSystem.SavePatientsFromLocal(patientLogin, patientData, imageKey, clipKey);

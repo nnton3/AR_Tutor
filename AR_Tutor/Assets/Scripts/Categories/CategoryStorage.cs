@@ -120,7 +120,7 @@ public class CategoryStorage : MonoBehaviour
                     imgRect,
                     Vector2.zero),
                 clip,
-                patientDataManager.PatientData.CategoriesVisible[index],
+                (index < 0) ? false : patientDataManager.PatientData.CategoriesVisible[index],
                 cardKeys,
                 cardsVisible,
                 true);

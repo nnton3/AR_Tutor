@@ -13,5 +13,7 @@ public class PatientCard : MonoBehaviour
         patientName.text += _data.PatientName;
         if (_data.img != null) img.sprite = _data.img;
         else img.sprite = defaultImg;
+
+        GetComponent<Button>().onClick.AddListener(() => Signals.PlayAudioClipEvent.Invoke(_data.nameClip));
     }
 }

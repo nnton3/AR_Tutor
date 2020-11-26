@@ -9,7 +9,8 @@ public class PatientSelectorControl : MonoBehaviour
     private GameObject
         patientSelectorContent,
         patientCardPref,
-        startGamePanel;
+        startGamePanel,
+        patientSelectorPanel;
     [SerializeField] private RectTransform openCreatePatientPanelBtn;
     [SerializeField] private HorizontalContentMover patientSelectorMover;
 
@@ -30,6 +31,7 @@ public class PatientSelectorControl : MonoBehaviour
         card.GetComponent<Button>().onClick.AddListener(() =>
         {
             startGamePanelControl.Initialize(data, _identifier);
+            patientSelectorPanel.SetActive(false);
             startGamePanel.SetActive(true);
         });
         card.transform.SetAsFirstSibling();

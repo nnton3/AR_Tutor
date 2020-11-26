@@ -42,7 +42,7 @@ public class UserSaveSystem : MonoBehaviour
     {
         yield return StartCoroutine(CheckInternetConnection());
 
-        if (hasConnection)
+        if (HasConnection)
         {
             yield return StartCoroutine(database.ReadPatientDataRoutine(identifier));
             LoadedPatient = new PatientData(database.patientData.PatientName, database.patientData.PatientGender);
@@ -78,11 +78,8 @@ public class UserSaveSystem : MonoBehaviour
             _imageKey,
             _clipKey);
         
-        if (_data.img != null)
-            SaveImage(_data.img.texture, _imageKey);
-
-        if (_data.nameClip != null)
-            SaveAudio(_data.nameClip, _clipKey);
+        SaveImage(_data.img.texture, _imageKey);
+        SaveAudio(_data.nameClip, _clipKey);
 
         var json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(_login, json);
@@ -101,13 +98,15 @@ public class UserSaveSystem : MonoBehaviour
 
         if (texture != null)
         {
+            var size = (texture.width > texture.height) ? texture.height : texture.width;
+
             targetSprite = Sprite.Create(
                 texture,
-                new Rect(0, 0, texture.width, texture.width),
+                new Rect(0, 0, size, size),
                 Vector2.zero);
         }
 
-        return new PatientData(savedData.PatientName, savedData.PatientGender, targetSprite);
+        return new PatientData(savedData.PatientName, savedData.PatientGender, targetSprite, clip);
     }
     #endregion
 
@@ -136,11 +135,12 @@ public class UserSaveSystem : MonoBehaviour
     {
         if (_clip == null) return;
         SaveWav.Save(_key, _clip);
+        Debug.Log("clip saved");
     }
 
     public AudioClip LoadAudio(string _key)
     {
-        if (ES3.KeyExists($"{_key}.wav"))
+        if (ES3.FileExists($"{_key}.wav"))
             return ES3.LoadAudio($"{Application.persistentDataPath}/{_key}.wav", AudioType.WAV);
         else return null;
     }
@@ -156,15 +156,15 @@ public class UserSaveSystem : MonoBehaviour
             action(true);
     }
 
-    private bool hasConnection;
-    private IEnumerator CheckInternetConnection()
+    public bool HasConnection { get; private set; }
+    public IEnumerator CheckInternetConnection()
     {
         UnityWebRequest www = new UnityWebRequest("http://google.com");
         yield return www.SendWebRequest();
         if (www.error != null)
-            hasConnection = false;
+            HasConnection = false;
         else
-            hasConnection = true;
+            HasConnection = true;
     }
 
     private void DeleteData()

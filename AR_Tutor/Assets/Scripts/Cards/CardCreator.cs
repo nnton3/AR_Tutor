@@ -9,9 +9,8 @@ public class CardCreator : MonoBehaviour
     private SaveSystem saveSystem;
     private PatientDataManager patientDataManager;
     private CategoryManager categoryManager;
-    private MenuTransitionController transitionController;
-    [SerializeField] private bool recording;
 
+    [SerializeField] private bool recording;
     [SerializeField] private AudioSource source;
 
     [SerializeField] private InputField cardNameField, cardNameFormField;
@@ -33,7 +32,8 @@ public class CardCreator : MonoBehaviour
         saveSystem = FindObjectOfType<SaveSystem>();
         patientDataManager = FindObjectOfType<PatientDataManager>();
         categoryManager = FindObjectOfType<CategoryManager>();
-        transitionController = FindObjectOfType<MenuTransitionController>();
+
+        Signals.ReturnToMainMenuEvent.AddListener(Reset);
 
         BindUI();
     }
@@ -60,7 +60,7 @@ public class CardCreator : MonoBehaviour
             if (CardDataIsValid())
             {
                 CreateCard(cardName, cardNameForm, image1data, image2data, image3data, audioClip, audioClipForm);
-                transitionController.ReturnToBack(2);
+                Signals.ReturnToMainMenuEvent.Invoke();
             }
         });
     }
@@ -106,7 +106,6 @@ public class CardCreator : MonoBehaviour
 
         storage.AddNewCardToBase(data, cardKey);
         categoryManager.AddCard(cardKey);
-        Reset();
     }
 
     public void Reset()

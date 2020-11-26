@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class HorizontalContentMover : MonoBehaviour
@@ -16,10 +17,14 @@ public class HorizontalContentMover : MonoBehaviour
     [SerializeField] private float startPos = 0f;
     private float currentPos = 0f;
     private bool canMove = true;
+    [HideInInspector] public UnityEvent EndMoveEvent = new UnityEvent();
+    private CardHierarchyManager hierarchyManager;
     #endregion
 
     private void Awake()
     {
+        hierarchyManager = GetComponent<CardHierarchyManager>();
+
         MoveOnValue(startPos);
         currentPos = contentPanel.anchoredPosition.x;
         CalculateMinPos();
@@ -37,16 +42,16 @@ public class HorizontalContentMover : MonoBehaviour
             currentPos = contentPanel.anchoredPosition.x;
     }
 
-    #region Horizontal
-    private void MoveLeft()
+    public void MoveLeft()
     {
         if (!canMove) return;
         StartCoroutine(MoveLeftRoutine());
     }
 
-    private void MoveRigth()
+    public void MoveRigth()
     {
         if (!canMove) return;
+        if (!hierarchyManager.CanMove()) return;
         StartCoroutine(MoveRightRoutine());
     }
 
@@ -66,6 +71,7 @@ public class HorizontalContentMover : MonoBehaviour
             yield return new WaitForSeconds(time);
             currentPos = targetPos;
             canMove = true;
+            EndMoveEvent?.Invoke();
         }
     }
 
@@ -85,6 +91,7 @@ public class HorizontalContentMover : MonoBehaviour
             yield return new WaitForSeconds(time);
             currentPos = targetPos;
             canMove = true;
+            EndMoveEvent?.Invoke();
         }
     }
 
@@ -94,5 +101,4 @@ public class HorizontalContentMover : MonoBehaviour
         pos.x = value;
         contentPanel.anchoredPosition = pos;
     }
-    #endregion
 }

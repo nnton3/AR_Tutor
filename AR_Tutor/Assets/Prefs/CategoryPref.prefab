@@ -1,5 +1,17 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2798042843209365434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236749561787235910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edcc99ef167ff6f40b1284469d7624ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5772280584762045900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17,7 +29,6 @@ MonoBehaviour:
   selectBtn: {fileID: 2914139303111821736}
   selectImageBtn: {fileID: 6878373665804532327}
   switchVisibleBtn: {fileID: 4779647359792412932}
-  image: {fileID: 4346327720093687087}
   deleteSprite: {fileID: 21300000, guid: 403ae64204b382f44818841552d62737, type: 3}
   addSprite: {fileID: 21300000, guid: b84f921b79f863e49a56e79bc57af8b3, type: 3}
 --- !u!1001 &822288682864447743
@@ -142,6 +153,11 @@ PrefabInstance:
       propertyPath: title
       value: 
       objectReference: {fileID: 8887794617088416053}
+    - target: {fileID: 8088061607841270218, guid: 36deec809b1cf7840ad7cf20fd62bc15,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1972230007437199374, guid: 36deec809b1cf7840ad7cf20fd62bc15, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 36deec809b1cf7840ad7cf20fd62bc15, type: 3}

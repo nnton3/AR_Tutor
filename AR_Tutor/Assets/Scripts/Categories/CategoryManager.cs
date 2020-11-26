@@ -8,9 +8,9 @@ public class CategoryManager : MonoBehaviour
     private enum AddedObj { Card, Category}
 
     #region Variables
-    private MenuTransitionController transitionController;
     private VariantGameMenu variantMenu;
     private WordBookMenuControl wordbookMenu;
+    private WordComposingMenuControl wordcomposingMenu;
     private PatientDataManager patientDataManager;
     private CardStorage cardStorage;
     private CategoryStorage categoryStorage;
@@ -36,9 +36,9 @@ public class CategoryManager : MonoBehaviour
 
     private void Awake()
     {
-        transitionController = FindObjectOfType<MenuTransitionController>();
         variantMenu = FindObjectOfType<VariantGameMenu>();
         wordbookMenu = FindObjectOfType<WordBookMenuControl>();
+        wordcomposingMenu = FindObjectOfType<WordComposingMenuControl>();
         patientDataManager = FindObjectOfType<PatientDataManager>();
         categoryStorage = FindObjectOfType<CategoryStorage>();
         cardStorage = FindObjectOfType<CardStorage>();
@@ -50,15 +50,8 @@ public class CategoryManager : MonoBehaviour
 
         Signals.SetImgForCardEvent.AddListener(SetUpNewImgForCard);
         Signals.SetImgForCategoryEvent.AddListener(SetUpImgForCategory);
-        Signals.CardLoadEnd.AddListener((value) =>
-        {
-            if (value)
-            {
-                transitionController.ReturnToBack();
-                Debug.Log("load end");
-            }
-            else Debug.Log("load error");
-        });
+        Signals.CardLoadEnd.AddListener((value) =>  Signals.ReturnToMainMenuEvent.Invoke());
+        Signals.ReturnToMainMenuEvent.AddListener(ReturnToMenuHandler);
         BindBtn();
     }
 
@@ -98,12 +91,7 @@ public class CategoryManager : MonoBehaviour
     #region Add content routine
     private void StartSelectMethodRoutine()
     {
-        routine = StartCoroutine(SelectMethodRoutine());
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            StopCoroutine(routine);
-            methodSelected = false;
-        });
+        StartCoroutine(SelectMethodRoutine());
     }
 
     private IEnumerator SelectMethodRoutine()
@@ -160,7 +148,21 @@ public class CategoryManager : MonoBehaviour
         libraryPanel = categoryLibrary;
         currentAddedObj = AddedObj.Category;
         categoryLibraryControl.FillLibrary(_game);
-        transitionController.ActivatePanel(categoryMethodSelectorPanel);
+        switch (_game)
+        {
+            case GameName.Variant:
+                variantMenu.ResetGame();
+                break;
+            case GameName.WordBook:
+                wordbookMenu.ResetGame();
+                break;
+            case GameName.WordComposing:
+                wordbookMenu.ResetGame();
+                break;
+            default:
+                break;
+        }
+        categoryMethodSelectorPanel.SetActive(true);
         StartSelectMethodRoutine();
         Signals.SelectCreateMethodCategory.Invoke();
     }
@@ -169,23 +171,15 @@ public class CategoryManager : MonoBehaviour
     {
         categoryLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(libraryPanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            categoryLibraryControl.ClearBtnsEvents();
-            StartSelectMethodRoutine();
-        });
+        categoryMethodSelectorPanel.SetActive(false);
+        libraryPanel.SetActive(true);
     }
 
     private void OpenCreateCategoryPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(createPanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            categoryCreator.Reset();
-            StartSelectMethodRoutine();
-        });
+        createPanel.SetActive(true);
+        categoryMethodSelectorPanel.SetActive(false);
     }
 
     public void AddCategory(string _categoryKey)
@@ -199,7 +193,7 @@ public class CategoryManager : MonoBehaviour
         {
             Debug.Log("add category");
             AddCategory(_categoryKey);
-            transitionController.ReturnToBack(2);
+            Signals.ReturnToMainMenuEvent.Invoke();
         }
         else
         {
@@ -223,7 +217,21 @@ public class CategoryManager : MonoBehaviour
         createPanel = createCardPanel;
         libraryPanel = cardLibrary;
         currentAddedObj = AddedObj.Card;
-        transitionController.ActivatePanel(cardMethodSelectorPanel);
+        switch (game)
+        {
+            case GameName.Variant:
+                variantMenu.HidePanels();
+                break;
+            case GameName.WordBook:
+                wordbookMenu.HidePanels();
+                break;
+            case GameName.WordComposing:
+                wordbookMenu.HidePanels();
+                break;
+            default:
+                break;
+        }
+        cardMethodSelectorPanel.SetActive(true);
         StartSelectMethodRoutine();
         Signals.SelectCreateMethodCard.Invoke();
     }
@@ -232,23 +240,15 @@ public class CategoryManager : MonoBehaviour
     {
         cardLibraryControl.BindCardsForSelect();
         methodSelected = false;
-        transitionController.ActivatePanel(libraryPanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            cardLibraryControl.ClearBtnsEvents();
-            StartSelectMethodRoutine();
-        });
+        cardMethodSelectorPanel.SetActive(false);
+        libraryPanel.SetActive(true);
     }
 
     private void OpenCreateCardPanel()
     {
         methodSelected = false;
-        transitionController.ActivatePanel(createPanel);
-        transitionController.AddEventToReturnBtn(() =>
-        {
-            cardCreator.Reset();
-            StartSelectMethodRoutine();
-        });
+        cardMethodSelectorPanel.SetActive(false);
+        createPanel.SetActive(true);
     }
 
     public void AddCard(string _cardKey)
@@ -262,7 +262,7 @@ public class CategoryManager : MonoBehaviour
         {
             Debug.Log("add card");
             AddCard(_cardKey);
-            transitionController.ReturnToBack(2);
+            Signals.ReturnToMainMenuEvent.Invoke();
         }
         else Debug.Log("card exist, select new");
     }
@@ -275,58 +275,6 @@ public class CategoryManager : MonoBehaviour
     #endregion
 
     #region Set new image
-    #region To card
-    /// <summary>
-    /// Установить для карточки новую картинку
-    /// </summary>
-    /// <param name="_game"></param>
-    /// <param name="_categoryKey"></param>
-    /// <param name="_cardKey"></param>
-    public void SetUpNewImgForCard(GameName _game, string _categoryKey , string _cardKey)
-    {
-        gameName = _game;
-        categoryKey = _categoryKey;
-
-        var cardData = cardStorage.cards[_cardKey];
-
-        Sprite sprite = null;
-
-        NativeGallery.GetImageFromGallery((path) =>
-        {
-            if (path != null)
-            {
-                Texture2D texture = NativeGallery.LoadImageAtPath(path, -1, false);
-
-                var size = (texture.width < texture.height) ? texture.width : texture.height;
-                sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
-
-                if (cardData.IsCustom)
-                    UpdateCardImage(_cardKey, sprite);
-                else
-                    SetUpImgToBaseCard(_categoryKey, _cardKey, sprite);
-            }
-        });
-    }
-
-    private void UpdateCardImage(string _cardKey, Sprite _cardImg)
-    {
-        /// Обновить картинку для карточки в библиотеке и сохранить изменения локально
-        cardStorage.UpdateCustomCardImage(_cardKey, _cardImg);
-
-        /// Обновить картинку для карточки во всех меню
-        cardLibraryControl.UpdateCardImg(_cardKey, _cardImg);
-        variantMenu.UpdateCardImg(_cardKey, _cardImg);
-        wordbookMenu.UpdateCardImg(_cardKey, _cardImg);
-        /// TODO: Добавить оставшиеся игры
-    }
-
-    private void SetUpImgToBaseCard(string _categoryKey, string _cardKey, Sprite sprite)
-    {
-        cardCreator.CreateCard(_cardKey, sprite);
-        Signals.DeleteCardFromCategory.Invoke(categoryKey, _cardKey);
-    }
-    #endregion
-
     #region To category
     private void SetUpImgForCategory(GameName _game, string _categoryKey)
     {
@@ -369,5 +317,68 @@ public class CategoryManager : MonoBehaviour
         Signals.DeleteCategoryFromGame.Invoke(_categoryKey);
     }
     #endregion
+
+    #region To card
+    /// <summary>
+    /// Установить для карточки новую картинку
+    /// </summary>
+    /// <param name="_game"></param>
+    /// <param name="_categoryKey"></param>
+    /// <param name="_cardKey"></param>
+    public void SetUpNewImgForCard(GameName _game, string _categoryKey , string _cardKey)
+    {
+        gameName = _game;
+        categoryKey = _categoryKey;
+
+        var cardData = cardStorage.cards[_cardKey];
+
+        Sprite sprite = null;
+
+        NativeGallery.GetImageFromGallery((path) =>
+        {
+            if (path != null)
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(path, -1, false);
+                var size = (texture.width < texture.height) ? texture.width : texture.height;
+                sprite = Sprite.Create(texture, new Rect(0, 0, size, size), Vector2.zero);
+
+                if (cardData.IsCustom)
+                    UpdateCardImage(_cardKey, sprite);
+                else
+                    SetUpImgToBaseCard(_categoryKey, _cardKey, sprite);
+            }
+        });
+    }
+
+    private void UpdateCardImage(string _cardKey, Sprite _cardImg)
+    {
+        /// Обновить картинку для карточки в библиотеке и сохранить изменения локально
+        cardStorage.UpdateCustomCardImage(_cardKey, _cardImg);
+
+        /// Обновить картинку для карточки во всех меню
+        cardLibraryControl.UpdateCardImg(_cardKey, _cardImg);
+        variantMenu.UpdateCardImg(_cardKey, _cardImg);
+        wordbookMenu.UpdateCardImg(_cardKey, _cardImg);
+        wordcomposingMenu.UpdateCardImg(_cardKey, _cardImg);
+        /// TODO: Добавить оставшиеся игры
+    }
+
+    private void SetUpImgToBaseCard(string _categoryKey, string _cardKey, Sprite sprite)
+    {
+        Debug.Log($"sprite format {sprite.texture.format}, other texture format {cardStorage.cards[_cardKey].img1.texture.format}");
+        cardCreator.CreateCard(_cardKey, sprite);
+        Signals.DeleteCardFromCategory.Invoke(categoryKey, _cardKey);
+    }
     #endregion
+    #endregion
+
+    private void ReturnToMenuHandler()
+    {
+        categoryMethodSelectorPanel.SetActive(false);
+        cardMethodSelectorPanel.SetActive(false);
+        createCardPanel.SetActive(false);
+        createCategoryPanel.SetActive(false);
+        cardLibrary.SetActive(false);
+        categoryLibrary.SetActive(false);
+    }
 }

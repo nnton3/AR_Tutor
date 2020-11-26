@@ -146,7 +146,13 @@ public class SaveSystem : MonoBehaviour
 
     public AudioClip LoadAudio(string _key)
     {
-        return ES3.LoadAudio($"{Application.persistentDataPath}/{_key}.wav", AudioType.WAV);
+        if (ES3.FileExists($"{_key}.wav"))
+            return ES3.LoadAudio($"{Application.persistentDataPath}/{_key}.wav", AudioType.WAV);
+        else
+        {
+            Debug.Log("Image not found");
+            return null;
+        }
     }
     #endregion
 

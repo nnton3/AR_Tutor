@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
-public class WordBookMenuControl : GameMenu
+public class WordBookMenuControl : GameMenu, IEditableElement
 {
-    [SerializeField] private GameObject audioBtn, cardContent, mainPanel, animalsBtn;
-    private VerticalContentMover categoryContentMover;
+    [SerializeField] private GameObject cardContent, mainPanel, animalsBtn;
+    [SerializeField] private WordbookGridCalculater gridControl;
+    [SerializeField] private VerticalContentMover categoryContentMover;
     private WordBookCardSelector wordbookSelector;
 
     public override void Initialize()
     {
         gameName = GameName.WordBook;
-        categoryContentMover = GetComponent<VerticalContentMover>();
         var selector = FindObjectOfType<WordBookCardSelector>();
         cardSelector = selector;
         wordbookSelector = selector;
@@ -22,39 +21,51 @@ public class WordBookMenuControl : GameMenu
             wordbookSelector.SetCurrentCategory(CategoryCards[0].CategoryKey, CategoriesPanels[0]);
         }
 
-        BindBtn();
+        categoryContentMover.GetComponent<ElementsManagment>().Initialize();
+
+        mainMenu.AddEditableElement(this);
+
+        Signals.ReturnToMainMenuEvent.AddListener(ReturnToMenuHandler);
+    }
+
+    private void Start()
+    {
+        gridControl.CalculateCategoryGrid();
+        categoryContentMover.UpdateMoveStep(gridControl.PanelHeight);
+        CalculateCategoryPanelRect();
+
+        foreach (var panel in CategoriesPanels)
+        {
+            panel.GetComponent<WordbookCardPanelControl>().CalculateGrid();
+            panel.GetComponent<WordbookCardPanelControl>().UpdateGrid();
+        }
     }
 
     protected override void CalculateCategoryPanelRect()
     {
-        UIInstruments.GetSizeForVerticalGroup(
-            categoryParent.GetComponent<VerticalLayoutGroup>(),
-            GetVisibleCategoriesCount(),
-            categoryCardPref.GetComponent<RectTransform>().sizeDelta.y * categoryCardPref.GetComponent<RectTransform>().localScale.y);
+        gridControl.CalculateContentSize(UIInstruments.GetVisibleElements(categoryParent));
         categoryContentMover.CalculateMinPos();
     }
 
     protected override void CalculateCardPanelRect(GameObject _panel)
     {
-        var contentPanel = _panel.transform.Find("Mask/Content");
-
-        var visibleCategoryCount = 0;
-        foreach (Transform card in contentPanel.transform)
-            if (card.gameObject.activeSelf) visibleCategoryCount++;
-
-        UIInstruments.GetSizeForVerticalGrid(contentPanel.GetComponent<GridLayoutGroup>(), visibleCategoryCount);
+        _panel.GetComponent<WordbookCardPanelControl>().UpdateGrid();
     }
 
-    private void BindBtn()
+    public override void ResetGame()
     {
-        returnToMenuBtn.onClick.AddListener(() =>
-        {
-            wordbookSelector.CloseContent();
-            mainPanel.SetActive(false);
-            animalsBtn.SetActive(false);
-            returnToMenuBtn.gameObject.SetActive(false);
-            Signals.StopPlayAudioEvent.Invoke();
-        });
+        mainPanel.SetActive(false);
+        animalsBtn.SetActive(false);
+        cardContent.SetActive(false);
+        HidePanels();
+    }
+
+    private void ReturnToMenuHandler()
+    {
+        wordbookSelector.CloseContent();
+        mainPanel.SetActive(false);
+        animalsBtn.SetActive(false);
+        Signals.StopPlayAudioEvent.Invoke();
     }
 
     protected override void BindCategoryBtn(int _categoryIndex)
@@ -74,8 +85,15 @@ public class WordBookMenuControl : GameMenu
                 categoryKey == "default_2_category11" ||
                 categoryKey == "default_2_category12")
             {
-                audioBtn.SetActive(true);
+                animalsBtn.SetActive(true);
             }
         });
+    }
+
+    public void ConfigurateElement(MenuMode _mode)
+    {
+        gridControl.CalculateContentSize(UIInstruments.GetVisibleElements(categoryParent));
+        foreach (var panel in CategoriesPanels)
+            CalculateCardPanelRect(panel);
     }
 }

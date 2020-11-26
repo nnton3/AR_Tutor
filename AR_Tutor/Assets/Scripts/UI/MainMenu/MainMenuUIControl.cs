@@ -7,42 +7,46 @@ public class MainMenuUIControl : MonoBehaviour
 {
     #region Variables
     [SerializeField] private GameObject gameSelector;
-    [SerializeField] private Button exitBtn, settingsBtn, siteBtn, returnToPlayBtn;
+    [SerializeField] private Button exitBtn, settingsBtn, siteBtn, returnToPlayBtn, returnToMenuBtn;
     [SerializeField] private Button[] gamesBtns = new Button[] { };
     [SerializeField] private GameObject[] defaultGamePanels = new GameObject[] { };
     [SerializeField] private GameObject[] settingsGamePanels = new GameObject[] { };
-    [SerializeField] private GameObject[] returnBtns = new GameObject[] { };
     [SerializeField] private List<IEditableElement> editableElements = new List<IEditableElement>();
 
-    private MenuTransitionController transitionController;
     public static MenuMode Mode { get; private set; } = MenuMode.Play;    
     #endregion
 
     public void Initialize()
     {
-        transitionController = FindObjectOfType<MenuTransitionController>();
-
         BindBtns();
         SwitchEditableElemets();
 
-        transitionController.ActivatePanel(gameSelector);
-        transitionController.ReturnToMainMenuEvent.AddListener(() => settingsBtn.gameObject.SetActive(true));
+        Signals.ReturnToMainMenuEvent.AddListener(() =>
+        {
+            returnToMenuBtn.gameObject.SetActive(false);
+            gameSelector.SetActive(true);
+        });
     }
 
     private void Start()
     {
         Signals.StartMainSceneEvent.Invoke();
+        gameSelector.SetActive(true);
     }
 
     private void BindBtns()
     {
+        returnToMenuBtn.onClick.AddListener(() =>
+        {
+            Signals.ReturnToMainMenuEvent.Invoke();
+        });
+
         for (int i = 0; i < gamesBtns.Length; i++)
         {
             var index = i;
             var btn = gamesBtns[index];
             var panel = defaultGamePanels[index];
             var panel_settings = settingsGamePanels[index];
-            var returnBtn = returnBtns[index];
 
             btn.onClick.AddListener(() =>
             {
@@ -71,8 +75,7 @@ public class MainMenuUIControl : MonoBehaviour
                         break;
                 }
 
-                BindReturnBtn(returnBtn);
-
+                returnToMenuBtn.gameObject.SetActive(true);
                 gameSelector.SetActive(false);
             });
         }
@@ -81,16 +84,6 @@ public class MainMenuUIControl : MonoBehaviour
         returnToPlayBtn.onClick.AddListener(SwitchToPlayMode);
         siteBtn.onClick.AddListener(OpenSite);
         exitBtn.onClick.AddListener(ExitToLoginScene);
-    }
-
-    private void BindReturnBtn(GameObject returnBtn)
-    {
-        returnBtn.SetActive(true);
-        returnBtn.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            Signals.ReturnToMainMenuEvent.Invoke();
-            gameSelector.SetActive(true);
-        });
     }
 
     private void SwitchToPlayMode()

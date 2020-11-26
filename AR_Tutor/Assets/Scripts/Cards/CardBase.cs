@@ -15,6 +15,7 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
     protected GameName game;
     protected string categoryKey;
     public string Key { get; protected set; }
+    public bool IsCustom { get; private set; }
     #endregion
 
     public virtual void Initialize(GameName _game, string _categoryKey, string cardKey, CardData data)
@@ -24,6 +25,7 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
         ConfigurateUI(data);
         categoryKey = _categoryKey;
         Key = cardKey;
+        IsCustom = data.IsCustom;
         if (data.audioClip1 != null) Clip = data.audioClip1;
         
         BindBtns(data);
@@ -31,11 +33,8 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
 
     protected void BindBtns(CardData data)
     {
-        if (selectImageBtn != null)
-            selectImageBtn.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key);
-            });
+        selectImageBtn.onClick.AddListener(() =>
+            Signals.SetImgForCardEvent.Invoke(game, categoryKey, Key));
 
         switchVisibleBtn.onClick.AddListener(SwitchVisible);
     }
@@ -64,8 +63,11 @@ public class CardBase : MonoBehaviour, ISwitchedDeleteBtnImg
     protected virtual void SwitchVisible()
     {
         editableElement.Visible = !editableElement.Visible;
+
+        if (IsCustom) Signals.DeleteCardFromCategory.Invoke(categoryKey, Key);
+        else Signals.SwitchCardVisibleEvent.Invoke(categoryKey, Key, editableElement.Visible);
+
         SwitchImgForDeleteBtn();
-        Signals.SwitchCardVisibleEvent.Invoke(categoryKey, Key, editableElement.Visible);
     }
 
     public void SwitchImgForDeleteBtn()

@@ -16,6 +16,18 @@ MonoBehaviour:
   btn: {fileID: 7023975537539750273}
   defaultClr: {r: 1, g: 1, b: 1, a: 1}
   selectedClr: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+--- !u!114 &-6221586286508834510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6350893392252743279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edcc99ef167ff6f40b1284469d7624ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4783506681258475734
 PrefabInstance:
   m_ObjectHideFlags: 0

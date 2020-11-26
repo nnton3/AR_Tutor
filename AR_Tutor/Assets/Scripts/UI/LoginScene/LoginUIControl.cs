@@ -126,7 +126,11 @@ public class LoginUIControl : MonoBehaviour
             () => StartCoroutine(loginMenuControl.AddPatient(patientLoginFieldForAdd.text)));
         if (resetYesBtn != null) resetYesBtn.onClick.AddListener(() => authentication.ResetPassword(loginMenuControl.Email));
         if (resetNoBtn != null) resetNoBtn.onClick.AddListener(() => resetPasswordPanel.SetActive(false));
-        if (openPatientDatasPanelBtn != null) openPatientDatasPanelBtn.onClick.AddListener(() => patientsDataPanel.SetActive(true));
+        if (openPatientDatasPanelBtn != null) openPatientDatasPanelBtn.onClick.AddListener(() =>
+        {
+            patientsDataPanel.SetActive(true);
+            Debug.Log("work");
+        });
     }
 
     private void BindFields()

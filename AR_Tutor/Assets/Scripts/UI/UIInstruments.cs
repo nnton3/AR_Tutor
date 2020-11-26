@@ -53,4 +53,13 @@ public static class UIInstruments
         if (size < height) return;
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
     }
+
+    public static int GetVisibleElements(Transform _target)
+    {
+        var visibleCategoryCount = 0;
+        foreach (Transform element in _target)
+            if (element.gameObject.activeSelf) visibleCategoryCount++;
+
+        return visibleCategoryCount;
+    }
 }

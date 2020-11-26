@@ -6,7 +6,7 @@ public class WordComposingPanelSizeControl : MonoBehaviour
 {
     [SerializeField] private Sprite backForCustomize, backForPlay;
     [SerializeField] private Image backImg;
-    [SerializeField] private RectTransform categorySelectorRect;
+    [SerializeField] private RectTransform categoryContentRect;
     [SerializeField] private GameObject firstRankParent, secondRankCardParent, categoryParent;
 
     public void ConfigurateForPlay(
@@ -14,10 +14,10 @@ public class WordComposingPanelSizeControl : MonoBehaviour
         List<GameObject> _categoryPanels)
     {
         backImg.sprite = backForPlay;
-        SetAnchorsForPlay(categorySelectorRect);
+        SetAnchorsForPlay(categoryContentRect);
 
         foreach (var category in _categoryPanels)
-            SetAnchorsForPlay(category.GetComponent<RectTransform>());
+            SetAnchorsForPlay(category.transform.Find("Mask").GetComponent<RectTransform>());
 
         SetParenForPlay(firstRankCard, secondRankCard1, secondRankCard2);
     }
@@ -27,33 +27,19 @@ public class WordComposingPanelSizeControl : MonoBehaviour
         List<GameObject> _categoryPanels)
     {
         backImg.sprite = backForCustomize;
-        SetAnchorsForCustomize(categorySelectorRect);
+        SetAnchorsForCustomize(categoryContentRect);
 
         foreach (var category in _categoryPanels)
-            SetAnchorsForCustomize(category.GetComponent<RectTransform>());
+            SetAnchorsForCustomize(category.transform.Find("Mask").GetComponent<RectTransform>());
 
         SetParentForCustomize(firstRankCard, secondRankCard1, secondRankCard2);
     }
 
     private void SetAnchorsForCustomize(RectTransform _transform)
-    {
-        var anchorValue = _transform.anchorMin;
-        anchorValue.y = 0.02941176f;
-        _transform.anchorMin = anchorValue;
-        anchorValue = _transform.anchorMax;
-        anchorValue.y = 0.9852941f;
-        _transform.anchorMax = anchorValue;
-    }
+    { _transform.anchorMin = new Vector2(0, 0); }
 
     private void SetAnchorsForPlay(RectTransform _transform)
-    {
-        var anchorValue = _transform.anchorMin;
-        anchorValue.y = 0.3675882f;
-        _transform.anchorMin = anchorValue;
-        anchorValue = _transform.anchorMax;
-        anchorValue.y = 0.9852941f;
-        _transform.anchorMax = anchorValue;
-    }
+    { _transform.anchorMin = new Vector2(0, 0.35f); }
 
     private void SetParenForPlay(GameObject firstRankCard, GameObject secondRankCard1, GameObject secondRankCard2)
     {

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ButtonsMenuControl : MonoBehaviour
 {
     [SerializeField] private Sprite defaultImg, selectedImg;
-    [SerializeField] private Button oneRepetitionBtn, twoRepetitionBtn, threeRepetitionBtn, returnToMainMenuBtn;
+    [SerializeField] private Button oneRepetitionBtn, twoRepetitionBtn, threeRepetitionBtn;
     [SerializeField] private GameObject selectPanel, gamePanel, startGameBtn, modeSelector;
     private ButtonsGameLogic gameLogic;
     private ButtonsSelector selector;
@@ -34,7 +34,7 @@ public class ButtonsMenuControl : MonoBehaviour
             gameLogic.SetRepetitionsNumber(3);
         });
 
-        returnToMainMenuBtn.onClick.AddListener(ResetGame);
+        Signals.ReturnToMainMenuEvent.AddListener(ResetGame);
     }
 
     private void SaveMode(int mode)
@@ -93,7 +93,6 @@ public class ButtonsMenuControl : MonoBehaviour
         gamePanel.SetActive(false);
         startGameBtn.SetActive(false);
         modeSelector.SetActive(false);
-        returnToMainMenuBtn.gameObject.SetActive(false);
         Signals.StopPlayAudioEvent.Invoke();
     }
 

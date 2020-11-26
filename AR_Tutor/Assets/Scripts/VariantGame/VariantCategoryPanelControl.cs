@@ -17,4 +17,14 @@ public class VariantCategoryPanelControl : MonoBehaviour, IEditableElement
     {
         if (closeBtn != null) closeBtn.onClick.AddListener(_closeAction);
     }
+
+    [SerializeField] private VariantGridCalculater gridCalculater;
+    [SerializeField] private HorizontalContentMover contentMover;
+    public void UpdateGrid()
+    {
+        //gridCalculater.CalculateCategoryContentSize(UIInstruments.GetVisibleElements(transform.Find("Mask/Content")));
+        contentMover.CalculateMinPos();
+    }
+
+    //public void CalculateGrid() { gridCalculater.CalculateCategoryGrid(); }
 }

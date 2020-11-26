@@ -4,14 +4,18 @@ using UnityEngine.Events;
 public class CardUnityEvent : UnityEvent<GameName, string, string> { }
 public class CategoryEvent : UnityEvent<GameName, string> { }
 public class StringBoolEvent : UnityEvent<string, bool> { }
+public class StringIntEvent : UnityEvent<string, int> { }
 public class StringStringEvent : UnityEvent<string, string> { }
 public class StringStringBoolEvent : UnityEvent<string, string, bool> { }
+public class StringStringIntEvent : UnityEvent<string, string, int> { }
 public class StringEvent : UnityEvent<string> { }
 public class BoolEvent : UnityEvent<bool> { }
 public class AudioEvent : UnityEvent<AudioClip> { }
 public class MultipleAudioEvent : UnityEvent<AudioClip, AudioClip> { }
 public class PatientEvent : UnityEvent<PatientData, string> { }
 public class AddWordEvent : UnityEvent<string, Sprite, AudioClip> { }
+public class GameObjectEvent : UnityEvent<GameObject> { }
+public class Vector3Event : UnityEvent<Vector3> { }
 
 public static class Signals
 {
@@ -75,6 +79,8 @@ public static class Signals
     public static StringEvent SelectCardFromLibrary = new StringEvent();
     public static StringEvent SelectCategoryFromLibrary = new StringEvent();
     public static BoolEvent CardLoadEnd = new BoolEvent();
+    public static StringIntEvent SetIndexForCategory = new StringIntEvent();
+    public static StringStringIntEvent SetIndexForCard = new StringStringIntEvent();
     #endregion
 
     #region Variant

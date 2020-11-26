@@ -51,28 +51,33 @@ public class LoginManager : MonoBehaviour
     #region Login
     public IEnumerator EnterRoutine()
     {
-        if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
-            Signals.ShowNotification.Invoke("Ошибка! Не удалось войти в учетную запись, проверьте правильность ввода эл.почты и пароля");
-        else
+        yield return StartCoroutine(saveSystem.CheckInternetConnection());
+        if (saveSystem.HasConnection)
         {
-            yield return StartCoroutine(auth.SignInRoutine(Email, Password));
-
-            if (auth.NewUser != null)
-            {
-                PlayerPrefs.SetString("lastUser", auth.UserID);
-                ConfigurateUserData(auth.UserID);
-                uiControl.PatientSelectorActiveSelf = true;
-            }
+            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+                Signals.ShowNotification.Invoke("Ошибка! Не удалось войти в учетную запись, проверьте правильность ввода эл.почты и пароля");
             else
             {
-                failedSigning++;
-                if (failedSigning > 2)
+                yield return StartCoroutine(auth.SignInRoutine(Email, Password));
+
+                if (auth.NewUser != null)
                 {
-                    Signals.ResetPasswordEvent.Invoke();
-                    failedSigning = 0;
+                    PlayerPrefs.SetString("lastUser", auth.UserID);
+                    ConfigurateUserData(auth.UserID);
+                    uiControl.PatientSelectorActiveSelf = true;
+                }
+                else
+                {
+                    failedSigning++;
+                    if (failedSigning > 2)
+                    {
+                        Signals.ResetPasswordEvent.Invoke();
+                        failedSigning = 0;
+                    }
                 }
             }
         }
+        else Signals.ShowNotification.Invoke("Для входа в учетную запись необходимо интернет-соединение. Проверьте доступ интернета к устройству и войдите повторно.");
     }
 
     public void ConfigurateUserData(string _userID)
@@ -94,24 +99,29 @@ public class LoginManager : MonoBehaviour
 
     public IEnumerator RegistryRoutine()
     {
-        if (!EmailIsValid())
-            Signals.ShowNotification.Invoke("Ошибка! Электронная почта указана неверно");
-        else if (!PasswordIsValid())
-            Signals.ShowNotification.Invoke("Ошибка! Пароль должен содержать не менее 6 символов и включать в себя английские буквы и цифры.");
-        else
+        yield return StartCoroutine(saveSystem.CheckInternetConnection());
+        if (saveSystem.HasConnection)
         {
-            var task = auth.CreateUser(email, password);
-            yield return new WaitUntil(() => task.IsCompleted);
-
-            if (task.Result == SignUpResult.Success)
+            if (!EmailIsValid())
+                Signals.ShowNotification.Invoke("Ошибка! Электронная почта указана неверно");
+            else if (!PasswordIsValid())
+                Signals.ShowNotification.Invoke("Ошибка! Пароль должен содержать не менее 6 символов и включать в себя английские буквы и цифры.");
+            else
             {
-                PlayerPrefs.SetString("lastUser", auth.UserID);
-                ConfigurateUserData(auth.UserID);
-                uiControl.PatientSelectorActiveSelf = true;
+                var task = auth.CreateUser(email, password);
+                yield return new WaitUntil(() => task.IsCompleted);
+
+                if (task.Result == SignUpResult.Success)
+                {
+                    PlayerPrefs.SetString("lastUser", auth.UserID);
+                    ConfigurateUserData(auth.UserID);
+                    uiControl.PatientSelectorActiveSelf = true;
+                }
+                else if (task.Result == SignUpResult.EmailAlreadyUse)
+                    Signals.ShowNotification.Invoke("Ошибка! Данный адрес эл. почты уже используется.");
             }
-            else if (task.Result == SignUpResult.EmailAlreadyUse)
-                Signals.ShowNotification.Invoke("Ошибка! Данный адрес эл. почты уже используется.");
         }
+        else Signals.ShowNotification.Invoke("Для входа в учетную запись необходимо интернет-соединение. Проверьте доступ интернета к устройству и войдите повторно.");
     }
 
     private bool EmailIsValid()
@@ -205,7 +215,7 @@ public class LoginManager : MonoBehaviour
 
     private IEnumerator StartGameSceneRoutine()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         Signals.ShowLoadScreen.Invoke();
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }

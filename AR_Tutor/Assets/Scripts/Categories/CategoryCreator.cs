@@ -23,7 +23,6 @@ public class CategoryCreator : MonoBehaviour
     private CategoryManager categoryManager;
     private CategoryStorage storage;
     private SaveSystem saveSystem;
-    private MenuTransitionController transitionController;
     #endregion
 
     private void Awake()
@@ -33,7 +32,8 @@ public class CategoryCreator : MonoBehaviour
         categoryManager = FindObjectOfType<CategoryManager>();
         saveSystem = FindObjectOfType<SaveSystem>();
         storage = FindObjectOfType<CategoryStorage>();
-        transitionController = FindObjectOfType<MenuTransitionController>();
+
+        Signals.ReturnToMainMenuEvent.AddListener(Reset);
 
         BindUI();
     }
@@ -50,7 +50,7 @@ public class CategoryCreator : MonoBehaviour
             if (DataIsValid())
             {
                 CreateCategory(title, imageData, clip);
-                transitionController.ReturnToBack(2);
+                Signals.ReturnToMainMenuEvent.Invoke();
             }
         });
     }
@@ -84,7 +84,6 @@ public class CategoryCreator : MonoBehaviour
 
         storage.AddCategoryToBase(categoryData, categoryKey, image1Key, audio1Key);
         categoryManager.AddCategory(categoryKey);
-        Reset();
     }
 
     #region Audio
@@ -153,9 +152,21 @@ public class CategoryCreator : MonoBehaviour
 
     private bool DataIsValid()
     {
-        if (string.IsNullOrEmpty(title)) return false;
-        if (imageData == null) return false;
-        if (clip == null) return false;
+        if (string.IsNullOrEmpty(title))
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Впишите название раздела");
+            return false;
+        }
+        if (imageData == null)
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Выберите изображение для раздела");
+            return false;
+        }
+        if (clip == null)
+        {
+            Signals.ShowNotification.Invoke("Ошибка! Нет звукового названия раздела");
+            return false;
+        }
 
         return true;
     }

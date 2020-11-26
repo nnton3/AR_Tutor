@@ -12,6 +12,8 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
     [SerializeField] private GameObject rankCardPref;
     [SerializeField] private GridLayoutGroup categoriesGrid;
     [SerializeField] private Button resetBtn;
+    [SerializeField] private HorizontalContentMover categoriesMover;
+    [SerializeField] private WordcomposingGridCalculater gridControl;
     private WordComposingReseter reseter;
     private WordComposingSelector wordComposingSelector;
     private WordComposingPanelSizeControl panelSizeControl;
@@ -27,11 +29,14 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
         wordComposingSelector = selector;
         reseter = FindObjectOfType<WordComposingReseter>();
         panelSizeControl = FindObjectOfType<WordComposingPanelSizeControl>();
+
         base.Initialize();
 
         CategoriesPanels.ObserveEveryValueChanged((temp) => temp)
             .Subscribe(_ => reseter.UpdatePanelList(CategoriesPanels))
             .AddTo(this);
+
+        categorySelectorPanel.GetComponent<ElementsManagment>().Initialize();
 
         Signals.LastWordSelected.AddListener(() => ClauseComplete = true);
         Signals.RemoveFirstWord.AddListener(() => GameMode = ClauseType.TwoWord);
@@ -42,9 +47,20 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                 GameMode = ClauseType.OneWord;
         });
         Signals.ReturnSecondRankCard.AddListener(() => GameMode = ClauseType.TwoWord);
-        reseter.Initialize(GameMode);
+        Signals.ReturnToMainMenuEvent.AddListener(ResetGame);
         mainMenu.AddEditableElement(this);
         BinBtn();
+    }
+
+    private void Start()
+    {
+        //gridControl.CalculateCategoryGrid();
+        //CalculateCategoryPanelRect();
+
+        //foreach (var panel in CategoriesPanels)
+        //    panel.GetComponent<WordComposingCardPanel>().UpdateGrid();
+
+        //reseter.Initialize(GameMode);
     }
 
     private int GetVisibleSecondRankCardCount()
@@ -120,6 +136,11 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
             reseter.SetMode(GameMode);
             wordComposingSelector.ShowPlayClauseBtn();
             resetBtn.gameObject.SetActive(true);
+            gridControl.SetRowConstraint(2);
+            gridControl.CalculateCategoryGrid();
+            CalculateCategoryPanelRect();
+            foreach (var panel in CategoriesPanels)
+                panel.GetComponent<WordComposingCardPanel>().UpdateGrid();
         }
         else
         {
@@ -127,6 +148,11 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
             reseter.SetMode(ClauseType.OneWord);
             wordComposingSelector.HidePlayClauseBtn();
             resetBtn.gameObject.SetActive(false);
+            gridControl.SetRowConstraint(3);
+            gridControl.CalculateCategoryGrid();
+            CalculateCategoryPanelRect();
+            foreach (var panel in CategoriesPanels)
+                panel.GetComponent<WordComposingCardPanel>().UpdateGrid(3);
         }
     }
 
@@ -163,34 +189,23 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                 Signals.RemoveWordFromClause.Invoke();
             }
         });
+
+        categoryPanel.GetComponent<ElementsManagment>()?.Initialize(_categoryKey);
     }
 
     protected override void CalculateCategoryPanelRect()
     {
-        UIInstruments.GetSizeForVerticalGrid(categoriesGrid, GetVisibleCategoriesCount());
+        gridControl.CalculateCategoryContentSize(UIInstruments.GetVisibleElements(categoryParent));
+        categoriesMover.CalculateMinPos();
     }
 
     protected override void CalculateCardPanelRect(GameObject _panel)
     {
-        var contentPanel = _panel.transform.Find("Mask/Content");
-
-        var visibleCategoryCount = 0;
-        foreach (Transform card in contentPanel.transform)
-            if (card.gameObject.activeSelf) visibleCategoryCount++;
-
-        UIInstruments.GetSizeForVerticalGrid(contentPanel.GetComponent<GridLayoutGroup>(), visibleCategoryCount);
+        _panel.GetComponent<WordComposingCardPanel>().UpdateGrid();
     }
 
     private void BinBtn()
     {
-        returnToMenuBtn.onClick.AddListener(() =>
-        {
-            Signals.ResetWordComposingMenu.Invoke();
-            ClauseComplete = false;
-            playPanel.SetActive(false);
-            returnToMenuBtn.gameObject.SetActive(false);
-            Signals.StopPlayAudioEvent.Invoke();
-        });
         resetBtn.onClick.AddListener(() =>
         {
             Signals.ResetWordComposingMenu.Invoke();
@@ -240,5 +255,13 @@ public class WordComposingMenuControl : GameMenu, IEditableElement
                     Signals.WordComposingCategoriesSelectEvent.Invoke();
                 }
            });
+    }
+
+    public override void ResetGame()
+    {
+        Signals.ResetWordComposingMenu.Invoke();
+        ClauseComplete = false;
+        playPanel.SetActive(false);
+        Signals.StopPlayAudioEvent.Invoke();
     }
 }

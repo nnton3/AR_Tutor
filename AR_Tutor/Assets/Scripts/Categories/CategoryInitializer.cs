@@ -9,15 +9,14 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
     [SerializeField] protected Button selectBtn, selectImageBtn, switchVisibleBtn;
     [SerializeField] private Sprite deleteSprite, addSprite;
     public AudioClip Clip { get; private set; }
-    private PatientDataManager patientManager;
     protected EditableElement editableElement;
     public string CategoryKey { get; private set; }
     public GameName game { get; private set; }
+    public bool IsCustom { get; private set; }
     #endregion
 
     public void Initialize(GameName _game, string _categoryKey, CategoryData _categoryData)
     {
-        patientManager = FindObjectOfType<PatientDataManager>();
         editableElement = GetComponent<EditableElement>();
 
         if (title != null) title.text = _categoryData.title;
@@ -28,6 +27,7 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
 
         CategoryKey = _categoryKey;
         game = _game;
+        IsCustom = _categoryData.IsCustom;
     }
 
     public Sprite GetSprite()
@@ -60,17 +60,11 @@ public class CategoryInitializer : MonoBehaviour, ISwitchedDeleteBtnImg
     {
         var element = GetComponent<EditableElement>();
 
-        if (element.Visible)
-        {
-            patientManager.SwitchCategoryVisible(CategoryKey, false);
-            element.Visible = false;
-        }
-        else
-        {
-            patientManager.SwitchCategoryVisible(CategoryKey, true);
-            element.Visible = true;
-        }
+        element.Visible = !element.Visible;
         switchVisibleBtn.GetComponent<Image>().sprite = (element.Visible) ? deleteSprite : addSprite;
+
+        if (IsCustom) Signals.DeleteCategoryFromGame.Invoke(CategoryKey);
+        else Signals.SwitchCategoryVisibleEvent.Invoke(CategoryKey, element.Visible);
     }
 
     public void SwitchImgForDeleteBtn()

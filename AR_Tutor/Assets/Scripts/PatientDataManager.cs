@@ -29,12 +29,29 @@ public class PatientDataManager : MonoBehaviour
     public void Initialize()
     {
         saveSystem = FindObjectOfType<SaveSystem>();
-        if (FindObjectOfType<SelectedPatient>())
+
+        var selectedPatient = FindObjectOfType<SelectedPatient>();
+        if (selectedPatient!= null)
         {
-            patientLogin = FindObjectOfType<SelectedPatient>()?.PatientLogin;
-            userLogin = FindObjectOfType<SelectedPatient>()?.UserLogin;
+            patientLogin = selectedPatient.PatientLogin;
+            userLogin = selectedPatient.UserLogin;
         }
 
+        InitData();
+
+        Signals.AddCategoryEvent.AddListener(AddCategoryToGame);
+        Signals.AddCardEvent.AddListener(AddCardToCategory);
+        Signals.DeleteCategoryFromGame.AddListener(RemoveCategoryFromGame);
+        Signals.DeleteCardFromCategory.AddListener(RemoveCardFromCategory);
+        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
+        Signals.SwitchCategoryVisibleEvent.AddListener(SwitchCategoryVisible);
+        Signals.SetIndexForCategory.AddListener(SetIndexForCategory);
+        Signals.SetIndexForCard.AddListener(SetIndexForCard);
+        testData = PatientData;
+    }
+
+    private void InitData()
+    {
         PatientData = new PatientSaveGameData(null, null, null, null, null);
         var loadData = saveSystem.LoadPatientDataFromLocal(patientLogin);
 
@@ -64,14 +81,6 @@ public class PatientDataManager : MonoBehaviour
             Debug.Log("null data");
             FillPatientDataByDefault();
         }
-
-        Signals.AddCategoryEvent.AddListener(AddCategoryToGame);
-        Signals.AddCardEvent.AddListener(AddCardToCategory);
-        Signals.DeleteCategoryFromGame.AddListener(RemoveCategoryFromGame);
-        Signals.DeleteCardFromCategory.AddListener(RemoveCardFromCategory);
-        Signals.SwitchCardVisibleEvent.AddListener(SwitchCardVisible);
-        Signals.SwitchCategoryVisibleEvent.AddListener(SwitchCategoryVisible);
-        testData = PatientData;
     }
 
     private void FillPatientDataByDefault()
@@ -135,20 +144,43 @@ public class PatientDataManager : MonoBehaviour
 
     private void RemoveCategoryFromGame(string _categoryKey)
     {
-        Debug.Log("Start removed category");
         var index = GetCategoryIndex(_categoryKey);
         if (index < 0) return;
 
         PatientData.CategoriesKeys.Remove(_categoryKey);
         if (PatientData.CategoriesVisible.Count - 1 >= index)
             PatientData.CategoriesVisible.RemoveAt(index);
+
         Debug.Log("Category removed from game");
+        UpdatePatientData();
+    }
+
+    private void SetIndexForCategory(string _categoryKey, int _index)
+    {
+        var currentIndex = GetCategoryIndex(_categoryKey);
+        var game = PatientData.Games[currentIndex];
+        var categoryVisible = PatientData.CategoriesVisible[currentIndex];
+        var cards = PatientData.CardKeys[currentIndex];
+        var cardsVisible = PatientData.CardsVisible[currentIndex];
+
+        PatientData.CategoriesKeys.RemoveAt(currentIndex);
+        PatientData.Games.RemoveAt(currentIndex);
+        PatientData.CategoriesVisible.RemoveAt(currentIndex);
+        PatientData.CardKeys.RemoveAt(currentIndex);
+        PatientData.CardsVisible.RemoveAt(currentIndex);
+
+        PatientData.CategoriesKeys.Insert(_index, _categoryKey);
+        PatientData.Games.Insert(_index, game);
+        PatientData.CategoriesVisible.Insert(_index, categoryVisible);
+        PatientData.CardKeys.Insert(_index, cards);
+        PatientData.CardsVisible.Insert(_index, cardsVisible);
+        
         UpdatePatientData();
     }
     #endregion
 
     #region Card management
-    public void SwitchCardVisible(string _categoryKey, string _cardKey, bool _visible)
+    private void SwitchCardVisible(string _categoryKey, string _cardKey, bool _visible)
     {
         var categoryIndex = GetCategoryIndex(_categoryKey);
         var cardIndex = GetCardIndex(_categoryKey, _cardKey);
@@ -172,7 +204,7 @@ public class PatientDataManager : MonoBehaviour
         return true;
     }
 
-    public void AddCardToCategory(string _categoryKey, string _cardKey)
+    private void AddCardToCategory(string _categoryKey, string _cardKey)
     {
         var categoryIndex = GetCategoryIndex(_categoryKey);
         if (categoryIndex < 0) return;
@@ -184,17 +216,34 @@ public class PatientDataManager : MonoBehaviour
         UpdatePatientData();
     }
 
-    public void RemoveCardFromCategory(string _categoryKey, string _cardKey)
+    private void RemoveCardFromCategory(string _categoryKey, string _cardKey)
     {
         var categoryIndex = GetCategoryIndex(_categoryKey);
         if (categoryIndex < 0) return;
         var cardIndex = GetCardIndex(_categoryKey, _cardKey);
         if (cardIndex < 0) return;
 
-        PatientData.CardKeys[categoryIndex].Remove(_cardKey);
+        PatientData.CardKeys[categoryIndex].RemoveAt(cardIndex);
         if (PatientData.CardsVisible[categoryIndex].Count - 1 >= cardIndex)
-            PatientData.CardsVisible[categoryIndex][cardIndex] = false;
+            PatientData.CardsVisible[categoryIndex].RemoveAt(cardIndex);
+
         Debug.Log("Card removed from category");
+        UpdatePatientData();
+    }
+
+    private void SetIndexForCard(string _categoryKey, string _cardKey, int _index)
+    {
+        var categoryIndex = GetCategoryIndex(_categoryKey);
+        var currentCardIndex = GetCardIndex(_categoryKey, _cardKey);
+        var card = PatientData.CardKeys[categoryIndex][currentCardIndex];
+        var cardVisible = PatientData.CardsVisible[categoryIndex][currentCardIndex];
+
+        PatientData.CardKeys[categoryIndex].RemoveAt(currentCardIndex);
+        PatientData.CardsVisible[categoryIndex].RemoveAt(currentCardIndex);
+
+        PatientData.CardKeys[categoryIndex].Insert(_index, card);
+        PatientData.CardsVisible[categoryIndex].Insert(_index, cardVisible);
+
         UpdatePatientData();
     }
     #endregion
